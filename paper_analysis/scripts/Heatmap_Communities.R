@@ -151,6 +151,7 @@ group_order <- c("Healthy", "Primary", "Remission", "Relapse")
 # Load data
 data_matrix_df <- read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t") |> column_to_rownames('peaks')
 
+zscored_df <- t(scale(t(data_matrix_df)))
 
 # Generate value_vars (column names of patients)
 id_vars <- data_matrix_df$peaks
@@ -168,14 +169,15 @@ for (group_name in names(patient_groups)) {
 # Loop over communities
 for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/")) {
   comm_file_name = paste("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/" , file_name , sep = "")
+  print(comm_file_name)
   comm_file = read_delim(comm_file_name , col_names = c('chromosome','start','end')) |>
     unite('peaks', c('chromosome', 'start', 'end'), sep = "-") 
 
   # Subset to the current community
-  subset_df <- zscored_df[rownames(zscored_df) %in% comm_file$peaks  , ]
+  subset_df <- zscored_df[rownames(zscored_df) %in% comm_file$peaks  , ] |> as.data.frame()
   
   # Melt to long format
-  melted <- melt(subset_df , variable.name = "original_column", value.name = "Zscore")
+  melted <- pivot_longer(subset_df , cols = colnames(subset_df), names_to = "original_column", values_to = "Zscore")
   
   # Map group
   melted$group <- group_mapping[as.character(melted$original_column)]
@@ -184,7 +186,7 @@ for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/
   # Plot
   p <- ggplot(melted, aes(x = group, y = Zscore)) +
     stat_summary(fun = mean, geom = "line", aes(group = 1), color = "steelblue") +
-    ylim(-1, 1) +
+    coord_cartesian(ylim = c(-1, 1)) +
     labs(y = "Z-score", x = NULL) +
     theme_classic()
 

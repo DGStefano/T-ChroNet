@@ -1,0 +1,11 @@
+[project]
+name = "TRACES"
+version = "0.0.1"
+dependencies = [
+    "pandas",
+    "numpy",
+    "deepgraph",
+    "tables",
+    "ipykernel",
+    "pip","igraph", "leidenalg", "scipy", "matplotlib", "seaborn"
+]

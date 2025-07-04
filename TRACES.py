@@ -140,11 +140,9 @@ def main():
     # Multiprocessing paramenter
     if args.threads == 1:
         pos_array = np.array([0, n_features * (n_features - 1) // 2], dtype=int)
-        print(pos_array)
         indices = np.array([0])
     else:
         pos_array = np.array(np.linspace(0, n_features * (n_features - 1) // 2, args.threads), dtype=int)
-        print(pos_array)
     indices = np.arange(0, args.threads - 1)
 
     # Make the parameter object

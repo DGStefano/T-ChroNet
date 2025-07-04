@@ -5,6 +5,8 @@ from multiprocessing import Pool
 import deepgraph as dg
 import sys
 
+np.random.seed(10)
+
 # parallel computation
 def create_ei(i ):
     

@@ -1,0 +1,5 @@
+.venv/
+tmp/
+traces_tmp/
+*test*
+__pycache__/

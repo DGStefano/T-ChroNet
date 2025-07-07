@@ -6,14 +6,17 @@ from multiprocessing import Pool
 import deepgraph as dg
 import sys
 import shutil
+import igraph as ig
 
 class ei_args:
-    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir):
+    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir, in_th):
         self.graph = in_graph
         self.pos_array = in_pos_array
         self.data_matrix = in_matrix
         self.n_samples = in_n_samples
         self.tmp_dir = in_tmp_dir
+        self.th = in_th
+
 
 # Deletes a directory, if it exists, and recreates it. Watch out!
 def reset_dir(path):
@@ -37,15 +40,13 @@ def run_create_ei(args):
 
 # parallel computation
 def create_ei(i, ei_args):
-    
-    print(f"Starting create_ei with index {i}")
     graph = dg.DeepGraph(ei_args.graph.v.copy(deep=True))
     pos_array = ei_args.pos_array
     step_size = 1e5
     # n_processes = 40
 
     chunk_size = 10000
-    th = 0.8
+    th = ei_args.th
 
     from_pos = pos_array[i]
     to_pos = pos_array[i + 1]
@@ -95,7 +96,8 @@ def main():
     parser.add_argument("-o", "--output", type=str, required=True, help="Path to the output file")
     parser.add_argument("-s", "--stepsize", type=int, required=False, default=1e5, help="Stepsize for RAM parameters")
     parser.add_argument("-@", "--threads", type=int, required=False, default=8, help="Number of threads to use")
-    parser.add_argument("-t", "--tempdir", type=str, required=False, help="Temporary directory to use. Will create a \"/tmp\" directory inside it.")
+    parser.add_argument("-t", "--tempdir", type=str, required=False, help="Temporary directory to use. Will create a \"/tmp\" directory inside it")
+    parser.add_argument("-r", "--threshold", type=float, required=False, default=0.8, help="Starting threshold")
 
     args = parser.parse_args()
 
@@ -151,26 +153,66 @@ def main():
         in_pos_array=pos_array,
         in_matrix=data_matrix,
         in_n_samples=n_samples,
-        in_tmp_dir=final_tempdir
+        in_tmp_dir=final_tempdir,
+        in_th=args.threshold
     )
 
-    print("Starting multiprocess..")
-    # Prepare iterable of argument tuples
-    ei_args_list = [(i, ei_args_obj) for i in indices]
-    with Pool(processes=args.threads) as pool:
-        for _ in pool.imap_unordered(run_create_ei, ei_args_list):
-            pass
-    
-    # Read files in tmp folder
-    files = os.listdir(f'{final_tempdir}/')
-    files.sort()
-    # Read files in tmp folder
-    store = pd.HDFStore( args.output, mode='w')
-    for f in files:
-        et = pd.read_pickle(os.path.join(final_tempdir, f))
-        store.append('e', et, format='t', data_columns=True, index=False ,  min_itemsize={'row_name_s': 35 , 'row_name_t': 35})
-    store.close()
-    shutil.rmtree(final_tempdir)
+    iteration_th_filelist = []
+    last_connected = True
+    last_th = ei_args_obj.th
+
+    while last_connected:
+        print(f"Starting multiprocess with threshold: {ei_args_obj.th}")
+        # Prepare iterable of argument tuples
+        ei_args_list = [(i, ei_args_obj) for i in indices]
+        with Pool(processes=args.threads) as pool:
+            for _ in pool.imap_unordered(run_create_ei, ei_args_list):
+                pass
+        
+        curr_output_file = args.output
+        curr_output_file+=f".th.{ei_args_obj.th}"
+        iteration_th_filelist.append(curr_output_file)
+
+        # Read files in tmp folder
+        files = os.listdir(f'{final_tempdir}/')
+        files.sort()
+        # Read files in tmp folder
+        store = pd.HDFStore( curr_output_file, mode='w')
+        for f in files:
+            et = pd.read_pickle(os.path.join(final_tempdir, f))
+            store.append('e', et, format='t', data_columns=True, index=False ,  min_itemsize={'row_name_s': 35 , 'row_name_t': 35})
+        store.close()
+        reset_dir(final_tempdir)
+
+
+        # WE CHECK IF GRAPH IS CONNECTED
+        # Loading correlation matrix
+        print("Loading thresholded file..")
+        e = pd.read_hdf(curr_output_file)
+        e_df = e.reset_index()
+
+        # Freeing space
+        del e
+        print("Making graph..")
+        G = ig.Graph.TupleList(e_df.itertuples(index=False), directed=False, weights=None, edge_attrs = 'corr')
+
+        last_th=ei_args_obj.th
+        if G.is_connected():
+            print(f"Graph connected with threshold: {ei_args_obj.th}")
+            print("Stopping here!")
+            last_connected=True            
+            iteration_th_filelist.remove(curr_output_file)
+            os.rename(curr_output_file, args.output)
+            for thfile in iteration_th_filelist:
+                os.remove(thfile)
+        else:
+            print(f"Graph not connected at threshold: {ei_args_obj.th}")
+            print("Going down by 0.1")
+            last_connected=False
+            ei_args_obj.th = last_th-0.1
+            if ei_args_obj.th < 0.1:
+                print("Lowest threshold, still not connected. Bailing out")
+                exit(-1)
 
 
 if __name__ == '__main__':

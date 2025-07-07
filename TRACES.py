@@ -158,10 +158,10 @@ def main():
     )
 
     iteration_th_filelist = []
-    last_connected = True
+    last_connected = False
     last_th = ei_args_obj.th
 
-    while last_connected:
+    while not last_connected:
         print(f"Starting multiprocess with threshold: {ei_args_obj.th}")
         # Prepare iterable of argument tuples
         ei_args_list = [(i, ei_args_obj) for i in indices]

@@ -14,6 +14,11 @@ R packages for ontology analysis :
 - rGREAT
 - tidyverse
 
+## Vignette
+Tutorials to run T-ChroNet to a toy dataset :
+1. Run T-ChroNet and finding communities [html](./vignette/Vignette1_BuildingAndAnalysis.html) [jupyter notebook](./vignette/Vignette1_BuildingAndAnalysis.ipynb)
+2. Ontology analysis and Transcription Factor analysis [html](./vignette/Vignette2_rGREATandCistrome.html) [Rmd](./vignette/Vignette2_rGREATandCistrome.Rmd)
+
 ## Execution
 To run the TRACES.py script, there are some positional arguments to be set :
 - path to the normalized counts matrix

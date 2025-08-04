@@ -20,13 +20,14 @@ Tutorials to run T-ChroNet to a toy dataset :
 2. Ontology analysis and Transcription Factor analysis [html](./vignette/Vignette2_rGREATandCistrome.html) [Rmd](./vignette/Vignette2_rGREATandCistrome.Rmd)
 
 ## Execution
-To run the TRACES.py script, there are some positional arguments to be set :
-- path to the normalized counts matrix
-- the name of the output edge list file
-- number of elements in each chunk per thread (tested with 100000)
-- number of threads to use
-- path to a temp dir to be used during the execution
+To run the TCHRONET.py script, there are some positional arguments to be set :
+- -m or --matrix : Path to input matrix
+- -o or --output : Path to the output file
+- -s or --stepsize : Stepsize for RAM parameters
+- -@ or --threads : Number of threads to use
+- -t or --tempdir : Temporary directory to use. Will create a \"/tmp\" directory inside it
+- -r of --threshold : Starting threshold
 
 The other two scripts are useful for analyzing the network :
-- **TRACES_regnet_Analysis.ipynb** loads the network and uses leiden algorithm to find communities
-- **TRACES_rGREAT.R** allows the interrogation of GREAT to define enriched pathways for each community
+- **TCHRONET_regnet_Analysis.ipynb** loads the network and uses leiden algorithm to find communities
+- **TCHRONET_rGRATE.R** allows the interrogation of GREAT to define enriched pathways for each community

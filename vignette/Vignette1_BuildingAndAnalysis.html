@@ -7704,7 +7704,7 @@ python ../TCHRONET.py -m /mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetA
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7d2b84e6">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=94552c82">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7857,12 +7857,12 @@ python ../TCHRONET.py -m /mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetA
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">communities_list</span> <span class="o">=</span> <span class="n">tchronet_utils</span><span class="o">.</span><span class="n">get_communities_names</span><span class="p">(</span><span class="n">G</span> <span class="p">,</span> <span class="n">communities</span><span class="p">)</span>
 
-<span class="n">counts_path</span> <span class="o">=</span> <span class="s2">"/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/data/thp1_test.tsv"</span>
+<span class="n">counts_path</span> <span class="o">=</span> <span class="s2">"./data/thp1_test.tsv"</span>
 <span class="n">data_matrix_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">counts_path</span> <span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="p">,</span> <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">)</span>
 
 <span class="n">tchronet_utils</span><span class="o">.</span><span class="n">plot_trends_zscore</span><span class="p">(</span> <span class="n">communities_list</span> <span class="p">,</span> <span class="n">data_matrix_df</span> <span class="p">,</span> <span class="n">custom_ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">)</span>
@@ -7939,7 +7939,7 @@ The `scale` parameter has been renamed and will be removed in v0.15.0. Pass `den
 </div>
 </div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[38]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>&lt;seaborn.axisgrid.FacetGrid at 0x7a6faaafff50&gt;</pre>
 </div>
@@ -8068,10 +8068,10 @@ annotatePeaks.pl ./data/thp1_test.bed hg19 &gt; ./results/thp1_test_anontations.
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [48]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">homer_annotation_path</span> <span class="o">=</span> <span class="s2">"/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/results/thp1_test_anontations.txt"</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">homer_annotation_path</span> <span class="o">=</span> <span class="s2">"./results/thp1_test_anontations.txt"</span>
 
 <span class="n">annotation</span> <span class="o">=</span> <span class="n">tchronet_utils</span><span class="o">.</span><span class="n">transform_annotation_homer</span><span class="p">(</span><span class="n">homer_annotation_path</span><span class="p">)</span>
 <span class="n">final_annotation</span> <span class="o">=</span> <span class="n">tchronet_utils</span><span class="o">.</span><span class="n">genomic_position_stackbar</span><span class="p">(</span><span class="n">communities_list</span><span class="p">,</span> <span class="n">annotation</span><span class="p">)</span>
@@ -8092,7 +8092,7 @@ annotatePeaks.pl ./data/thp1_test.bed hg19 &gt; ./results/thp1_test_anontations.
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[48]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[ ]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
 <pre>&lt;matplotlib.legend.Legend at 0x7a7144e4c6d0&gt;</pre>
 </div>

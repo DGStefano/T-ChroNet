@@ -41,6 +41,36 @@ plotting_ontologies <- function( df , top_n = 10 )  {
     scale_x_discrete(limits =colnames(clusteing_df), guide = guide_axis(angle = 90))
 }
 
+GREAT_target_genes  <- function (file_list , ontologies_list) {
+    #### FUNCTION TO FIND TARGET GENES ACCORDING GREAT
+    #### Parameters: 
+    #### file_list : list of bed files' path of communities
+    #### ontologies_list : list of ontologies for GREAT
+    #### Return :
+    #### list of target genes according GREAT and a list of dataframes containign the ontologies enrichemnt for each ontology listed in "ontologies_list"
+    
+    final_target_gens = list()
+    for (comm_num in  seq_along(list_files_communities)){
+    file_path = list_files_communities[comm_num]
+    # read the bed file
+    
+    GREAT_results = interrogate_GREAT(file_path ,  comm_num , "hg19" , ontologies)
+    
+    if (comm_num == 1 )  {
+        Final_ontologies_dfs = GREAT_results[[1]]
+        final_target_gens[[1]] = GREAT_results[[2]]
+    }
+    else {
+        final_target_gens[[length(final_target_gens)+1]] = GREAT_results[[2]]
+        for (ontology_name in names(GREAT_results[[1]])) {
+        Final_ontologies_dfs[[ontology_name]]  <-  merge.data.frame(Final_ontologies_dfs[[ontology_name]]  , GREAT_results[[1]][[ontology_name]]  , by = c('ID' , 'name') , all = TRUE)
+        }
+    }
+    }
+    return( list(final_target_gens , Final_ontologies_dfs) )
+}
+
+
 interrogate_GREAT <- function(path_comm , comm_num , species , ontologies , th_qval = 0.01 , th_fc = 2 )  {
   #### FUNCTION TO INTERROGATE GREAT AND RETRIEVE THE ENRICHMENT FOR EACH ONTOLOGY
   #### Parameters: 
@@ -81,8 +111,8 @@ interrogate_GREAT <- function(path_comm , comm_num , species , ontologies , th_q
   
   for (ontology_name in names(GREAT_results)) {
     GREAT_results[[ontology_name]]  <- GREAT_results[[ontology_name]] |>
-      dplyr::filter(Binom_Adjp_BH <= 0.01) |>
-      dplyr::filter(Binom_Fold_Enrichment >= 2) |>
+      dplyr::filter(Binom_Adjp_BH <= th_qval) |>
+      dplyr::filter(Binom_Fold_Enrichment >= th_fc) |>
       dplyr::select(ID , name , Binom_Adjp_BH , Binom_Fold_Enrichment)
     colnames( GREAT_results[[ontology_name]]) <- columnNames
     
@@ -112,6 +142,57 @@ for (comm_num in  seq_along(list_files_communities)){
 }
 
 
-# png("/mnt/nas-safu/analysis/scripts/ScriptSdigiove/RegNetATACProject/prova_salva_foto.png" , height = 5 , width = 9 , units = 'in' , res = 300)
+results  <- GREAT_target_genes(list_files_communities , ontologies)
+
+msigdbr_collections(db_species = "Hs")
+genesets <- msigdbr(species = "Homo sapiens" , db_species = 'HS', collection = "H") #, subcollection = "CP:REACTOME"
+genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
+i = 1
+j=0
+for (x in reults[[1]]) {
+    x_enrichr <- enricher( x , TERM2GENE = genesets_removed ) #   , universe = unname(unlist(reults[[1]]))
+    x_df  <- x_enrichr@result |> filter(qvalue < 0.05) |> arrange ( -FoldEnrichment )
+
+    if(nrow(x_df) == 0) {    
+        i = i + 1
+        next
+    }
+
+    x_df  <- top_n(x_df,5,FoldEnrichment)
+    x_df['community'] <- i
+
+    if (j == 0) {
+        final_df <- x_df
+        j=1
+    } else {
+        final_df <- rbind(final_df , x_df)
+    }
+    i = i + 1
+}
+
+final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
+final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
+
+clusteing_df = final_df_selected_Columns |> select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
+clusteing_df[is.na(clusteing_df)] = 0
+row.order <- stats::hclust(stats::dist(clusteing_df))$order
+col.order <- stats::hclust(stats::dist(t(clusteing_df)))$order
+clusteing_df[clusteing_df == 0] <-  NA
+clusteing_df = clusteing_df[row.order, col.order]
+
+final_df_selected_Columns  <- final_df_selected_Columns |> mutate(name = fct_relevel(Description, 
+            rownames(clusteing_df)))
+final_df_selected_Columns$community  <- factor(final_df_selected_Columns$community , levels = sort(final_df_selected_Columns |> pull(community) |> unique()))
+
+ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
+  geom_point() + #color =Percent  , , size = 5
+  scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
+  scale_radius() +#trans = "log2"
+  theme_classic() +
+  theme(legend.position="top" , legend.text = element_text(size=10)) 
+#ggsave("", width = 12, height = 5, units = "in", dpi = 300)
+
+
+# png("" , height = 5 , width = 9 , units = 'in' , res = 300)
 plotting_ontologies(Final_ontologies_dfs[[2]] , 1)
 # dev.off()

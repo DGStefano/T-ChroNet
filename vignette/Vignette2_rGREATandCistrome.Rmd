@@ -5,11 +5,11 @@ library(tidyverse)
 library(msigdbr)
 library(clusterProfiler)
 
-source("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/utils/R_utils.R")
+source("../utils/R_utils.R")
 ```
 
 ```{r}
-list_files_communities = list.files(path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/results/bed/" , full.names = TRUE)
+list_files_communities = list.files(path = "./results/bed/" , full.names = TRUE)
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
 
 results  <- GREAT_target_genes(list_files_communities , ontologies)
@@ -70,10 +70,10 @@ If you want to plot and investigate the Transcription Factors and Chromatin Modu
 ```
 
 ```{r}
-folders_to_compare = list.files('/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/results/cistromdb_thp1/')
+folders_to_compare = list.files('./results/cistromdb_thp1/')
 
 for (community in folders_to_compare){ 
-    to_read = paste('/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/results/cistromdb_thp1/' ,community , sep = "")
+    to_read = paste('./results/cistromdb_thp1/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
@@ -91,7 +91,7 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
-tfs_name = read_delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/vignette/data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
+tfs_name = read_delim("./data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
 real_tfs  <- c()

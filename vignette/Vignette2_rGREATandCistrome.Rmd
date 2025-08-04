@@ -2,33 +2,67 @@
 ```{r}
 library(rGREAT)
 library(tidyverse)
+library(msigdbr)
+library(clusterProfiler)
 
-source("./utils/R_utils.R")
+source("../utils/R_utils.R")
 ```
 
 ```{r}
+list_files_communities = list.files(path = "./results/bed/" , full.names = TRUE)
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
-list_files_communities = list.files(path = "" , full.names = TRUE)
 
-for (comm_num in  seq_along(list_files_communities)){
-  file_path = list_files_communities[comm_num]
-  # read the bed file
-  
-  GREAT_results = interrogate_GREAT(file_path ,  comm_num , "hg19" , ontologies)
-  
-  if (comm_num == 1 )  {
-    Final_ontologies_dfs = GREAT_results
-  }
-  else {
-    for (ontology_name in names(GREAT_results)) {
-      Final_ontologies_dfs[[ontology_name]]  <-  merge.data.frame(Final_ontologies_dfs[[ontology_name]]  , GREAT_results[[ontology_name]]  , by = c('ID' , 'name') , all = TRUE)
+results  <- GREAT_target_genes(list_files_communities , ontologies)
+
+# msigdbr_collections(db_species = "Hs")
+
+genesets <- msigdbr(species = "Homo sapiens" , db_species = 'HS', collection = "C5") #, subcollection = "CP:REACTOME"
+genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
+i = 1
+j=0
+for (x in results[[1]]) {
+    x_enrichr <- enricher( x , TERM2GENE = genesets_removed ) #   , universe = unname(unlist(reults[[1]]))
+    x_df  <- x_enrichr@result |> filter(qvalue < 0.05) |> arrange ( -FoldEnrichment )
+
+    if(nrow(x_df) == 0) {    
+        i = i + 1
+        next
     }
-  }
+
+    x_df  <- top_n(x_df,5,FoldEnrichment)
+    x_df['community'] <- i
+
+    if (j == 0) {
+        final_df <- x_df
+        j=1
+    } else {
+        final_df <- rbind(final_df , x_df)
+    }
+    i = i + 1
 }
 
-# png("/mnt/nas-safu/analysis/scripts/ScriptSdigiove/RegNetATACProject/prova_salva_foto.png" , height = 5 , width = 9 , units = 'in' , res = 300)
-plotting_ontologies(Final_ontologies_dfs[[2]] , 1)
-# dev.off()
+final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
+final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
+
+clusteing_df = final_df_selected_Columns |> select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
+clusteing_df[is.na(clusteing_df)] = 0
+row.order <- stats::hclust(stats::dist(clusteing_df))$order
+col.order <- stats::hclust(stats::dist(t(clusteing_df)))$order
+clusteing_df[clusteing_df == 0] <-  NA
+clusteing_df = clusteing_df[row.order, col.order]
+
+final_df_selected_Columns  <- final_df_selected_Columns |> mutate(name = fct_relevel(Description, 
+            rownames(clusteing_df)))
+final_df_selected_Columns$community  <- factor(final_df_selected_Columns$community , levels = sort(final_df_selected_Columns |> pull(community) |> unique()))
+
+ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
+  geom_point() + #color =Percent  , , size = 5
+  scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
+  scale_radius() +#trans = "log2"
+  theme_classic() +
+  theme(legend.position="top" , legend.text = element_text(size=10)) 
+#ggsave("", width = 12, height = 5, units = "in", dpi = 300)
+
 ```
 
 ```
@@ -36,14 +70,10 @@ If you want to plot and investigate the Transcription Factors and Chromatin Modu
 ```
 
 ```{r}
-
-```
-
-```{r}
-folders_to_compare = list.files('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/cistrom/')
+folders_to_compare = list.files('./results/cistromdb_thp1/')
 
 for (community in folders_to_compare){ 
-    to_read = paste('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/cistrom/' ,community , sep = "")
+    to_read = paste('./results/cistromdb_thp1/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
@@ -61,7 +91,7 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
-tfs_name = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
+tfs_name = read_delim("./data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
 real_tfs  <- c()
@@ -89,16 +119,13 @@ final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor, levels 
 final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
 
 ggplot(data = final_homer_scatterplot , aes(x = Community, y = Factor ) ) +
-geom_point( aes( size = ComboScore) ,  shape = 21  , stroke = 0.6  , color = 'black') +
-geom_point( aes( size = ComboScore) ,  shape = 21  , fill = "black" , stroke = 0.6 , alpha= 0.4 , color = 'black') +
-theme_classic() +
-ylab("")+
-theme(legend.position="top" , legend.text = element_text(size=10) ) +
-  #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0) ) +
-scale_x_discrete( limits = unique(final_homer_scatterplot$Community) )
-# theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
-#       axis.text.y=element_blank(),
-#       legend.position="none")
+  geom_point( aes( size = ComboScore) ,  shape = 21  , stroke = 0.6  , color = 'black') +
+  geom_point( aes( size = ComboScore) ,  shape = 21  , fill = "black" , stroke = 0.6 , alpha= 0.4 , color = 'black') +
+  theme_classic() +
+  ylab("")+
+  theme(legend.position="top" , legend.text = element_text(size=10) ) +
+  scale_x_discrete( limits = unique(final_homer_scatterplot$Community) )
+
 #ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/TFs_R_withlabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
 
 ```

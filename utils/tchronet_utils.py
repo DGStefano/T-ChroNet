@@ -1,4 +1,3 @@
-import sys
 import pandas as pd
 import numpy as np
 import igraph as ig
@@ -6,7 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from os import listdir
 from scipy.stats import zscore
-import leidenalg as la
+import networkx as nx
+import random
+import matplotlib.patches as mpatches
 
 def CreateLinkDf (count_matrix):
     count_matrix_turned = count_matrix.T
@@ -196,3 +197,85 @@ def get_communities_names(G , communities) :
             community_list = [G.vs[node_pos]["name"] for node_pos in community]
             communities_list_sp.append(community_list)
     return(communities_list_sp)
+
+
+def plot_clusters_resolution (df , steps ) :
+    edges = []
+    for i in steps:  # Cluster_1 to Cluster_2, Cluster_2 to Cluster_3
+        from_col = f"Cluster_{i}"
+        to_col = f"Cluster_{round(i+0.1 , 2)}"
+
+
+        grouped = df.groupby([from_col, to_col]).size().reset_index(name='count')
+        
+        for _, row in grouped.iterrows():
+            source = f"{from_col}:{row[from_col]}"
+            target = f"{to_col}:{row[to_col]}"
+            edges.append((source, target, row['count']))
+
+    # Build graph
+    G = nx.DiGraph()
+    for source, target, weight in edges:
+        G.add_edge(source, target, weight=weight)
+
+    # Layout positions by level (res_1 → res_3 vertically)
+    level_pos = {}
+    y_spacing = 10
+    for node in G.nodes:
+        res, label = node.split(":")
+        level = float(res.split("_")[1])
+        if level not in level_pos:
+            level_pos[level] = []
+        level_pos[level].append(node)
+
+    # Assign (x, y) positions
+    pos = {}
+    for level, nodes in level_pos.items():
+        for i, node in enumerate(nodes):
+            pos[node] = (i * 4, -level * y_spacing)  # vertical layout
+
+
+    levels = sorted({float(n.split(":")[0].split("_")[1]) for n in G.nodes})
+
+    # Generate random colors for each level
+    def random_color():
+        return "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
+    level_colors = {lvl: random_color() for lvl in levels}
+
+
+    # Node colors per level
+    #level_colors = {1: 'lightblue', 2: 'lightgreen', 3: 'salmon'}
+    node_colors = [level_colors[float(n.split(":")[0].split("_")[1])] for n in G.nodes]
+
+    # Draw graph
+    plt.figure(figsize=(12, 8))
+    nx.draw(
+        G, pos, with_labels=False, node_size=1000,
+        node_color=node_colors, edge_color='gray', arrows=True, font_size=8
+    )
+
+    # Create legends
+    node_legend = [
+        mpatches.Patch(color=clr, label=f"res_{lvl}")
+        for lvl, clr in level_colors.items()
+    ]
+
+    edge_weights = nx.get_edge_attributes(G, 'weight')
+    min_w, max_w = min(edge_weights.values()), max(edge_weights.values())
+
+    # Map edge width to weight
+    edge_widths = [1 + 3 * (w - min_w) / (max_w - min_w) if max_w > min_w else 2 for w in edge_weights.values()]
+    nx.draw_networkx_edges(G, pos, width=edge_widths)
+
+    # Edge weight legend (example buckets)
+    weight_legend = [
+        mpatches.Patch(color='gray', label=f"Weight ≈ {w}")
+        for w in sorted(set(edge_weights.values()))[:3]  # take up to 3 unique weights
+    ]
+
+    plt.legend(handles=node_legend + weight_legend, loc='lower left', bbox_to_anchor=(1, 0.5))
+    plt.title("Cluster Transition Tree (Colored by Resolution Level)")
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()

@@ -31,3 +31,5 @@ To run the TCHRONET.py script, there are some positional arguments to be set :
 The other two scripts are useful for analyzing the network :
 - **TCHRONET_regnet_Analysis.ipynb** loads the network and uses leiden algorithm to find communities
 - **TCHRONET_rGRATE.R** allows the interrogation of GREAT to define enriched pathways for each community
+
+[![DOI](https://zenodo.org/badge/933292065.svg)](https://doi.org/10.5281/zenodo.16737392)

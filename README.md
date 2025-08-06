@@ -16,8 +16,8 @@ R packages for ontology analysis :
 
 ## Vignette
 Tutorials to run T-ChroNet to a toy dataset :
-1. Run T-ChroNet and finding communities [html](./vignette/Vignette1_BuildingAndAnalysis.html) [jupyter notebook](./vignette/Vignette1_BuildingAndAnalysis.ipynb)
-2. Ontology analysis and Transcription Factor analysis [html](./vignette/Vignette2_rGREATandCistrome.html) [Rmd](./vignette/Vignette2_rGREATandCistrome.Rmd)
+1. Run T-ChroNet and finding communities [html](https://htmlpreview.github.io/?https://github.com/DGStefano/T-ChroNet/blob/main/vignette/Vignette1_BuildingAndAnalysis.html) [jupyter notebook](./vignette/Vignette1_BuildingAndAnalysis.ipynb)
+2. Ontology analysis and Transcription Factor analysis [html](https://htmlpreview.github.io/?https://github.com/DGStefano/T-ChroNet/blob/main/vignette/Vignette2_rGREATandCistrome.html) [Rmd](./vignette/Vignette2_rGREATandCistrome.Rmd)
 
 ## Execution
 To run the TCHRONET.py script, there are some positional arguments to be set :

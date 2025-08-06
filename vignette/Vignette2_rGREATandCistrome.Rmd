@@ -60,7 +60,7 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
   scale_radius() +#trans = "log2"
   theme_classic() +
-  theme(legend.position="top" , legend.text = element_text(size=10)) 
+  theme(legend.position="top" , legend.text = element_text(size=10) , axis.text.y =element_text(size=5)) 
 #ggsave("", width = 12, height = 5, units = "in", dpi = 300)
 
 ```

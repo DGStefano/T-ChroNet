@@ -1,5 +1,5 @@
 """
-THHRONET.py
+TCHRONET.py
 
 This script constructs a correlation-based network from a feature matrix using 
 Spearman correlations. It iteratively lowers the correlation threshold until 

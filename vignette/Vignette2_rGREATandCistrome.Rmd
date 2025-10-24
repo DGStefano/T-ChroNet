@@ -1,5 +1,8 @@
 ```
 This Vignette aims to provide a guided toor in the identification of ontologies and putative TFs enriched in each community
+- First the neccesary libraries will be loaded. 
+- Then, target genes are retrieved using GREAT toolkit through rGRATE R library. The enrichment is conducted through msigdb R library selecting a collection.
+- Finally, the cistromDB Trascription Factors enrichment are unified and then plotted as in the paper.
 ```
 ```{r}
 library(rGREAT)

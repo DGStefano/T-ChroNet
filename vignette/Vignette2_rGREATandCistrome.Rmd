@@ -1,4 +1,6 @@
-
+```
+This Vignette aims to provide a guided toor in the identification of ontologies and putative TFs enriched in each community
+```
 ```{r}
 library(rGREAT)
 library(tidyverse)
@@ -9,19 +11,29 @@ source("../utils/R_utils.R")
 ```
 
 ```{r}
+# Retrieve path of each community bed file
 list_files_communities = list.files(path = "./results/bed/" , full.names = TRUE)
+
+# Definition of ontologies for GREAT enrichments
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
 
+# Detecting the target genes of each community through the employment of GREAT web tool
 results  <- GREAT_target_genes(list_files_communities , ontologies)
 
-# msigdbr_collections(db_species = "Hs")
+# Visulizing the msigb collections available for further analysis (Hs = Homo Sapiens, Mm = Mus Musculus)
+msigdbr_collections(db_species = "Hs")
 
+# Load selected collections of msigdb. In this section we used the C5 containing all the pathways enrichment datasets.
+# You can also specify the subcollection of interest according the the result of "msigdbr_collections(db_species = "Hs")"
 genesets <- msigdbr(species = "Homo sapiens" , db_species = 'HS', collection = "C5") #, subcollection = "CP:REACTOME"
 genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
+
+# Cicle over the target genes of each community
 i = 1
 j=0
 for (x in results[[1]]) {
-    x_enrichr <- enricher( x , TERM2GENE = genesets_removed ) #   , universe = unname(unlist(reults[[1]]))
+    x_enrichr <- enricher( x , TERM2GENE = genesets_removed )
+    # Selection of significant enriched terms and order descending according the FoldEnrichment score
     x_df  <- x_enrichr@result |> filter(qvalue < 0.05) |> arrange ( -FoldEnrichment )
 
     if(nrow(x_df) == 0) {    
@@ -29,6 +41,7 @@ for (x in results[[1]]) {
         next
     }
 
+    # Selection of the top 5 annotation. You can change this paramter to retrieve more terms
     x_df  <- top_n(x_df,5,FoldEnrichment)
     x_df['community'] <- i
 
@@ -41,9 +54,12 @@ for (x in results[[1]]) {
     i = i + 1
 }
 
+# Selecting only columns to be plotted from the dataframe containing all the enrichment scores for each community
 final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
+# Transforming the q-vale into log10
 final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
 
+# Definition of a new dataframe to allow furthe rows (terms) and columns (communities) clustering
 clusteing_df = final_df_selected_Columns |> select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
 clusteing_df[is.na(clusteing_df)] = 0
 row.order <- stats::hclust(stats::dist(clusteing_df))$order
@@ -55,8 +71,9 @@ final_df_selected_Columns  <- final_df_selected_Columns |> mutate(name = fct_rel
             rownames(clusteing_df)))
 final_df_selected_Columns$community  <- factor(final_df_selected_Columns$community , levels = sort(final_df_selected_Columns |> pull(community) |> unique()))
 
+# Plot enrichemnts scores and significance for each community. Uncomment and insert a path inside the ggsave function for saving the plot 
 ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
-  geom_point() + #color =Percent  , , size = 5
+  geom_point() +
   scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
   scale_radius() +#trans = "log2"
   theme_classic() +
@@ -70,14 +87,15 @@ If you want to plot and investigate the Transcription Factors and Chromatin Modu
 ```
 
 ```{r}
+# Retrieve path of each Transcirption Factor enrichment resulting from cistromDB toolkit
 folders_to_compare = list.files('./results/cistromdb_thp1/')
 
+# Cicle over oeac enrichment result to concatenate each file into a unique dataframe
 for (community in folders_to_compare){ 
     to_read = paste('./results/cistromdb_thp1/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
-    #homer_tfs  <- homer_tfs |> filter(grepl('liver' , Biosource ) | grepl('Liver' , Biosource ))
 
     homer_tfs = homer_tfs |> group_by(Factor) |> summarise(max_value = max(GIGGLE_score)) |> select(Factor , max_value)
     
@@ -91,9 +109,13 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
+# Load the TF_names_v_1.01.txt containing the name of all the Transcritpion factor for Homo Sapiens (use ~/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt if you want to use Mus Musculus transcription factors)
 tfs_name = read_delim("./data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
+# Tranform all the Transcription factors to uppercase
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
+
+# Filter out all the chromatin modifier to retain only the Transcritpion Factors
 real_tfs  <- c()
 for (x in rownames(final_homer_tfs)){
     if (x %in% tfs_name[['X1']]){
@@ -101,6 +123,8 @@ for (x in rownames(final_homer_tfs)){
     }
 }
 final_homer_tfs_only_tfs <- final_homer_tfs[rownames(final_homer_tfs) %in% real_tfs,]
+
+# Selecting only the top 10 Trascription Factors for each community according the Giggle Score
 saved_tfs = c()
 for (column_name in colnames(final_homer_tfs_only_tfs)) {
     final_homer_tfs_dropped  <- final_homer_tfs_only_tfs[!is.na(final_homer_tfs_only_tfs[column_name]), column_name, drop = FALSE]  
@@ -110,6 +134,7 @@ for (column_name in colnames(final_homer_tfs_only_tfs)) {
 }
 saved_tfs <- unique(saved_tfs)
 
+# Create a Datfarme for further Transcription Factor row clustering
 cluster_map <- final_homer_tfs_only_tfs[saved_tfs,]
 cluster_map[is.na(cluster_map)] <- 0
 r.cluster = hclust(stats::dist(cluster_map, method = "euclidean"), method="ward.D2")
@@ -118,6 +143,7 @@ final_homer_scatterplot <- final_homer_tfs_only_tfs[saved_tfs,]|> rownames_to_co
 final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor, levels = r.cluster$labels[r.cluster$order])
 final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
 
+# Plot Transcription Factors Giggle Score for each community. Uncomment and insert a path inside the ggsave function for saving the plot 
 ggplot(data = final_homer_scatterplot , aes(x = Community, y = Factor ) ) +
   geom_point( aes( size = ComboScore) ,  shape = 21  , stroke = 0.6  , color = 'black') +
   geom_point( aes( size = ComboScore) ,  shape = 21  , fill = "black" , stroke = 0.6 , alpha= 0.4 , color = 'black') +
@@ -126,6 +152,6 @@ ggplot(data = final_homer_scatterplot , aes(x = Community, y = Factor ) ) +
   theme(legend.position="top" , legend.text = element_text(size=10) ) +
   scale_x_discrete( limits = unique(final_homer_scatterplot$Community) )
 
-#ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/TFs_R_withlabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
+#ggsave("", width = 7, height = 8, units = "in", dpi = 300)
 
 ```

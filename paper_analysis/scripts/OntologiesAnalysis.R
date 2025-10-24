@@ -110,7 +110,7 @@ GREAT_target_genes  <- function (file_list , ontologies_list) {
 
 # THP-1
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
-list_files_communities = list.files(path = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/beds/" , full.names = TRUE)
+list_files_communities = list.files(path = "~/T-ChroNet/paper_analysis/data/THP1/communities/" , full.names = TRUE)
 
 results  <- GREAT_target_genes(list_files_communities , ontologies)
 
@@ -165,13 +165,13 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
   #       axis.text.y=element_blank(),
   #       legend.position="none")
-#ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/HALLMARKS_withLabelswithLegends.png", width = 12, height = 5, units = "in", dpi = 300)
+#ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/HALLMARKS_withLabelswithLegends.png", width = 12, height = 5, units = "in", dpi = 300)
 
 
 # LIVER DEVELOPMENT
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
 
-list_files_communities = list.files(path = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/beds/" , full.names = TRUE)
+list_files_communities = list.files(path = "~/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , full.names = TRUE)
 final_target_gens = list()
 
 for (comm_num in  seq_along(list_files_communities)){
@@ -232,13 +232,12 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
         axis.text.y=element_blank(),
         legend.position="none")
-#ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/HALLMARKS_withLabelswithLegends.png", width = 12, height = 5, units = "in", dpi = 300)
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/HALLMARKS_NoLabelsNoLegends.png", width = 7, height = 5, units = "in", dpi = 300)
+#ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/HALLMARKS_withLabelswithLegends.png", width = 9, height = 5, units = "in", dpi = 300)
 
 # B-ALL
 ontologies <- c("GO Molecular Function","GO Biological Process","GO Cellular Component","Mouse Phenotype" ,"Mouse Phenotype Single KO","Human Phenotype")
 
-list_files_communities = list.files(path = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/" , full.names = TRUE)
+list_files_communities = list.files(path = "~/T-ChroNet/paper_analysis/data/BCP-ALL/communities/" , full.names = TRUE)
 final_target_gens = list()
 for (comm_num in  seq_along(list_files_communities)){
   file_path = list_files_communities[comm_num]
@@ -302,4 +301,4 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
         axis.text.y=element_blank(),
         legend.position="none")
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/msigdb_3CA.png", width = 12, height = 5, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/msigdb_3CA.png", width = 12, height = 5, units = "in", dpi = 300)

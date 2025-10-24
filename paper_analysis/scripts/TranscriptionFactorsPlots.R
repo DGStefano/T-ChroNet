@@ -2,10 +2,10 @@ library(tidyverse)
 library(ComplexHeatmap)
 
 # THP-1
-folders_to_compare = list.files('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/cistrom/')
+folders_to_compare = list.files('~/T-ChroNet/paper_analysis/data/THP1/cistrom/')
 
 for (community in folders_to_compare){ 
-    to_read = paste('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/cistrom/' ,community , sep = "")
+    to_read = paste('~/T-ChroNet/paper_analysis/data/THP1/cistrom/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
@@ -23,7 +23,7 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
-tfs_name = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
+tfs_name = read_delim("~/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
 real_tfs  <- c()
@@ -61,15 +61,15 @@ scale_x_discrete( limits = unique(final_homer_scatterplot$Community) )
 # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
 #       axis.text.y=element_blank(),
 #       legend.position="none")
-ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/TFs_R_withlabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/TFs_R_Nolabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
+ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/TFs_R_withlabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results//TFs_R_Nolabels_THP1.png", width = 7, height = 8, units = "in", dpi = 300)
 
 
 # LIVER DEVELOPMENT
-folders_to_compare = list.files('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/cistromdb/')
+folders_to_compare = list.files('~/T-ChroNet/paper_analysis/data/LiverDevelopment/cistromdb/')
 
 for (community in folders_to_compare){ 
-    to_read = paste('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/cistromdb/' ,community , sep = "")
+    to_read = paste('~/T-ChroNet/paper_analysis/data/LiverDevelopment/cistromdb/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
@@ -87,7 +87,7 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
-tfs_name = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/mouse_tfs.txt" , delim = "\t")
+tfs_name = read_delim("~/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" , delim = "\t")
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
 real_tfs  <- c()
@@ -123,16 +123,16 @@ ylab("")+
   # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
   #       axis.text.y=element_blank(),
   #       legend.position="none")
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/TFs_R_withlabels_liver.png", width = 7, height = 8, units = "in", dpi = 300)
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/TFs_R_Nolabels_liver.png", width = 7, height = 5, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/TFs_R_withlabels_liver.png", width = 7, height = 8, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/TFs_R_Nolabels_liver.png", width = 7, height = 5, units = "in", dpi = 300)
 
 
 
 # B-ALL
-folders_to_compare = list.files('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/cistromdf_broad/')
+folders_to_compare = list.files('~/T-ChroNet/paper_analysis/data/BCP-ALL/cistromdf_broad/')
 
 for (community in folders_to_compare){ 
-    to_read = paste('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/cistromdf_broad/' ,community , sep = "")
+    to_read = paste('~/T-ChroNet/paper_analysis/data/BCP-ALL/cistromdf_broad/' ,community , sep = "")
 
     homer_tfs = read_delim(to_read , delim = ",")
 
@@ -150,7 +150,7 @@ for (community in folders_to_compare){
 }
 final_homer_tfs <- final_homer_tfs |> column_to_rownames("Factor")
 
-tfs_name = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
+tfs_name = read_delim("~/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" , delim = "\t" , col_names = F)
 tfs_name <- tfs_name %>%
   mutate(across(where(is.character), toupper))
 
@@ -190,5 +190,5 @@ ggplot(data = final_homer_scatterplot , aes(x = Community, y = Factor ) ) +
     # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
     #       axis.text.y=element_blank(),
     #       legend.position="none")
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/TFs_R_withlabels_BCPALL.png", width = 7, height = 8, units = "in", dpi = 300)
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/communities/res_0_8/TFs_R_Nolabels_liver.png", width = 7, height = 5, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/TFs_R_withlabels_BCPALL.png", width = 7, height = 8, units = "in", dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/TFs_R_Nolabels_liver.png", width = 7, height = 5, units = "in", dpi = 300)

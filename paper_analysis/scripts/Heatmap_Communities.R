@@ -4,10 +4,10 @@ library(ggplot2)
 library(reshape2)
 
 #THP-1
-logCPMs_corrected_filtered = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/out_mutlicov_matrix/lognorm_edgeR_limma_countsInCellReport_TheiCounts_All.tsv" , delim = "\t") |> column_to_rownames('peaks')
+logCPMs_corrected_filtered = read_delim("~/T-ChroNet/paper_analysis/data/THP1/lognorm_edgeR_limma_countsInCellReport_TheiCounts_NoStatic_mean.tsv" , delim = "\t") |> column_to_rownames('peaks')
 
-for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/beds/")) {
-  comm_file_name = paste("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/communities_k27/res_1_5/beds/" , file_name , sep = "")
+for (file_name in list.files("~/T-ChroNet/paper_analysis/data/THP1/communities/")) {
+  comm_file_name = paste("~/T-ChroNet/paper_analysis/data/THP1/communities/" , file_name , sep = "")
   comm_file = read_delim(comm_file_name , col_names = c('chromosome','start','end')) |>
     unite('peaks', c('chromosome', 'start', 'end'), sep = "-") 
 
@@ -42,17 +42,17 @@ HM = ComplexHeatmap::Heatmap(
   # show_row_dend = TRUE,
   
 )
-out_dir = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/pictures/heatmaps_2_script_final/"
+out_dir = "~/T-ChroNet/paper_analysis/data/THP1/results/"
 png(paste0(out_dir ,file_name , '.png' , sep ="" ) , height = 5 , width = 9 , units = 'in' , res = 300)
 ComplexHeatmap::draw(HM)
 dev.off()
 }
 
 # LIVER DEVELOPMENT
-logCPMs_corrected_filtered = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/network_files/normalized_samplemean_multicov_all_sites_all_timepoint.tsv" , delim = "\t") |> column_to_rownames('peaks')
+logCPMs_corrected_filtered = read_delim("~/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv" , delim = "\t") |> column_to_rownames('peaks')
 
-for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/")) {
-  comm_file_name = paste("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/" , file_name , sep = "")
+for (file_name in list.files("~/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/")) {
+  comm_file_name = paste("~/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , file_name , sep = "")
   comm_file = read_delim(comm_file_name , col_names = c('chromosome','start','end')) |>
     unite('peaks', c('chromosome', 'start', 'end'), sep = "-") 
 
@@ -87,17 +87,17 @@ for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/
     # show_row_dend = TRUE,
     
   )
-  out_dir = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/pictures/heatmaps_2_script_final/"
+  out_dir = "~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/heatmaps_2_script_final/"
   png(paste0(out_dir ,file_name , '.png' , sep ="" ) , height = 5 , width = 9 , units = 'in' , res = 300)
   ComplexHeatmap::draw(HM)
   dev.off()
 }
 
 # BCP-ALL
-logCPMs_corrected_filtered = read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t") |> column_to_rownames('peaks')
+logCPMs_corrected_filtered = read_delim("~/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t") |> column_to_rownames('peaks')
 
-for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/")) {
-  comm_file_name = paste("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/" , file_name , sep = "")
+for (file_name in list.files("~/T-ChroNet/paper_analysis/data/BCP-ALL/communities/")) {
+  comm_file_name = paste("~/T-ChroNet/paper_analysis/data/BCP-ALL/communities/" , file_name , sep = "")
   comm_file = read_delim(comm_file_name , col_names = c('chromosome','start','end')) |>
     unite('peaks', c('chromosome', 'start', 'end'), sep = "-") 
 
@@ -137,7 +137,7 @@ for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/
     # show_row_dend = TRUE,
     
   )
-  out_dir = "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/heatmaps_2_script_final/"
+  out_dir = "T-ChroNet/paper_analysis/data/BCP-ALL/communities/results/heatmaps_2_script_final/"
   png(paste0(out_dir ,file_name , '.png' , sep ="" ) , height = 5 , width = 9 , units = 'in' , res = 300)
   ComplexHeatmap::draw(HM)
   dev.off()
@@ -149,7 +149,7 @@ patient_groups <- c(Healthy = 6, Primary = 11, Remission = 8, Relapse = 8)
 group_order <- c("Healthy", "Primary", "Remission", "Relapse")
 
 # Load data
-data_matrix_df <- read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t") |> column_to_rownames('peaks')
+data_matrix_df <- read_delim("~/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t") |> column_to_rownames('peaks')
 
 zscored_df <- t(scale(t(data_matrix_df)))
 
@@ -167,8 +167,8 @@ for (group_name in names(patient_groups)) {
 }
 
 # Loop over communities
-for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/")) {
-  comm_file_name = paste("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/beds/" , file_name , sep = "")
+for (file_name in list.files("~/T-ChroNet/paper_analysis/data/BCP-ALL/communities/")) {
+  comm_file_name = paste("~/T-ChroNet/paper_analysis/data/BCP-ALL/communities/" , file_name , sep = "")
   print(comm_file_name)
   comm_file = read_delim(comm_file_name , col_names = c('chromosome','start','end')) |>
     unite('peaks', c('chromosome', 'start', 'end'), sep = "-") 
@@ -191,6 +191,6 @@ for (file_name in list.files("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/
     theme_classic()
 
   # Save
-  path_to_save <- paste0("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/res_0_9/communities_trends_median_final/", file_name,".png")
+  path_to_save <- paste0("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/", file_name,".png")
   ggsave(path_to_save, plot = p, width = 9, height = 5, dpi = 300)
 }

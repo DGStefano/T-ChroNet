@@ -57,13 +57,10 @@ filter_genes <- function(data) {
 
 # THP1 NORMALIZATION
 
-counts <- read.delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/out_mutlicov_matrix/Multicov_AllAnalyzedPeaksWithAnnotations_NOSTATIC.tsv", sep = "\t") |> 
+counts <- read.delim("~/T-ChroNet/paper_analysis/data/THP1/Multicov_AllAnalyzedPeaksWithAnnotations_NOSTATIC.tsv", sep = "\t") |> 
   unite('peaks', c('chromosome', 'start', 'end'), sep = "-")
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> select(-'_') |> column_to_rownames('peaks')
 
-counts <- read.delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/their_regions_counts.bed" , #
-                     sep = "\t" ) |> unite('peaks' , c('chr','start','end') , sep ="-")
-counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> select(-'_') |> column_to_rownames('peaks')
 sample.annot = c('t0','t0','t30min','t30min','t60min','t60min','t90min','t90min','t120min','t120min','t240min' ,'t240min' , 't360min', 't360min', 't1440min', 't1440min') 
 
 replicates <- rep(c('1','2') , times = 8)
@@ -95,7 +92,7 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/pictures/cell_report/batch_correction/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 # correct for the batch which here is the "kit"
 batch <- factor(y$samples$replicated)
@@ -119,7 +116,7 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/pictures/cell_report/batch_correction/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 logCPMs_corrected_filtered <- logCPMs_corrected#[rownames(counts),]
 
@@ -127,7 +124,7 @@ cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearm
 
 
 # Plot the heatmap
-# png("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/pictures/cell_report/batch_correction/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , res = 300)
+# png("~/T-ChroNet/paper_analysis/data/THP1/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , res = 300)
 pheatmap(cor_matrix, 
          display_numbers = TRUE, # Show correlation values on the heatmap
          clustering_method = "complete", # Clustering method
@@ -141,28 +138,24 @@ data.frame("rowMean" = row_mean , "rowVar" = row_var ) |>
   ggplot(aes(x = rowMean , y = rowVar))+
   geom_point() +
   geom_hline(yintercept = 1.0)
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/pictures/cell_report/batch_correction/Means_vs_Variance_TH1.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/Means_vs_Variance_TH1.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 dim(logCPMs_corrected_filtered)
 
-# as.data.frame(logCPMs_corrected_filtered) |> rownames_to_column('peaks') |> write_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/CellReport/out_mutlicov_matrix/lognorm_edgeR_limma_countsInCellReport_TheiCounts_All.tsv" , delim = "\t" )
+# as.data.frame(logCPMs_corrected_filtered) |> rownames_to_column('peaks') |> write_delim("~/T-ChroNet/paper_analysis/data/THP1/results/lognorm_edgeR_limma_countsInCellReport_TheiCounts_All.tsv" , delim = "\t" )
 
 # LIVER DEVELOPMENT
 #### STARDARD EDGER AND LIMMA ANALYSIS
-# counts <- read.delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/heartdevel/multicov_mouse_accessibility_allasterlist.txt" , #
-#                      sep = "\t" ) |> unite('peaks' , c('chromosome','start','end') , sep ="-")
-counts <- read.delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/multicov_all_sites_all_timepoint.tsv" , #
+
+counts <- read.delim("~/T-ChroNet/paper_analysis/data/LiverDevelopment/multicov_all_sites_all_timepoint.tsv" , #
                      sep = "\t" ) |> unite('peaks' , c('chromosome','start','end') , sep ="-")                     
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> dplyr::select(-'_') |> column_to_rownames('peaks')
 
 
-#removing rep 2 tp 13 due to high discrepacy with rep 1
-# counts <- counts |> dplyr::select(-musmusculus_heart_13_5d_rep2 , -musmusculus_heart_13_5d_rep1)
 
 sample.annot = c('t11_5','t11_5' , 't12_5','t12_5','t13_5','t13_5' , 't14_5','t14_5','t15_5','t15_5' , 't16_5','t16_5')  #
 
 replicates <- rep(c('1','2') , times = 6)
-# replicates <- rep('1','2','1','2','1','1','2','1','2','1','2' )
 
 # Make a DGEList and add metadata
 y <- DGEList(counts = counts)
@@ -191,7 +184,7 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/pictures/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 # correct for the batch which here is the "kit"
 batch <- factor(y$samples$replicated)
@@ -216,11 +209,10 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/pictures/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 
-#logCPMs_corrected_filtered$musmusculus_heart_13_5d_rep2  <- logCPMs_corrected_filtered$musmusculus_heart_13_5d_rep1
 
 cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
@@ -230,7 +222,7 @@ ph <- pheatmap(cor_matrix,
          display_numbers = TRUE, # Show correlation values on the heatmap
          clustering_method = "complete", # Clustering method
          color = colorRampPalette(c("blue", "white", "red"))(100)) # Color gradient
-#png("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/pictures/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
+#png("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
 ph
 #dev.off()
 
@@ -259,14 +251,12 @@ result <- data.frame(
 
 colnames(result)  <- c('t11_5', 't12_5','t13_5' , 't14_5','t15_5', 't16_5') 
 
-# as.data.frame(result) |> rownames_to_column("peaks") |> write_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/network_files/normalized_samplemean_multicov_all_sites_all_timepoint.tsv" , delim = "\t")
+# as.data.frame(result) |> rownames_to_column("peaks") |> write_delim("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/normalized_samplemean_multicov_all_sites_all_timepoint.tsv" , delim = "\t")
 
 # B-ALL
 #### STARDARD EDGER AND LIMMA ANALYSIS
-# counts <- read.delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/multicovallsampe.bed" , #
-#                      sep = "\t" )
 
-counts <- read_delim("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/preliminary_analysis/results_atac/bwa/merged_library/macs2/broad_peak/consensus/consensus_peaks.mLb.clN.featureCounts.txt" , #
+counts <- read_delim("~/T-ChroNet/paper_analysis/data/BCP-ALL/consensus_peaks.mLb.clN.featureCounts.txt" , #
                      delim = "\t" , comment = "#") |> select(-Geneid , -Strand , -Length)  |> unite('peaks' , c('Chr','Start','End') , sep ="-")
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> dplyr::select(-'_') |> column_to_rownames('peaks')
 counts <- counts |> select('patient_6_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_9_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_4_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_7_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_5_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_8_Healthy_ATACseq_REP1.mLb.clN.sorted.bam',
@@ -314,7 +304,7 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2,  color=timepoint)) + #,
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 # correct for the batch which here is the "kit"
 #batch <- factor(y$samples$replicated)
@@ -339,11 +329,10 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2,  color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 
-#logCPMs_corrected_filtered$musmusculus_heart_13_5d_rep2  <- logCPMs_corrected_filtered$musmusculus_heart_13_5d_rep1
 
 cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
@@ -353,7 +342,7 @@ ph  <- pheatmap(cor_matrix,
          #display_numbers = TRUE, # Show correlation values on the heatmap
          clustering_method = "complete", # Clustering method
          color = colorRampPalette(c("blue", "white", "red"))(100)) # Color gradient
-# png("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
+# png("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
 ph
 # dev.off()
 
@@ -371,13 +360,13 @@ data.frame("rowMean" = row_mean , "rowVar" = row_var ) |>
   geom_point() +
   geom_hline(yintercept = 1.0) +
   theme_classic()
-# ggsave("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/communities_broad/Means_vs_Variance_BALL_nostrangeCHR.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/Means_vs_Variance_BALL_nostrangeCHR.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 
 cor_matrix <- cor(logCPMs_corrected_filtered_noextra , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
 # Plot the heatmap
-# png("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/pictures/cell_report/batch_correction/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , res = 300)
+# png("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , res = 300)
 out  <- pheatmap(cor_matrix, 
          #display_numbers = TRUE, # Show correlation values on the heatmap
          clustering_method = "complete", # Clustering method
@@ -385,4 +374,4 @@ out  <- pheatmap(cor_matrix,
 # dev.off()
 
 logCPMs_var  <- logCPMs_corrected_filtered_noextra[row_var > 1.0,] |> as.data.frame()
-# logCPMs_var |> rownames_to_column('peaks')  |> write_delim( "/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t")
+# logCPMs_var |> rownames_to_column('peaks')  |> write_delim( "~/T-ChroNet/paper_analysis/data/BCP-ALL/results/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv" , delim = "\t")

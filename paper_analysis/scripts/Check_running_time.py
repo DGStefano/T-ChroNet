@@ -94,10 +94,10 @@ if __name__ == '__main__':
             data_matrix = (data_matrix - data_matrix.mean(axis=1, keepdims=True)) / data_matrix.std(axis=1, keepdims=True)
 
             # Save binary numpy Matrix
-        #   np.save('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/ClusteredPatients_Ball_Multicov', data_matrix)    
+        #   np.save([Path to save Matrix], data_matrix)    
 
             # load samples as memory-map
-        #    X = np.load('/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/data/BALL/ClusteredPatients_Ball_Multicov.npy', mmap_mode='r')
+        #    X = np.load([Path to save Matrix].npy, mmap_mode='r')
 
             # Store the nodes names 
             v = pd.DataFrame({'index': range(data_matrix.shape[0]), 'row_name': row_names})
@@ -140,4 +140,4 @@ if __name__ == '__main__':
             time_out = time_out_part
         else :
             time_out = pd.concat([time_out, time_out_part], axis=0)
-    time_out.to_csv("/mnt/nas-safu/analysis/PhDsdigiove/method_coAcces/running_time.tsv" , sep="\t" , index=True)
+    time_out.to_csv([Path to save Matrix Running time results] , sep="\t" , index=True)

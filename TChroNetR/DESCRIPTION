@@ -1,0 +1,24 @@
+Package: TChroNetR
+Title: T-ChroNet Analysis Toolkit
+Version: 0.0.1
+Authors@R: 
+    person("Stefano", "Di Giovenale", , "stefano.digiovenale@ifo.it", role = c("aut", "cre"))
+Description: This package allows the network analysis of Chromatin Networks.
+Depends: R(>= 4.2)
+Imports: 
+    dplyr (>= 1.1.4),
+    fossil (>= 0.4.0),
+    GenomicRanges (>= 1.58.0),
+    ggplot2 (>= 4.0.0),
+    ggsankey (>= 0.0.99999),
+    grid (>= 4.4.2),
+    igraph (>= 2.0.3),
+    leidenAlg (>= 1.1.5),
+    liftOver (>= 1.30.0),
+    rhdf5 (>= 2.50.2),
+    rlang (>= 1.1.6),
+    rtracklayer (>= 1.66.0)
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

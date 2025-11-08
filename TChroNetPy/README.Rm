@@ -1,0 +1,9 @@
+# TChroNet
+
+TChroNet constructs correlation-based networks from feature matrices using Spearman correlations.
+It saves separate HDF5 edge files for each correlation range (e.g., 0.4–0.5, 0.5–0.6, etc.).
+
+## Installation
+
+```bash
+pip install git+https://github.com/<yourusername>/TChroNet.git

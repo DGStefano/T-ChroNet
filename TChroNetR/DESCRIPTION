@@ -14,7 +14,7 @@ Imports:
     grid (>= 4.3.0),
     igraph (>= 2.0.3),
     leidenAlg (>= 1.1.5),
-    liftOver (>= 1.30.0),
+    liftOver (>= 1.26.0),
     rhdf5 (>= 2.50.2),
     rlang (>= 1.1.6),
     rtracklayer (>= 1.66.0)

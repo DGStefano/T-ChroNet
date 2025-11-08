@@ -17,7 +17,7 @@ Imports:
     liftOver (>= 1.26.0),
     rhdf5 (>= 2.46.0),
     rlang (>= 1.1.6),
-    rtracklayer (>= 1.66.0)
+    rtracklayer (>= 1.62.0)
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

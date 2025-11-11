@@ -8,5 +8,6 @@
     if (!requireNamespace(pkg, quietly = TRUE)) {
       stop(paste("Package", pkg, "is required but not installed."))
     }
+    library(pkg, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
   }))
 }

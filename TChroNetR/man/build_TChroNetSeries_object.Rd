@@ -14,7 +14,7 @@ build_TChroNetSeries_object(
 \arguments{
 \item{edge_files}{List of hd5 files to build the network}
 
-\item{method}{Method for community investigation (c("Leiden", "Louvain"))}
+\item{method}{Method for community investigation NULL if you want only to load the graph and check metrics, "Leiden" if you want to run community detection. default = NULL}
 
 \item{resolutions_list}{List of resolutions to be investigated}
 

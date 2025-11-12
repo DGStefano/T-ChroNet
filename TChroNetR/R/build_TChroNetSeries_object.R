@@ -11,7 +11,7 @@
 #' @importFrom tidyr pivot_longer
 #' 
 #' @param edge_files List of hd5 files to build the network
-#' @param method Method for community investigation (c("Leiden", "Louvain"))
+#' @param method Method for community investigation NULL if you want only to load the graph and check metrics, "Leiden" if you want to run community detection. default = NULL
 #' @param resolutions_list List of resolutions to be investigated 
 #' @param seed Set a seed for computational reproducibility
 #' @return A TChroNetSeries object
@@ -20,7 +20,7 @@ build_TChroNetSeries_object <- function(edge_files,
                                  method = NULL,
                                  resolutions_list = seq(0.1, 0.9, 0.1),
                                  seed = 123) {
-  method <- match.arg(method)
+  # method <- match.arg(method)
   set.seed(seed)
 
   # --- Validate inputs ---

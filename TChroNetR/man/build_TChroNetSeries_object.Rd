@@ -6,7 +6,7 @@
 \usage{
 build_TChroNetSeries_object(
   edge_files,
-  method = c("Leiden", "Louvain"),
+  method = NULL,
   resolutions_list = seq(0.1, 0.9, 0.1),
   seed = 123
 )

@@ -17,7 +17,7 @@
 #' @return A TChroNetSeries object
 #' @export
 build_TChroNetSeries_object <- function(edge_files,
-                                 method = c("Leiden", "Louvain"),
+                                 method = NULL,
                                  resolutions_list = seq(0.1, 0.9, 0.1),
                                  seed = 123) {
   method <- match.arg(method)

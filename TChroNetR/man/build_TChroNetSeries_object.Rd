@@ -6,17 +6,20 @@
 \usage{
 build_TChroNetSeries_object(
   edge_files,
-  method = NULL,
+  method = c("Leiden", "Louvain"),
   resolutions_list = seq(0.1, 0.9, 0.1),
+  run_cd = FALSE,
   seed = 123
 )
 }
 \arguments{
 \item{edge_files}{List of hd5 files to build the network}
 
-\item{method}{Method for community investigation NULL if you want only to load the graph and check metrics, "Leiden" if you want to run community detection. default = NULL}
+\item{method}{Method for community investigation (c("Leiden", "Louvain"))}
 
 \item{resolutions_list}{List of resolutions to be investigated}
+
+\item{run_cd}{Boolean value for running community detection evaluation. default = FALSE}
 
 \item{seed}{Set a seed for computational reproducibility}
 }

@@ -24,7 +24,7 @@ This vignette demonstrates how to use TChroNetR to build threshold-based chromat
 # 1. Building a TChroNet Series Object
 A TChroNet Series object contains network metrics computed across multiple thresholds. By setting `run_cd = TRUE`, community detection (Leiden algorithm) is performed automatically for each resolution specified in `resolutions_list`.
 
-```{r setup}
+```{r}
 # List all graph edge files (thresholded networks)
 edge_files <- list.files("~/T-ChroNet/toy_data/results/th/", full.names = TRUE)
 
@@ -44,7 +44,7 @@ obj_series <- build_TChroNetSeries_object(
 # 2. Selecting the Best Threshold
 
 Determine the optimal threshold using the `find_best_th` function. By default, selection is based on the relative largest component. If transitivity was computed, it can also be used as a criterion (note: may slow down series building).
-```{r setup}
+```{r}
 # Automatically determine the best threshold parameter
 obj_series <- find_best_th(obj_series)
 ```
@@ -52,26 +52,26 @@ obj_series <- find_best_th(obj_series)
 
 Explore community structures across thresholds and resolutions:
 ## Random index map among neighbors
-```{r setup}
+```{r}
 plot_randindex_map(obj_series)
 ```
 ## Sankey plot at a fixed threshold
-```{r setup}
+```{r}
 plot_community_sankey(obj_series, threshold = 0.8)
 ```
 ## Sankey plot at a fixed resolution
-```{r setup}
+```{r}
 plot_sankey_fixed_resolution(obj_series, resolution = 0.8)
 ```
 # 4. Building a TChroNet Object
 
 Convert the series object into a TChroNet Object for downstream analysis:
-```{r setup}
+```{r}
 # Build the final TChroNet object
 obj <- build_TChroNetNetwork_from_series(obj_series, threshold = 0.8)
 ```
 Or, if the desired threshold is already known, build directly:
-```{r setup}
+```{r}
 # Directly build TChroNet object without scanning thresholds
 obj <- make_TChroNetNetwork_obj(
   edge_files,
@@ -82,27 +82,27 @@ obj <- make_TChroNetNetwork_obj(
 # 5. Community Detection Across Resolutions
 
 If the TChroNet object lacks community detection:
-```{r setup}
+```{r}
 # Run community detection at multiple resolutions
 obj <- compute_membership_nodes(obj, resolutions = seq(0.5, 1.5, 0.1))
 ```
 Select the best resolution:
 ## Modularity plot
-```{r setup}
+```{r}
 plot_modularity(obj)
 ```
 ## Sankey plot to track community stability
-```{r setup}
+```{r}
 plot_community_sankey(obj)
 ```
 ## Automatically find the best resolution
-```{r setup}
+```{r}
 obj <- find_best_resolution(obj)
 ```
 # 6. Visualizing Community Trends
 
 Plot trends of communities:
-```{r setup}
+```{r}
 # Plot trends as lines 
 plot_line_trends(obj)
 
@@ -113,7 +113,7 @@ plot_trends_zscore(obj)
 # 7. Genomic Annotation
 
 Annotate genomic regions. If network coordinates are in hg19, use liftOver to convert to hg38:
-```{r setup}
+```{r}
 # Lift hg19 to hg38 if required
 obj <- lift_network_coordinates(obj, chain_path = "~/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
 
@@ -121,14 +121,14 @@ obj <- lift_network_coordinates(obj, chain_path = "~/T-ChroNet/toy_data/data/hg1
 obj <- annotate_regions_from_bed(obj, bed_path =  "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed")
 ```
 # Visualize genomic annotations
-```{r setup}
+```{r}
 genomic_position_stackbar(obj)
 ```
 
 # 8. Target Gene Identification
 
 Identify potential target genes for each community using rGREAT:
-```{r setup}
+```{r}
 # Run GREAT functional analysis on the communities
 obj <- run_GREAT_analysis(obj, genome = 'hg19')
 ```

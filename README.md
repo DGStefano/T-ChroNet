@@ -27,7 +27,7 @@ This short tutorial explains how to run **T-ChroNet** using the included **toy d
 1. Run tchronet tool to evalute correlation parameters among all the peaks: 
 ```
 conda activate T-CHRONET
-tchronet -m ~/T-ChroNet/toy_data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --step 0.1 --pval 0.1
+tchronet -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --step 0.1 --pval 0.1
 ```
 2. Use TChronetR for netowrk analysis
 The full TChronetR vignette is avaliable [here](./TChroNetR/vignettes/TchronetR_Vignette.Rmd)

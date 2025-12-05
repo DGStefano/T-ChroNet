@@ -14,8 +14,8 @@ knitr::opts_chunk$set(
 )
 
 
-```{r setup}
-library(TChroNetR)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
 ```
 # Introduction
 
@@ -23,7 +23,9 @@ This vignette demonstrates how to use TChroNetR to build threshold-based chromat
 
 # 1. Building a TChroNet Series Object
 A TChroNet Series object contains network metrics computed across multiple thresholds. By setting `run_cd = TRUE`, community detection (Leiden algorithm) is performed automatically for each resolution specified in `resolutions_list`.
-
+```{r}
+library(TChroNetR)
+```
 ```{r}
 # List all graph edge files (thresholded networks)
 edge_files <- list.files("~/T-ChroNet/toy_data/results/th/", full.names = TRUE)

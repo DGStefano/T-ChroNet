@@ -9,7 +9,7 @@ compute_membership_nodes(
   resolutions = 1,
   method = c("Leiden", "Louvain"),
   niter = 2,
-  seed = 123
+  seed = 1234
 )
 }
 \arguments{

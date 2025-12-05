@@ -4,12 +4,14 @@
 \alias{make_TChroNetNetwork_obj}
 \title{Create a NetworkAnalysis object from an HDF5 network file}
 \usage{
-make_TChroNetNetwork_obj(network_path, matrix_path)
+make_TChroNetNetwork_obj(edge_files, matrix_path, threshold = 0)
 }
 \arguments{
-\item{network_path}{Path to the HDF5 file}
+\item{edge_files}{List of parquet files to build the network}
 
 \item{matrix_path}{Path to the tsv normalized counts matrix}
+
+\item{threshold}{Desired threshold already selected. If specified, the network is built considering the threshold as the lowest correlation. deafulat = 0}
 }
 \value{
 An object of class NetworkAnalysis

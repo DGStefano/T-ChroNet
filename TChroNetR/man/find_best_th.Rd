@@ -4,7 +4,7 @@
 \alias{find_best_th}
 \title{Find the best threshold value according to the transitivity values at increased thresholds}
 \usage{
-find_best_th(object)
+find_best_th(object, parameter = "relative_lcc")
 }
 \arguments{
 \item{object}{TCrhoNetSeries object}

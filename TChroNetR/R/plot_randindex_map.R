@@ -5,41 +5,41 @@
 #' @import grid
 #' 
 #' @param object TCrhoNetSeries object
-#' @param threshold Set the correlation threshold
 #' @param color_limits List of min and max limits for color map (default = c(0.0,1))
 #' @return A ggplot2 object
 #' @export
 #' 
-plot_randindex_map <- function(object, threshold, output_path = NULL , color_limits = c(0.0, 1)) {
+plot_randindex_map <- function(object, output_path = NULL , color_limits = c(0.0, 1)) {
   if (!inherits(object, "TCrhoNetSeries")) {
     stop("Input must be a 'TCrhoNetSeries' object.")
   }
-  if (!threshold %in% names(object@communities)) {
-    stop("Threshold not found in object@communities.")
-  }
+  # if (!threshold %in% names(object@communities)) {
+  #  stop("Threshold not found in object@communities.")
+  # }
 
   library(fossil)
   library(tidyverse)
   library(grid)
 
   # --- Extract cluster dataframe for this threshold ---
-  comm_df <- object@communities[[as.character(threshold)]]
+  # comm_df <- object@communities[[as.character(threshold)]]
 
   # Remove 'node' column if present
-  if ("node" %in% colnames(comm_df)) {
-    comm_df <- comm_df %>% tibble::column_to_rownames("node")
-  }
+  # if ("node" %in% colnames(comm_df)) {
+  #  comm_df <- comm_df %>% tibble::column_to_rownames("node")
+  # }
 
   # --- Prepare a Rand Index matrix structure ---
-  n_res <- ncol(comm_df)
-  RandIndex_matrix <- matrix(list(), nrow = n_res, ncol = n_res)
-  colnames(RandIndex_matrix) <- colnames(comm_df)
-  rownames(RandIndex_matrix) <- colnames(comm_df)
+  n_res <- ncol(object@communities[[1]][2:length(object@communities[[1]])])
+  n_th <- length(names(object@communities))
+  RandIndex_matrix <- matrix(list(), nrow = n_res, ncol = n_th)
+  colnames(RandIndex_matrix) <- names(object@communities)
+  rownames(RandIndex_matrix) <- colnames(object@communities[[1]][2:length(object@communities[[1]])])
 
   # --- Fill RandIndex_matrix with cluster assignment lists ---
   for (i in seq_len(n_res)) {
-    for (j in seq_len(n_res)) {
-      RandIndex_matrix[[i, j]] <- list(comm_df[, i])
+    for (j in seq_len(n_th)) {
+      RandIndex_matrix[[i, j]] <- list(object@communities[[names(object@communities)[j]]][,i+1])
     }
   }
 
@@ -103,7 +103,7 @@ plot_randindex_map <- function(object, threshold, output_path = NULL , color_lim
     theme_minimal(base_size = 14) +
     coord_equal() +
     labs(
-      title = paste("Adjusted Rand Index Map – Threshold", threshold),
+      title = paste("Adjusted Rand Index Map"),
       color = "Adj. Rand Index",
       x = "Resolution", y = "Resolution"
     )

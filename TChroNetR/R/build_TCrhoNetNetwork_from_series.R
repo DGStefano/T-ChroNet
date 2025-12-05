@@ -36,65 +36,22 @@ build_TCrhoNetNetwork_from_series <- function(series_object,
   if(missing(threshold) & ('best_rh' %in% slotNames(series_object) ) ){
     threshold = series_object@best_rh
   }
-  if(missing(matrix_path) ){
+  if(missing(matrix_path) & !('matrix' %in% slotNames(series_object)) ){
     stop("❌ You must specify the matrix path")
   }
-  # --- Extract thresholds available ---
-  all_thresholds <- as.numeric(names(series_object@communities))
-  all_thresholds <- sort(all_thresholds, decreasing = TRUE)
-  
-  if (!threshold %in% all_thresholds) {
-    stop(paste0("❌ Threshold ", threshold, " not found in the series. Available thresholds: ",
-                paste(all_thresholds, collapse = ", ")))
-  }
-  
-  # --- Find which edge files are below or equal to the chosen threshold ---
-  file_paths <- series_object@edge_files
-  file_thrs <- as.numeric(gsub(".*edges_(\\d+\\.\\d+)_.*\\.h5", "\\1", basename(file_paths)))
-  
-  valid_files <- file_paths[file_thrs >= threshold]
-  if (length(valid_files) == 0) stop("❌ No edge files found for this threshold or above.")
-  
-  valid_files <- valid_files[order(-file_thrs[file_thrs >= threshold])]
-  if (verbose) message("📂 Loading ", length(valid_files), " edge files up to threshold ", threshold, "...")
-  
-  # --- Load and combine edge data ---
-  cumulative_edges <- data.frame()
-  
-  for (f in valid_files) {
-    if (verbose) message("🔹 Reading ", basename(f))
-    
-    e <- tryCatch({
-      h5read(f, "/")
-    }, error = function(e) {
-      warning("⚠️ Could not read ", f, ": ", e$message)
-      return(NULL)
-    })
-    
-    if (is.null(e)) next
-    e_df <- as.data.frame(e)
-    if (ncol(e_df) < 3) next
-    colnames(e_df) <- c("id", "origin", "target", "corr")[1:ncol(e_df)]
-    
-    e_df <- e_df[, c("origin", "target", "corr")]
-    e_df <- e_df %>% mutate(corr = as.numeric(corr))
-    cumulative_edges <- bind_rows(cumulative_edges, e_df)
-  }
-  
-  # --- Remove duplicate edges ---
-  cumulative_edges <- cumulative_edges %>%
-    distinct(origin, target, .keep_all = TRUE)
-  
-  # --- Build graph ---
-  if (verbose) message("🧩 Building cumulative network graph...")
-  G <- graph_from_data_frame(cumulative_edges, directed = FALSE)
-  E(G)$weight <- cumulative_edges$corr
-  
   # --- Create TCrhoNetNetwork object ---
   if (verbose) message("🧠 Creating TCrhoNetNetwork object at threshold ", threshold, "...")
   
+  G <- delete_edges(series_object@graph, E(series_object@graph)[corr < threshold])
+  G <- delete_vertices(G, V(G)[degree(G) == 0])
+
   # --- Read the input matrix ---
-  matrix_G <- read.delim(matrix_path , sep ="\t" ,row.names=1)
+  if( 'matrix' %in% slotNames(series_object) ){
+    matrix_G <- series_object@matrix
+  }
+  else {
+    matrix_G <- read.delim(matrix_path , sep ="\t" ,row.names=1)
+  }
 
   # --- From the peaks in the counts matrix create a GRanges object ---
 
@@ -117,7 +74,7 @@ build_TCrhoNetNetwork_from_series <- function(series_object,
   if (verbose) {
     message(sprintf(
       "✅ Network built: %d nodes, %d edges, transitivity = %.3f",
-      vcount(G), ecount(G), series_object@metrics[sereis_network@metrics$threshold == threshold , 'transitivity']
+      vcount(G), ecount(G), series_object@metrics[series_object@metrics$threshold == threshold , 'transitivity']
     ))
   }
   

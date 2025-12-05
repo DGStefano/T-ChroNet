@@ -6,20 +6,26 @@
 \usage{
 build_TChroNetSeries_object(
   edge_files,
+  matrix_path,
   method = c("Leiden", "Louvain"),
   resolutions_list = seq(0.1, 0.9, 0.1),
   run_cd = FALSE,
+  transitivity = FALSE,
   seed = 123
 )
 }
 \arguments{
-\item{edge_files}{List of hd5 files to build the network}
+\item{edge_files}{List of parquet files to build the network}
+
+\item{matrix_path}{Path to the log2 normalized count matrix used in tchronetPy}
 
 \item{method}{Method for community investigation (c("Leiden", "Louvain"))}
 
 \item{resolutions_list}{List of resolutions to be investigated}
 
 \item{run_cd}{Boolean value for running community detection evaluation. default = FALSE}
+
+\item{transitivity}{Boolean value for evaluating transitivity value for each threshold. default = FALSE}
 
 \item{seed}{Set a seed for computational reproducibility}
 }

@@ -17,8 +17,8 @@
 #' @param seed Set a seed for computational reproducibility
 #' @return An object of class TChroNetNetwork
 #' @export
-compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden", "Louvain") , niter = 2 , seed = 123) {
-    
+compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden", "Louvain") , niter = 2 , seed = 1234) {
+
     method <- match.arg(method)
     
     if (!inherits(object@graph, "igraph")) {
@@ -56,20 +56,29 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
         }
         else {
           message(sprintf("Running Leiden clustering at resolution %.2f...", res))
+          
+          set.seed(seed)
+          # membership_nodes <- leidenAlg::find_partition(
+          #   object@graph,
+          #   resolution = res,
+          #   edge_weights = E(object@graph)$corr,
+          #   niter = niter
+          # )
+          nodes_membership <- leiden_find_partition( object@graph, 
+            partition_type = "RBConfigurationVertexPartition", 
+            initial_membership = NULL, 
+            edge_weights = E(object@graph)$corr, 
+            node_sizes = NULL, seed = 1234, 
+            resolution_parameter = res, 
+            num_iter = niter, 
+            verbose = F )
 
-          membership_nodes <- leidenAlg::find_partition(
-            object@graph,
-            resolution = res,
-            edge_weights = E(object@graph)$corr,
-            niter = niter
-          )
+          # membership_nodes <- membership_nodes+1
 
-          membership_nodes <- membership_nodes+1
-
-          if (length(membership_nodes) != vcount(object@graph)) {
+          if (length(nodes_membership$membership) != vcount(object@graph)) {
             stop(sprintf(
               "Leiden returned %d assignments but the graph has %d vertices.",
-              length(membership_nodes), vcount(object@graph)
+              length(nodes_membership$membership), vcount(object@graph)
             ))
           }
           # Build data frame for this resolution
@@ -78,7 +87,7 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
             node = V(object@graph)$name,
             stringsAsFactors = FALSE
           )
-          tmp_df[[cluster_col]] <- as.integer(membership_nodes)
+          tmp_df[[cluster_col]] <- as.integer(nodes_membership$membership)
           
           # Handle first run (clusters empty)
           if (nrow(object@clusters) == 0) {
@@ -93,7 +102,7 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
           }
           
           # Compute modularity
-          mod_val <- igraph::modularity(object@graph, membership = membership_nodes, weights = E(object@graph)$corr , directed = FALSE)
+          mod_val <- igraph::modularity(object@graph, membership = nodes_membership$membership, weights = E(object@graph)$corr , directed = FALSE)
           object@modularity <- rbind(object@modularity, data.frame(
             resolution = res,
             modularity = mod_val,

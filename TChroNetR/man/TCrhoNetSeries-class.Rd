@@ -12,6 +12,8 @@ TCrhoNetTCrhoNetSeriesNetwork class
 \describe{
 \item{\code{edge_files}}{List of edge hd5 files}
 
+\item{\code{matrix}}{Matrix of normalized log2 counts used for inferring the netowrk}
+
 \item{\code{thresholds}}{List of all the threshold stored}
 
 \item{\code{metrics}}{Data frame containing the metrics for each threshold}
@@ -29,5 +31,7 @@ TCrhoNetTCrhoNetSeriesNetwork class
 \item{\code{method}}{Method used for investigation of communities}
 
 \item{\code{best_th}}{Value of best threshold value}
+
+\item{\code{graph}}{Graph with all the threshold loaded}
 }}
 

@@ -19,7 +19,7 @@ setClass(
     matrix = 'data.frame',
     genomicRegions = "GRanges",
     lifted_coords = "data.frame",
-    clusters = "data.frame",
+    clusters = "ANY",
     modularity = "data.frame",
     metadata = "list",
     resolution = 'numeric',
@@ -31,6 +31,7 @@ setClass(
 #' TCrhoNetTCrhoNetSeriesNetwork class
 #'
 #' @slot edge_files List of edge hd5 files
+#' @slot matrix Matrix of normalized log2 counts used for inferring the netowrk
 #' @slot thresholds List of all the threshold stored
 #' @slot metrics Data frame containing the metrics for each threshold
 #' @slot communities List of communities found for each threshold
@@ -40,11 +41,14 @@ setClass(
 #' @slot components Data frame of detected components at increased resolution
 #' @slot method Method used for investigation of communities
 #' @slot best_th Value of best threshold value
+#' @slot graph Graph with all the threshold loaded
 #' @export
 #' 
 setClass(
   "TCrhoNetSeries",
   slots = list(
+    graph = "ANY",
+    matrix = 'data.frame',
     edge_files = "character",
     thresholds = "character",
     metrics = "data.frame",

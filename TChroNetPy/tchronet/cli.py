@@ -18,17 +18,22 @@ import numpy as np
 from multiprocessing import Pool
 import deepgraph as dg
 import shutil
+from scipy import stats
+# import h5py
 
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 class ei_args:
     """Container class for edge computation arguments."""
-    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir, in_th):
+    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir, in_th , in_significance_level ):
         self.graph = in_graph
         self.pos_array = in_pos_array
         self.data_matrix = in_matrix
         self.n_samples = in_n_samples
         self.tmp_dir = in_tmp_dir
-        self.th = in_th
+        self.th = in_th,
+        self.significance_level = in_significance_level
 
 
 def reset_dir(path):
@@ -37,12 +42,27 @@ def reset_dir(path):
         shutil.rmtree(path)
     os.makedirs(path, exist_ok=True)
 
+def corr_from_pvalue(p_value, n_samples):
+    dof = n_samples - 2
+    t_stat = stats.t.ppf(1 - p_value/2, df=dof)
+    r = round(np.sqrt(t_stat**2 / (t_stat**2 + dof)),1)
+    return r
 
-def spearman_corr(index_s, index_t, data_matrix, n_samples):
+def spearman_corr(index_s, index_t, data_matrix, n_samples,significance_level=0.05):
     """Compute pairwise Spearman correlations efficiently."""
     features_s = data_matrix[index_s].astype(np.float32)
     features_t = data_matrix[index_t].astype(np.float32)
     corr = np.einsum('ij,ij->i', features_s, features_t) / n_samples
+    corr = np.clip(corr, -1.0, 1.0)
+    dof = n_samples - 2
+    t_stat = corr * np.sqrt(dof / (1 - corr**2 + 1e-8))
+    p_values = 2 * (1 - stats.t.cdf(np.abs(t_stat), dof))
+    
+    significant_mask = p_values >= significance_level
+    
+    # Return only significant results to save memory
+    corr[significant_mask] = 0
+    
     np.round(corr, 3, out=corr)
     return corr
 
@@ -67,7 +87,7 @@ def create_ei(i, ei_args):
         """
         Local wrapper for spearman_corr that captures ei_args from closure.
         """
-        corr = spearman_corr(index_s, index_t, ei_args.data_matrix, ei_args.n_samples)
+        corr = spearman_corr(index_s, index_t, ei_args.data_matrix, ei_args.n_samples,ei_args.significance_level )
         return corr
 
     edge_chunks = range(from_pos, to_pos, chunk_size)
@@ -115,6 +135,8 @@ def main():
                         help="Maximum correlation threshold (end of last interval)")
     parser.add_argument("--step", type=float, default=0.1,
                         help="Size of each correlation interval (e.g., 0.1 for 0.4–0.5, 0.5–0.6, etc.)")
+    parser.add_argument("--pval", type=float, default=0.05,
+                        help="Pvalue threshold")
 
     args = parser.parse_args()
 
@@ -159,16 +181,20 @@ def main():
         in_matrix=data_matrix,
         in_n_samples=n_samples,
         in_tmp_dir=final_tempdir,
-        in_th=args.min_th
+        in_th=corr_from_pvalue(args.pval , n_samples),
+        in_significance_level = args.pval
     )
 
     ##############################################
     ##### Modified: save per threshold interval
     ##############################################
-    thresholds = np.arange(args.min_th, args.max_th, args.step)
+    thresholds = np.round(np.arange(corr_from_pvalue(args.pval , n_samples), args.max_th, args.step),1)
 
     for low_th in thresholds:
-        high_th = round(low_th + args.step, 3)
+        if low_th == 1.0 :
+            continue
+        
+        high_th = round(low_th + args.step, 1)
         ei_args_obj.th = low_th
 
         print(f"\n>>> Processing threshold range: {low_th:.2f} - {high_th:.2f}")
@@ -179,22 +205,49 @@ def main():
             for _ in pool.imap_unordered(run_create_ei, ei_args_list):
                 pass
 
-        # Merge all temporary pickles into a single HDF5 file
-        print("Consolidating temporary files into HDF5...")
+        # Merge all temporary pickles into a single Parquet file
+        print("Consolidating temporary files into Parquet...")
         files = os.listdir(final_tempdir)
         files.sort()
 
-        curr_output_file = f"{args.output}/edges_{low_th:.1f}_{high_th:.1f}.h5"
-        store = pd.HDFStore(curr_output_file, mode='w')
+        all_edges = []
 
         for f in files:
             et = pd.read_pickle(os.path.join(final_tempdir, f))
-            et = et[(et['corr'] >= low_th) & (et['corr'] < high_th)]
+            if high_th == 1.0 :
+                et = et[(et['corr'] >= low_th) & (et['corr'] <= high_th)]
+            else :
+                et = et[(et['corr'] >= low_th) & (et['corr'] < high_th)]
             if not et.empty:
-                store.append('e', et, format='t', data_columns=True, index=False,
-                             min_itemsize={'row_name_s': 35, 'row_name_t': 35})
-        store.close()
-        print(f"Saved {curr_output_file}")
+                all_edges.append(et)
+        
+        if all_edges:
+            df_all = pd.concat(all_edges)
+            df_all = df_all.reset_index(drop=False)
+
+            # Convert string columns to fixed-length bytes for HDF5 compatibility
+            df_all['row_name_s'] = df_all['row_name_s'].astype(str)
+            df_all['row_name_t'] = df_all['row_name_t'].astype(str)
+
+            # Convert Pandas DataFrame to an Arrow Table
+            table = pa.Table.from_pandas(df_all)
+            
+            # Change the output extension to Parquet
+            curr_output_file = f"{args.output}/edges_{low_th:.3f}_{high_th:.3f}.parquet"
+            
+            # Write the Arrow Table to a Parquet file with Snappy compression
+            pq.write_table(
+                table, 
+                curr_output_file,
+                compression="zstd", 
+                compression_level=1,
+                use_dictionary=False,
+                # compression='snappy', # Snappy is fast and offers good compression
+                row_group_size=5000000 # Optimize for faster reads on large files
+            )
+            print(f">>> Saved {curr_output_file} <<<")
+        else:
+            print(f"No edges found in range {low_th:.3f} - {high_th:.3f}. No file saved.")
 
         # Clean temp dir for next run
         reset_dir(final_tempdir)

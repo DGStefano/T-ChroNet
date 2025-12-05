@@ -30,7 +30,7 @@ conda activate T-CHRONET
 tchronet -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --step 0.1 --pval 0.1
 ```
 2. Use TChronetR for netowrk analysis
-The full TChronetR vignette is avaliable [here](./TChroNetR/vignettes/TchronetR_Vignette.Rmd)
+The full TChronetR vignette is avaliable [html](https://htmlpreview.github.io/?https://github.com/DGStefano/T-ChroNet/blob/main/TChroNetR/vignettes/TchronetR_Vignette.html) [rmd](./TChroNetR/vignettes/TchronetR_Vignette.Rmd)
 
 
 

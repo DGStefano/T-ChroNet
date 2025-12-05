@@ -2,16 +2,29 @@ name: T-CHRONET
 channels:
   - defaults
   - conda-forge
-  - anaconda
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
   - alsa-lib=1.2.14=h5eee18b_0
   - arpack=3.9.1=nompi_hf03ea27_102
+  - aws-c-auth=0.7.22=hf36ad8f_6
+  - aws-c-cal=0.6.15=h816f305_1
+  - aws-c-common=0.9.23=h4ab18f5_0
+  - aws-c-compression=0.2.18=he027950_7
+  - aws-c-event-stream=0.4.2=hb72ac1a_14
+  - aws-c-http=0.8.2=h75ac8c9_3
+  - aws-c-io=0.14.9=hd3d3696_3
+  - aws-c-mqtt=0.10.4=hb0abfc5_7
+  - aws-c-s3=0.5.10=h44b787d_4
+  - aws-c-sdkutils=0.1.16=he027950_3
+  - aws-checksums=0.1.18=he027950_7
+  - aws-crt-cpp=0.26.12=he940a02_1
+  - aws-sdk-cpp=1.11.329=h0f5bab0_6
   - blas=2.137=openblas
   - blas-devel=3.9.0=37_h1ea3ea9_openblas
   - bzip2=1.0.8=h5eee18b_6
-  - ca-certificates=2025.9.9=h06a4308_0
+  - c-ares=1.34.5=hb9d3cd8_0
+  - ca-certificates=2025.11.12=hbd8a1cb_0
   - cairo=1.18.4=h44eff21_0
   - contourpy=1.3.1=py311hdb19cb5_0
   - cycler=0.11.0=pyhd3eb1b0_0
@@ -30,6 +43,8 @@ dependencies:
   - fonts-conda-ecosystem=1=hd3eb1b0_0
   - fonttools=4.60.1=py311hee96239_0
   - freetype=2.14.1=ha770c72_0
+  - gflags=2.2.2=h5888daf_1005
+  - glog=0.7.1=hbabe93e_0
   - glpk=5.0=h445213a_0
   - gmp=6.3.0=h6a678d5_0
   - graphite2=1.3.14=h295c915_1
@@ -42,15 +57,26 @@ dependencies:
   - ld_impl_linux-64=2.44=h153f514_2
   - leidenalg=0.10.2=py311h1ddb823_1
   - lerc=4.0.0=h6a678d5_0
+  - libabseil=20240116.2=cxx17_he02047a_1
+  - libarrow=16.1.0=h9102155_9_cpu
+  - libarrow-acero=16.1.0=hac33072_9_cpu
+  - libarrow-dataset=16.1.0=hac33072_9_cpu
+  - libarrow-substrait=16.1.0=h7e0c224_9_cpu
   - libblas=3.9.0=37_h4a7cf45_openblas
+  - libbrotlicommon=1.1.0=hb03c661_4
+  - libbrotlidec=1.1.0=hb03c661_4
+  - libbrotlienc=1.1.0=hb03c661_4
   - libcblas=3.9.0=37_h0358290_openblas
   - libclang-cpp21.1=21.1.4=default_h99862b1_0
   - libclang13=21.1.4=default_h746c552_0
+  - libcrc32c=1.1.2=h9c3ff4c_0
   - libcups=2.3.3=hb8b1518_5
+  - libcurl=8.17.0=h4e3cde8_0
   - libdeflate=1.24=h86f0d12_0
   - libdrm=2.4.125=hb03c661_1
   - libedit=3.1.20230828=h5eee18b_0
   - libegl=1.7.0=h5eee18b_2
+  - libev=4.33=hd590300_2
   - libevent=2.1.12=hdbd6064_1
   - libexpat=2.7.1=hecca717_0
   - libffi=3.4.6=h2dba641_1
@@ -66,6 +92,9 @@ dependencies:
   - libglvnd=1.7.0=h5eee18b_2
   - libglx=1.7.0=h5eee18b_2
   - libgomp=15.2.0=h767d61c_6
+  - libgoogle-cloud=2.25.0=h2736e30_0
+  - libgoogle-cloud-storage=2.25.0=h3d9a0c8_0
+  - libgrpc=1.62.2=h15f2491_0
   - libiconv=1.18=h3b78370_2
   - libjpeg-turbo=3.1.1=hb25bd0a_0
   - libkrb5=1.21.3=h520c7b4_4
@@ -75,18 +104,25 @@ dependencies:
   - libllvm21=21.1.4=hf7376ad_0
   - liblzma=5.8.1=hb9d3cd8_2
   - liblzma-devel=5.8.1=hb9d3cd8_2
+  - libnghttp2=1.67.0=had1ee68_0
   - libnsl=2.0.0=h5eee18b_0
   - libopenblas=0.3.30=h46f56fc_0
   - libopengl=1.7.0=h5eee18b_2
   - libopenjpeg=2.5.4=hee96239_0
+  - libparquet=16.1.0=h6a7eafb_9_cpu
   - libpciaccess=0.18=h5eee18b_0
   - libpng=1.6.50=h2ed474d_0
   - libpq=18.0=h3675c94_0
+  - libprotobuf=4.25.3=hd5b35b9_1
+  - libre2-11=2023.09.01=h5a48ba9_2
   - libsodium=1.0.20=heac8642_0
   - libsqlite=3.50.4=h0c1763c_0
+  - libssh2=1.11.1=hcf80075_0
   - libstdcxx=15.2.0=h8f9b012_6
   - libstdcxx-ng=15.2.0=h4852527_6
+  - libthrift=0.19.0=hb90f79a_1
   - libtiff=4.7.1=h8261f1e_0
+  - libutf8proc=2.8.0=hf23e847_1
   - libuuid=2.41.2=he9a06e4_0
   - libvulkan-loader=1.4.313.0=he857663_0
   - libwebp-base=1.6.0=hd42ef1d_0
@@ -112,7 +148,8 @@ dependencies:
   - openblas-devel=0.3.30=h557178c_0
   - openjpeg=2.5.4=h4e0627c_0
   - openldap=2.6.10=he9288cc_1
-  - openssl=3.5.4=h26f9b46_0
+  - openssl=3.6.0=h26f9b46_0
+  - orc=2.0.1=h17fec99_1
   - packaging=25.0=py311h06a4308_1
   - pandas=2.3.3=py311hed34c8f_1
   - pcre2=10.46=hf426167_0
@@ -120,6 +157,8 @@ dependencies:
   - pip=25.2=pyhc872135_1
   - pixman=0.46.4=h7934f7d_0
   - pthread-stubs=0.3=h0ce48e5_1
+  - pyarrow=16.1.0=py311hbd00459_4
+  - pyarrow-core=16.1.0=py311h8c3dac4_4_cpu
   - pyparsing=3.2.0=py311h06a4308_0
   - pyside6=6.9.3=py311he4c1a5a_1
   - python=3.11.6=hab00c5b_0_cpython
@@ -130,11 +169,14 @@ dependencies:
   - pytz=2025.2=py311h06a4308_0
   - qhull=2020.2=hdb19cb5_2
   - qt6-main=6.9.3=h5c1c036_0
+  - re2=2023.09.01=h7f4b329_2
   - readline=8.3=hc2a1206_0
+  - s2n=1.4.16=he19d79f_0
   - scipy=1.16.2=py311h1e13796_0
   - seaborn=0.13.2=py311h06a4308_3
   - setuptools=80.9.0=py311h06a4308_0
   - six=1.17.0=py311h06a4308_0
+  - snappy=1.2.2=h03e3b7b_1
   - sqlite=3.50.2=hb25bd0a_1
   - suitesparse=5.10.1=he2db622_2
   - tbb=2022.0.0=hdb19cb5_0
@@ -172,4 +214,7 @@ dependencies:
   - xz-tools=5.8.1=hb9d3cd8_2
   - zlib=1.3.1=hb25bd0a_0
   - zstd=1.5.7=h11fc155_0
+  - pip:
+      - h5py==3.15.1
+      - tchronet==0.1.0
 prefix: /home/sdigiove/miniconda3/envs/T-CHRONET

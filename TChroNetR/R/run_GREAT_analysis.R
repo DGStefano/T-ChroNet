@@ -40,7 +40,7 @@ run_GREAT_analysis <- function(object,
   })
 
   if(is.null(resolution)) {
-    resolution <- G@resolution
+    resolution <- object@resolution
   }
   
   cluster_col <- paste0('clusters_' , as.character(resolution))

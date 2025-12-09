@@ -31,24 +31,40 @@ genomic_position_stackbar <- function(object , resolution = NULL) {
 
   # Initialize empty list for results
   combined_list <- list()
+  if (nrow(object@lifted_coords) != 0 ){
+    # Iterate over membership_nodes
+    for (i in unique(object@clusters[[cluster_col]])) {
+      community_nodes <- object@clusters[object@clusters[cluster_col] == i, 'node']
 
-  # Iterate over membership_nodes
-  for (i in unique(object@clusters[[cluster_col]])) {
-    community_nodes <- object@clusters[object@clusters[cluster_col] == i, 'node']
+      community_nodes_lifted <- object@lifted_coords[object@lifted_coords$node %in% community_nodes, "lifted_coord"]
+      # Filter annotation_df for nodes in this community
+      community_annot <- object@annotations[object@annotations$node %in% community_nodes_lifted, , drop = FALSE]
 
-    community_nodes_lifted <- object@lifted_coords[object@lifted_coords$node %in% community_nodes, "lifted_coord"]
-    # Filter annotation_df for nodes in this community
-    community_annot <- object@annotations[object@annotations$node %in% community_nodes_lifted, , drop = FALSE]
+      # Remove NA annotations
+      community_annot <- community_annot[!is.na(community_annot$annotation), , drop = FALSE]
 
-    # Remove NA annotations
-    community_annot <- community_annot[!is.na(community_annot$annotation), , drop = FALSE]
-
-    if (nrow(community_annot) > 0) {
-      community_annot$community_number <- paste0("community_", i)
-      combined_list[[i]] <- community_annot
+      if (nrow(community_annot) > 0) {
+        community_annot$community_number <- paste0("community_", i)
+        combined_list[[i]] <- community_annot
+        }
       }
-    }
+  }
+  else{
+    for (i in unique(object@clusters[[cluster_col]])) {
+      community_nodes <- object@clusters[object@clusters[cluster_col] == i, 'node']
 
+      # Filter annotation_df for nodes in this community
+      community_annot <- object@annotations[object@annotations$node %in% community_nodes, , drop = FALSE]
+
+      # Remove NA annotations
+      community_annot <- community_annot[!is.na(community_annot$annotation), , drop = FALSE]
+
+      if (nrow(community_annot) > 0) {
+        community_annot$community_number <- paste0("community_", i)
+        combined_list[[i]] <- community_annot
+        }
+      }
+  }
   # Combine all membership_nodes into one data frame
   final_annotation_df <- do.call(rbind, combined_list)
 

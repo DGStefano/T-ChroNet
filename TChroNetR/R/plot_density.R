@@ -18,7 +18,7 @@ plot_density <- function(object){
     stop("The 'object' must be a TCrhoNetSeries instance.")
   }
 
-  g <- ggplot(object@metrics , aes(x = thresholds , y = density , group = 1)) +
+  g <- ggplot(object@metrics , aes(x = threshold , y = density , group = 1)) +
     geom_point() +
     geom_line()+
     theme_classic()

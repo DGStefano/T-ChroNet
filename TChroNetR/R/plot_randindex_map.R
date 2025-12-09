@@ -105,7 +105,7 @@ plot_randindex_map <- function(object, output_path = NULL , color_limits = c(0.0
     labs(
       title = paste("Adjusted Rand Index Map"),
       color = "Adj. Rand Index",
-      x = "Resolution", y = "Resolution"
+      x = "Thresholds", y = "Resolution"
     )
 
   if (!is.null(output_path)) {

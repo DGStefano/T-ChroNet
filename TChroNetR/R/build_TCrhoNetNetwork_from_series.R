@@ -40,10 +40,10 @@ build_TCrhoNetNetwork_from_series <- function(series_object,
     stop("❌ You must specify the matrix path")
   }
   # --- Create TCrhoNetNetwork object ---
-  if (verbose) message("🧠 Creating TCrhoNetNetwork object at threshold ", threshold, "...")
+  if (verbose) message("Creating TCrhoNetNetwork object at threshold ", threshold, "...")
   
-  G <- delete_edges(series_object@graph, E(series_object@graph)[corr < threshold])
-  G <- delete_vertices(G, V(G)[degree(G) == 0])
+  G <- delete_edges(series_object@graph, E(series_object@graph)[weight < threshold])
+  # G <- delete_vertices(G, V(G)[degree(G) == 0])
 
   # --- Read the input matrix ---
   if( 'matrix' %in% slotNames(series_object) ){

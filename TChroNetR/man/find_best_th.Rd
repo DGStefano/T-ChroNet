@@ -2,16 +2,18 @@
 % Please edit documentation in R/find_best_th.R
 \name{find_best_th}
 \alias{find_best_th}
-\title{Find the best threshold value according to the transitivity values at increased thresholds}
+\title{Find the best threshold value according to network metrics values at increased thresholds}
 \usage{
 find_best_th(object, parameter = "relative_lcc")
 }
 \arguments{
 \item{object}{TCrhoNetSeries object}
+
+\item{parameter}{Define wich parameter should be used to find best Spearman threshold. default = "relative_lcc"}
 }
 \value{
-A TCrhoNetSeries object
+numeric best threshold defined
 }
 \description{
-Find the best threshold value according to the transitivity values at increased thresholds
+Find the best threshold value according to network metrics values at increased thresholds
 }

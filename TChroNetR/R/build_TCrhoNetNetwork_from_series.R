@@ -30,11 +30,11 @@ build_TCrhoNetNetwork_from_series <- function(series_object,
     stop("❌ Input must be a 'TCrhoNetSeries' object.")
   }
   
-  if (missing(threshold) & !('best_rh' %in% slotNames(series_object))  ) {
+  if (missing(threshold) & !('best_th' %in% slotNames(series_object))  ) {
     stop("❌ You must specify a 'threshold' (e.g., 0.7). or run 'find_best_th'")
   }
-  if(missing(threshold) & ('best_rh' %in% slotNames(series_object) ) ){
-    threshold = series_object@best_rh
+  if(missing(threshold) & ('best_th' %in% slotNames(series_object) ) ){
+    threshold = series_object@best_th
   }
   if(missing(matrix_path) & !('matrix' %in% slotNames(series_object)) ){
     stop("❌ You must specify the matrix path")

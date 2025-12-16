@@ -4,7 +4,7 @@
 \alias{annotate_regions_from_bed}
 \title{Annotate regions according to a provided bed annotation file}
 \usage{
-annotate_regions_from_bed(object, bed_path)
+annotate_regions_from_bed(object, bed_path, genome = "hg39")
 }
 \arguments{
 \item{object}{TChroNetNetwork object}

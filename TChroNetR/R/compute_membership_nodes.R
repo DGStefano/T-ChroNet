@@ -58,22 +58,10 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
           message(sprintf("Running Leiden clustering at resolution %.2f...", res))
           
           set.seed(seed)
-          # membership_nodes <- leidenAlg::find_partition(
-          #   object@graph,
-          #   resolution = res,
-          #   edge_weights = E(object@graph)$corr,
-          #   niter = niter
-          # )
-          nodes_membership <- leiden_find_partition( object@graph, 
-            partition_type = "RBConfigurationVertexPartition", 
-            initial_membership = NULL, 
-            edge_weights = E(object@graph)$corr, 
-            node_sizes = NULL, seed = 1234, 
-            resolution_parameter = res, 
-            num_iter = niter, 
-            verbose = F )
+ 
+          nodes_membership <- leidenAlg::find_partition_with_rep(object@graph, resolution = res, edge_weights = E(object@graph)$weight , nrep = 5)
 
-          # membership_nodes <- membership_nodes+1
+          nodes_membership <- nodes_membership+1
 
           if (length(nodes_membership$membership) != vcount(object@graph)) {
             stop(sprintf(

@@ -4,7 +4,12 @@
 \alias{plot_trends_zscore}
 \title{Plot communities trends at a specified resolution}
 \usage{
-plot_trends_zscore(object, resolution = NULL, custom_ylim = c(-2, 2))
+plot_trends_zscore(
+  object,
+  resolution = NULL,
+  custom_ylim = c(-2, 2),
+  time_order = NULL
+)
 }
 \arguments{
 \item{object}{TChroNetNetwork object}

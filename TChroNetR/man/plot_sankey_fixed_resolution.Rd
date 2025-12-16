@@ -6,7 +6,7 @@
 \usage{
 plot_sankey_fixed_resolution(
   object,
-  resolution = 1.5,
+  resolution = NULL,
   thresholds = NULL,
   output_path = NULL
 )

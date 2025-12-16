@@ -48,14 +48,14 @@ run_GREAT_analysis <- function(object,
   message("🔍 Using cluster column: ", cluster_col)
   
   # --- 2. Prepare coordinates ---
-  if (!is.null(object@lifted_coords)) {
+  if (!is.null(object@lifted_coords) & nrow(object@lifted_coords) > 0 ) {
     coords_df <- object@lifted_coords
   } else {
     coords_df <- data.frame(
       chr = as.character(GenomeInfoDb::seqnames(object@genomicRegions)),
       start = start(object@genomicRegions),
       end = end(object@genomicRegions),
-      node = nodes(object@genomicRegions)
+      node = object@genomicRegions$nodes
     )
   }
   
@@ -82,9 +82,9 @@ run_GREAT_analysis <- function(object,
     
     gr <- makeGRangesFromDataFrame(
       comm_regions,
-      seqnames.field = "chr_orig",
-      start.field = "start_orig",
-      end.field = "end_orig",
+      seqnames.field = colnames(comm_regions)[2],
+      start.field = colnames(comm_regions)[3],
+      end.field = colnames(comm_regions)[4],
       keep.extra.columns = TRUE
     )
     

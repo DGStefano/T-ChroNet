@@ -1,7 +1,8 @@
-#' Find the best threshold value according to the transitivity values at increased thresholds
+#' Find the best threshold value according to network metrics values at increased thresholds
 #' 
 #' @param object TCrhoNetSeries object
-#' @return A TCrhoNetSeries object
+#' @param parameter Define wich parameter should be used to find best Spearman threshold. default = "relative_lcc"
+#' @return numeric best threshold defined
 #' @export
 find_best_th <- function(object , parameter = "relative_lcc") {
   if (!inherits(object, "TCrhoNetSeries")) {
@@ -17,8 +18,7 @@ find_best_th <- function(object , parameter = "relative_lcc") {
     idx <- which(metrics$relative_lcc == max_trans)
     # Pick the highest threshold among tied maxima
     best_th <- max(as.numeric(metrics$threshold[idx]))
-  }
-  else {
+  } else {
     # Extract metrics
     metrics <- object@metrics
     # Find maximum transitivity
@@ -29,9 +29,5 @@ find_best_th <- function(object , parameter = "relative_lcc") {
     best_th <- max(as.numeric(metrics$threshold[idx]))
 
   }
-
-  # Assign to object
-  object@best_th <- best_th
-
-  return(object)
+  return(best_th)
 }

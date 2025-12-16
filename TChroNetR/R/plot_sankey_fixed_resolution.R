@@ -10,7 +10,7 @@
 #' @return A ggplot2 object
 #' @export
 plot_sankey_fixed_resolution <- function(object,
-                                         resolution = 1.5,
+                                         resolution = NULL,
                                          thresholds = NULL,
                                          output_path = NULL) {
 
@@ -21,6 +21,9 @@ plot_sankey_fixed_resolution <- function(object,
   
   if (is.null(thresholds)) {
     thresholds <- names(object@communities)
+  }
+  if(missing(resolution) & ('resolution' %in% slotNames(object) ) ){
+    resolution = object@resolution
   }
   
   thresholds <- as.character(sort(as.numeric(thresholds), decreasing = FALSE))

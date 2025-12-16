@@ -19,11 +19,55 @@
 #' @param seed Set a seed for computational reproducibility
 #' @return A TChroNetSeries object
 #' @export
+#' 
+
+.add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
+  iso <- which(degree(G) == 0)
+  if (length(iso) == 0) return(G)
+
+  add_edges(
+    G,
+    as.vector(rbind(iso, iso)),
+    attr = list(weight = rep(loop_weight, length(iso)))
+  )
+}
+
+.fix_leiden_membership <- function(G, membership, min_size = 100, merged_id = 1000) {
+
+  # Ensure full length
+  if (length(membership) < vcount(G)) {
+    full <- rep(NA_integer_, vcount(G))
+    full[seq_along(membership)] <- membership
+    membership <- full
+  }
+
+  # Handle degree-0 nodes → unique singleton communities
+  iso <- which(degree(G) == 0)
+  if (length(iso) > 0) {
+    max_id <- max(membership, na.rm = TRUE)
+    membership[iso] <- seq_len(length(iso)) + max_id
+  }
+
+  # Community sizes
+  comm_sizes <- table(membership)
+
+  # Communities smaller than min_size
+  small_comms <- as.integer(names(comm_sizes[comm_sizes < min_size]))
+
+  if (length(small_comms) > 0) {
+    membership[membership %in% small_comms] <- merged_id
+  }
+
+  return(membership)
+}
+
 build_TChroNetSeries_object <-  function(edge_files, matrix_path,
                                       method = c("Leiden", "Louvain"),
                                       resolutions_list = seq(0.1, 0.9, 0.1),
                                       run_cd = FALSE,
                                       transitivity = FALSE,
+                                      min_size = 100,
+                                      merged_id = 1000,
                                       seed = 123) {
   library(igraph)
   library(leidenAlg)
@@ -33,7 +77,6 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
   method <- match.arg(method)
   if (!run_cd) method <- ""
 
-  set.seed(seed)
 
   # --- Validate inputs ---
   if (length(edge_files) == 0) stop("No edge files provided.")
@@ -98,19 +141,36 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
     # --- Initialize storage ---
     th_cluster_df <- data.frame()
     modularity_at_th <- data.frame()
-    membership_vec <- rep(NA, vcount(G))
+
     if (method == "Leiden") {
       for (res in resolutions_list) {
         message(sprintf("🧩 Leiden clustering at resolution %.2f...", res))
-        membership_nodes <- suppressWarnings(
-          # leidenAlg::find_partition_with_rep(G, resolution = res, edge_weights = E(G)$weight , nrep = 5)
-          igraph::cluster_leiden(G, resolution_parameter = res, weights = E(G)$weight )$membership
+
+        set.seed(seed)
+        G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
+
+        membership_nodes <- leidenAlg::find_partition_with_rep(
+          G_loop,
+          resolution = res,
+          edge_weights = E(G_loop)$weight,
+          nrep = 5
         )
 
-        #membership_nodes <- as.integer(membership_nodes) + 1
+        rm(G_loop)
+        invisible(gc())
+        
+        membership_nodes <- membership_nodes+1
+        
+        membership_nodes_print <- .fix_leiden_membership(
+          G,
+          membership_nodes,
+          min_size = min_size,
+          merged_id = merged_id
+        )
+
         cluster_col <- paste0("clusters_", res)
         tmp_df <- data.frame(node = V(G)$name, stringsAsFactors = FALSE)
-        tmp_df[[cluster_col]] <- membership_nodes
+        tmp_df[[cluster_col]] <- membership_nodes_print
 
         if (nrow(th_cluster_df) == 0) th_cluster_df <- tmp_df
         else th_cluster_df <- merge(th_cluster_df, tmp_df, by = "node", all = TRUE)
@@ -140,7 +200,7 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         transitivity = trans_val,
         lcc = lcc_size,
         relative_lcc = relative_lcc,
-        n_communities = ifelse(all(is.na(membership_vec)), 0, length(unique(membership_vec))),
+        n_communities = ifelse(all(is.na(membership_nodes_print)), 0, length(unique(membership_nodes_print))),
         stringsAsFactors = FALSE
       )
     )

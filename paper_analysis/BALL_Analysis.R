@@ -6,6 +6,8 @@ library(ComplexHeatmap)
 library(clusterProfiler)
 library(msigdbr)
 
+setwd("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/TChroNetR")
+devtools::load_all()
 
 plot_heatmap_counts <- function(object , resolution = NULL) {
   if (!inherits(object, "TCrhoNetNetwork")) {
@@ -30,7 +32,8 @@ plot_heatmap_counts <- function(object , resolution = NULL) {
   right_annotation = ha_row,
   cluster_rows = F,
   show_row_names = F,
-  show_column_dend = F
+  show_column_dend = F,
+  cluster_columns = F
   )
   
   return(h)
@@ -148,64 +151,320 @@ plot_cistrom <- function(
   return(p)
 }
 
-edge_files_ball <- list.files("/Users/sdigiove/Downloads/rds/th/" , full.names = T)
-matrix_path <- "/Users/sdigiove/Downloads/rds/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
-series_ball_low <- build_TChroNetSeries_object(edge_files_ball,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
-# write_rds(series_ball_low , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/series_obj_ball_low.rds")
+# edge_files_ball <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/th/" , full.names = T)
+# matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
+# series_ball <- build_TChroNetSeries_object(edge_files_ball,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
+# write_rds(series_ball , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/series_obj_ball.rds")
 
-series_ball <- read_rds("/Users/sdigiove/Downloads/rds/series_obj_ball.rds")
+series_ball <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/series_obj_ball.rds")
 
-ball_obj <- make_TChroNetNetwork_obj(edge_files = edge_files_ball , matrix_path = matrix_path , threshold = 0.9)
-
-ball_obj <- compute_membership_nodes(ball_obj , resolutions = c(0.8 : 1.2))
-# plot number of components and size distribution
-m <- leidenAlg::find_partition_with_rep(ball_obj@graph, resolution = 0.8, edge_weights = E(ball_obj@graph)$weight , nrep = 5)
-
-plot_randindex_map(series_ball)
-plot_randindex_map_old(series_ball)
-
+plot_randindex_map(series_ball )
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/rand_index_map.pdf" ,device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 plot_metrics(series_ball , "relative_lcc") +
   geom_point( size = 3)+
   xlab("Threshold")+
   ylab("Relative LCC")+
   theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/relative_lcc.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/relative_lcc.pdf" ,device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 
 series_ball@best_th <- find_best_th(series_ball) 
 
-ball_obj <- build_TCrhoNetNetwork_from_series(series_ball )
-write_rds(ball_obj , "/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/obj_ball.rds")
+ball_obj <- build_TCrhoNetNetwork_from_series(series_ball)
+# write_rds(ball_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/obj_ball.rds")
+# colnames(ball_obj@matrix) <- c("H6","H9","H4","H7","H5","H8","P14","P12","P10","P13","P11","P16","P7","P19","P17","P27","P26","REM21","REM22","REM18","REM26","REM20","REM25","REM23","REM24","REL31","REL28","REL29","REL33","REL32","REL27","REL30","REL14")
 
-plot_community_sankey(ball_obj , threshold = 0.5)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/community_sankey.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+
+plot_community_sankey(series_ball , threshold = 0.5)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/community_sankey_th_05.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 
 plot_modularity(ball_obj)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/modularity.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/modularity.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 
 ball_obj <- find_best_resolution(ball_obj)
 
+ball_obj@clusters |> group_by(clusters_1) |> 
+  summarise(peaks = n()) |> 
+  mutate(clusters_1 = as.factor(clusters_1)) |> 
+ggplot(aes(x = clusters_1 , y = peaks)) +
+  geom_bar(stat = 'identity' , fill = "black") +
+  theme_classic() + 
+  coord_flip()+
+  xlab("")+
+  ylab("Size")+
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/community_size.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
-plot_sankey_fixed_resolution(ball_obj)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/sankey_plot_best_res.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
 
-ball_obj <- lift_network_coordinates(ball_obj , chain_path = "~/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
-ball_obj <- annotate_regions_from_bed(liver_obj , bed_path = "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed" , genome = 'hg38')
-plot_stacked_annotation(liver_obj , resolution = as.numeric(ball_obj@resolution)) +
+
+plot_sankey_fixed_resolution(series_ball , resolution = 1.0)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/sankey_plot_best_res.pdf" ,device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
+
+ball_obj <- lift_network_coordinates(ball_obj , chain_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
+ball_obj <- annotate_regions_from_bed(ball_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/GRCh38-cCREs_2.bed" , genome = 'hg38')
+plot_stacked_annotation(ball_obj , resolution = as.numeric(ball_obj@resolution)) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/stachek_annotations_bestth_bestres.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/stachek_annotations_bestth_bestres.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 
 ball_obj <- run_GREAT_analysis(ball_obj, resolution = as.numeric(ball_obj@resolution), genome = "hg19")
 
 plot_trends_zscore(ball_obj)+
-  theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/boxplot_trends.png", height = 9 , width = 5 , units = 'in', dpi = 300)
+  theme(text = element_text(size = 15)) +
+  scale_x_discrete(
+    labels = c(
+      "patient_6_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H6",
+ "patient_9_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H9",
+ "patient_4_Healthy_ATACseq_REP1.mLb.clN.sorted.bam"    = "H4",
+ "patient_7_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H7",
+ "patient_5_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H5",
+ "patient_8_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H8",
+ "patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P14",
+ "patient_12_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P12",
+ "patient_10_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P10",
+ "patient_13_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P13",
+ "patient_11_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P11",
+ "patient_16_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P16",
+ "patient_7_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P7",
+ "patient_19_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P19",
+ "patient_17_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P17",
+ "patient_27_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P27",
+ "patient_26_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P26",
+ "patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM21",
+ "patient_22_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM22",
+ "patient_18_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM18",
+ "patient_26_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM26",
+ "patient_20_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM20",
+ "patient_25_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM25",
+ "patient_23_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM23",
+ "patient_24_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM24",
+ "patient_31_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL31",
+ "patient_28_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL28",
+ "patient_29_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL29",
+ "patient_33_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL33",
+ "patient_32_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL32",
+ "patient_27_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL27",
+ "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
+ "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
+    ))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/boxplot_trends.pdf",device = cairo_pdf , 
+  height = 10, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
+
 plot_line_trends_zscore(ball_obj)+
-    theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/lineplot_trends.png", height = 9 , width = 5 , units = 'in', dpi = 300)
+    theme(text = element_text(size = 15)) +
+  scale_x_discrete(
+    labels = c(
+      "patient_6_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H6",
+ "patient_9_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H9",
+ "patient_4_Healthy_ATACseq_REP1.mLb.clN.sorted.bam"    = "H4",
+ "patient_7_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H7",
+ "patient_5_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H5",
+ "patient_8_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H8",
+ "patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P14",
+ "patient_12_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P12",
+ "patient_10_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P10",
+ "patient_13_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P13",
+ "patient_11_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P11",
+ "patient_16_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P16",
+ "patient_7_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P7",
+ "patient_19_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P19",
+ "patient_17_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P17",
+ "patient_27_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P27",
+ "patient_26_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P26",
+ "patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM21",
+ "patient_22_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM22",
+ "patient_18_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM18",
+ "patient_26_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM26",
+ "patient_20_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM20",
+ "patient_25_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM25",
+ "patient_23_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM23",
+ "patient_24_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM24",
+ "patient_31_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL31",
+ "patient_28_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL28",
+ "patient_29_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL29",
+ "patient_33_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL33",
+ "patient_32_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL32",
+ "patient_27_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL27",
+ "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
+ "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
+    ))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/lineplot_trends.pdf", device = cairo_pdf , 
+  height = 10, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
+
+
+patient_groups <- c(
+  Healthy = 6,
+  Primary = 11,
+  Remission = 8,
+  Relapse = 8
+)
+
+order <- c("Healthy", "Primary", "Remission", "Relapse")
+value_vars <- colnames(ball_obj@matrix)
+group_mapping <- rep(names(patient_groups), times = patient_groups)
+names(group_mapping) <- value_vars
+
+facet_colors <- c(
+  Healthy   = "#66c5cc",
+  Primary   = "#ff6767",
+  Remission = "#ffdb84",
+  Relapse   = "#ff951f"
+)
+library(stats)
+scaled_matrix <- t(scale(t(ball_obj@matrix))) |> as.data.frame()
+all_melted <- lapply(seq_along(list_communities_11), function(x) {
+  df <- scaled_matrix[list_communities_11[[x]], ] |> 
+    rownames_to_column("peaks") |>
+    pivot_longer(
+      cols = all_of(value_vars),
+      names_to = "original_column",
+      values_to = "expression"
+    ) |>
+    mutate(
+      group = factor(group_mapping[original_column], levels = order),
+      community = paste0("Community_", x)
+    )
+  return(df)
+}) |> bind_rows()
+
+median_df <- all_melted |> 
+  group_by(community, group) |> 
+  summarise(median_expr = median(expression, na.rm = TRUE), .groups = "drop")
+
+ggplot(
+  all_melted,
+  aes(x = original_column, y = expression, fill = group)
+) +
+  geom_violin(
+      trim = F,
+      scale = "width",
+      color = "black",
+      alpha = 0.7
+      #linewidth = 0.2
+    ) +
+  geom_boxplot(
+      width = 0.15,
+      outlier.shape = NA,
+      color = "black",
+      fill = "black",
+      linewidth = 0.2
+    ) +
+  
+  geom_hline(
+    data = median_df,
+    aes(yintercept = median_expr,),
+    linetype = "dotted",
+    linewidth = 0.8,
+    color = "red"
+  ) +
+  facet_grid(community ~ group, scales = "free_x") +
+  # facet_wrap(~community, scales = "free_x", ncol = 1) +
+  scale_fill_manual(values = facet_colors) +
+  # coord_cartesian(ylim = c(-5, 5)) +
+  labs(y = "Z-score", x = NULL) +
+  theme_classic() +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(size = 15),
+    axis.text.x = element_text(size = 15, angle = 90, vjust = 0.5),
+    axis.text.y = element_text(size = 15),
+    legend.position = "top",
+    legend.text = element_text(size=15)
+
+  )  +
+  scale_x_discrete(
+    labels = c(
+      "patient_6_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H6",
+ "patient_9_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H9",
+ "patient_4_Healthy_ATACseq_REP1.mLb.clN.sorted.bam"    = "H4",
+ "patient_7_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H7",
+ "patient_5_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H5",
+ "patient_8_Healthy_ATACseq_REP1.mLb.clN.sorted.bam" = "H8",
+ "patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P14",
+ "patient_12_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P12",
+ "patient_10_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P10",
+ "patient_13_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P13",
+ "patient_11_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P11",
+ "patient_16_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P16",
+ "patient_7_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P7",
+ "patient_19_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P19",
+ "patient_17_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P17",
+ "patient_27_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P27",
+ "patient_26_Primary_ATACseq_REP1.mLb.clN.sorted.bam" = "P26",
+ "patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM21",
+ "patient_22_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM22",
+ "patient_18_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM18",
+ "patient_26_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM26",
+ "patient_20_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM20",
+ "patient_25_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM25",
+ "patient_23_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM23",
+ "patient_24_Remission_ATACseq_REP1.mLb.clN.sorted.bam" = "REM24",
+ "patient_31_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL31",
+ "patient_28_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL28",
+ "patient_29_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL29",
+ "patient_33_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL33",
+ "patient_32_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL32",
+ "patient_27_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL27",
+ "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
+ "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
+    ))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/violin_trends.pdf" ,device = cairo_pdf , 
+  height = 10, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
+
 
 
 msigdbr_collections(db_species = "Hs")
@@ -216,7 +475,7 @@ j=0
 for (x in ball_obj@GREAT_targets) {
     target_genes = unname(unlist(as.data.frame(x)$annotated_genes))
     x_enrichr <- enricher( target_genes , TERM2GENE = genesets_removed ) #   , universe = unname(unlist(reults[[1]]))
-    x_df  <- x_enrichr@result |> filter(qvalue < 0.05) |> arrange( -FoldEnrichment )
+    x_df  <- x_enrichr@result |> filter(pvalue < 0.01) |> arrange( -FoldEnrichment )
 
     if(nrow(x_df) == 0) {    
         i = i + 1
@@ -261,22 +520,93 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   scale_radius() +#trans = "log2"
   theme_classic() +
   # scale_y_discrete(limits=rownames(clusteing_df)) +
-  theme(legend.position="top" , legend.text = element_text(size=10)) +
+  theme(legend.position="top" ,  legend.box = "vertical" , legend.text = element_text(size=10)) +
   scale_size(range = c(3, 10)) +
-  theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/Metaprograms.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+  theme(text = element_text(size = 10))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/Metaprograms.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 
-best_clust_th <- paste("clusters_" , as.character(ball_obj@resolution) , sep ="")
-ball_obj@clusters |> group_by(!!best_clust_th) |> 
-  summarise(peaks = n()) |> 
-  mutate(clusters_0.9 = as.factor(!!best_clust_th)) |> 
-ggplot(aes(x = !!best_clust_th , y = peaks)) +
-  geom_bar(stat = 'identity' , fill = "black") +
-  theme_classic() + 
-  coord_flip()+
-  xlab("")+
-  ylab("Size")+
-  theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/ball/community_size.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+
+
+communities_11 <- ball_obj@clusters[,c('node' , "clusters_1")]
+list_communities_11 <- list()
+for (x in sort(unique(communities_11[["clusters_1"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1"] == x, ] |> pull(node)
+  list_communities_11[[x]] <- nodes
+}
+
+communities_paper <- list.files("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/BCP-ALL/communities/" , full.names = T)
+list_communities_paper <- list()
+for (x in seq_along(communities_paper)) {
+  #print(x)
+  # print(communities_paper[[x]])
+  list_communities_paper[[x]] <- read_delim(communities_paper[x], delim ="\t" , col_names = F) |> unite('nodes' , c(X1,X2,X3) , sep ="-") |> pull(nodes)
+}
+
+listA <- list_communities_11
+names(listA) <- paste0("TChroNetR_" , as.character(c(1:4)))
+listB <- list_communities_paper
+names(listB) <- paste0("paper_" , as.character(c(1:4)))
+
+intersections <- expand.grid(A = names(listA), B = names(listB))
+
+intersections$overlap <- mapply(
+  function(a, b) length(intersect(listA[[a]], listB[[b]])),
+  intersections$A,
+  intersections$B
+)
+library(UpSetR)
+
+# Get universe of elements
+all_elems <- unique(unlist(c(listA, listB)))
+
+# Convert each list into binary membership matrix
+make_binary <- function(lst) {
+  sapply(lst, function(x) as.numeric(all_elems %in% x))
+}
+
+binA <- make_binary(listA)
+binB <- make_binary(listB)
+
+# Combine sets
+binary_matrix <- cbind(binA, binB)
+
+# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/paper_vs_TCNR.pdf", height = 5 , width = 9 , units = 'in', res = 300)
+upset(
+  as.data.frame(binary_matrix),
+  sets = colnames(binary_matrix),
+  keep.order = T
+  # order.by = "freq",
+)
+# dev.off()
+
+
+### Save communities hg38
+for (x in seq_along(list_communities_11)) {
+  comm <- list_communities_11[[x]]
+  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
+  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/beds/community_hg38_" , as.character(x) , ".bed" , sep ="")
+  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
+}
+
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/cistrom/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
+  theme(text = element_text(size = 15))+
+  theme(legend.position="top" , legend.text = element_text(size=15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/TFs.pdf", device = cairo_pdf , 
+  height = 8, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
+
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/Heatmap.pdf", height = 9 , width = 5 )
+plot_heatmap_counts(ball_obj)
+dev.off()
+
 

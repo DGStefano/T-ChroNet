@@ -64,6 +64,8 @@ plot_line_trends_zscore <- function(object, resolution = NULL , custom_ylim = c(
   if (nrow(final_df) == 0) {
     stop("No overlapping peaks between data_matrix rownames and network node names.")
   }
+
+  final_df$variable <- factor(final_df$variable , levels = colnames(object@matrix))
   
   # --- 5. Plot violin + mean line trends ---
   g <- ggplot(final_df, aes(x = variable, y = value, group = community)) +

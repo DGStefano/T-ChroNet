@@ -9,7 +9,7 @@
 #' @return A ggplot2 object
 #' @export
 #' 
-plot_randindex_map <- function(object, output_path = NULL , color_limits = c(0.0, 1)) {
+plot_randindex_map <- function(object, color_limits = c(0.0, 1)) {
   if (!inherits(object, "TCrhoNetSeries")) {
     stop("Input must be a 'TCrhoNetSeries' object.")
   }
@@ -107,11 +107,5 @@ plot_randindex_map <- function(object, output_path = NULL , color_limits = c(0.0
       color = "Adj. Rand Index",
       x = "Resolution", y = "Resolution"
     )
-
-  if (!is.null(output_path)) {
-    ggsave(output_path, p, height = 8, width = 10, units = "in", dpi = 300)
-    message("✅ Plot saved to: ", output_path)
-  }
-
   return(p)
 }

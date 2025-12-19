@@ -5,7 +5,8 @@ library(tidyverse)
 library(ComplexHeatmap)
 library(clusterProfiler)
 library(msigdbr)
-
+setwd("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/TChroNetR")
+devtools::load_all()
 
 plot_heatmap_counts <- function(object , resolution = NULL) {
   if (!inherits(object, "TCrhoNetNetwork")) {
@@ -156,19 +157,46 @@ plot_cistrom <- function(
 
 
 ### Liver
-series_liver <- read_rds("/Users/sdigiove/Downloads/rds/series_obj_liver.rds")
+series_liver <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/series_obj_liver.rds")
 
-plot_randindex_map(series_liver ,"/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/rand_index_map.png" )
+plot_randindex_map(series_liver )
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/rand_index_map.pdf" ,device = cairo_pdf , 
+  height = 9, 
+  width = 5, 
+  units = 'in',
+  dpi = 300
+)
+
 plot_sankey_fixed_resolution(series_liver , resolution = 0.8)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/sankey_plot_res_1.1.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/sankey_plot_res_1.1.pdf" ,device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 plot_metrics(series_liver , "relative_lcc")
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/relative_lcc.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/relative_lcc.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 liver_obj <- build_TCrhoNetNetwork_from_series(series_liver , threshold = 0.8)
 plot_modularity(liver_obj)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/modularity.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/modularity.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 plot_community_sankey(liver_obj , threshold = 0.8)
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/community_sankey_th08.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/community_sankey_th08.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 liver_obj <- find_best_resolution(liver_obj)
 
@@ -182,16 +210,26 @@ ggplot(aes(x = clusters_1.1 , y = peaks)) +
   xlab("")+
   ylab("Size")+
   theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/community_size.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/community_size.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 
-liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "~/T-ChroNet/toy_data/data/mm10-cCREs_mod.bed" , genome = 'mm10')
+liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/mm10-cCREs_mod.bed" , genome = 'mm10')
 plot_stacked_annotation(liver_obj , resolution = 1.1) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/stachek_annotations_th08_res1.1.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/stachek_annotations_th08_res1.1.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 
 communities_08 <- liver_obj@clusters[,c('node' , "clusters_0.8")]
@@ -208,7 +246,7 @@ for (x in sort(unique(communities_11[["clusters_1.1"]])) ) {
   list_communities_11[[x]] <- nodes
 }
 
-communities_paper <- list.files("~/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , full.names = T)
+communities_paper <- list.files("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , full.names = T)
 list_communities_paper <- list()
 for (x in seq_along(communities_paper)) {
   #print(x)
@@ -244,7 +282,7 @@ binB <- make_binary(listB)
 # Combine sets
 binary_matrix <- cbind(binA, binB)
 
-# png("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/paper_vs_TCNR.png", height = 5 , width = 9 , units = 'in', res = 300)
+# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/paper_vs_TCNR.pdf", height = 5 , width = 9 , units = 'in', res = 300)
 upset(
   as.data.frame(binary_matrix),
   sets = colnames(binary_matrix),
@@ -256,29 +294,45 @@ upset(
 liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.1, genome = "mm10")
 
 ### Save communities hg38
-for (x in seq_along(list_communities_11)) {
-  comm <- list_communities_11[[x]]
-  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
-  out_file <- paste("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/bed/community_hg38_" , as.character(x) , ".bed" , sep ="")
-  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
-}
+# for (x in seq_along(list_communities_11)) {
+#   comm <- list_communities_11[[x]]
+#   comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
+#   out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/bed/community_hg38_" , as.character(x) , ".bed" , sep ="")
+#   write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
+# }
 
-plot_cistrom("/Users/sdigiove/Downloads/cistrom_liver/" , tf_name_file = "~/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" )+
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/cistrom_liver/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" )+
   theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/TFs.png", width = 7, height = 8 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/TFs.pdf",device = cairo_pdf , 
+  height = 8, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
 
 
 plot_trends_zscore(liver_obj , resolution = 1.1)
-# ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/trends_violin.png", height = 9 , width = 5 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/trends_violin.pdf",device = cairo_pdf , 
+  height = 10, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
 plot_line_trends_zscore(liver_obj , resolution = 1.1)
-# ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/trends_lines.png", height = 9 , width = 5 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/trends_lines.pdf",device = cairo_pdf , 
+  height = 10, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
 
-# png("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/Heatmap_trends.png", height = 9 , width = 5 , units = 'in', res = 300)
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/Heatmap_trends.pdf", height = 9 , width = 5)
 plot_heatmap_counts(liver_obj)
-# dev.off()
+dev.off()
 
 library(clusterProfiler)
 library(msigdbr)
+library(DOSE)
 
 final_list_genes <- list()
 for (x in liver_obj@GREAT_targets) {
@@ -350,6 +404,11 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
   #       axis.text.y=element_blank(),
   #       legend.position="none")
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/liver/Cell_annotations.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/Cell_annotations.pdf",device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
   

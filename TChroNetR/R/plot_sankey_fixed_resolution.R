@@ -74,7 +74,12 @@ plot_sankey_fixed_resolution <- function(object,
                   fill = factor(node))) +
     geom_sankey(alpha = 0.8, show.legend = FALSE) +
     scale_fill_discrete(drop = FALSE) +
-    theme_bw(base_size = 14) +
+    theme_minimal(base_size = 14) +
+    theme(axis.text.y = element_blank()) +
+    geom_vline(
+      xintercept = seq_along(levels(res_scc_fixed_long$x)),
+      linetype = "dashed",
+      color = "grey70" ) +
     labs(
       title = paste("Sankey Plot of Fixed Resolution =", resolution),
       subtitle = paste("Across thresholds:", paste(thresholds, collapse = ", ")),

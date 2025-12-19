@@ -1,3 +1,6 @@
+setwd("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/TChroNetR")
+devtools::load_all()
+
 library(clustree)
 library(tidyverse)
 library(readr)
@@ -30,7 +33,8 @@ plot_heatmap_counts <- function(object , resolution = NULL) {
   right_annotation = ha_row,
   cluster_rows = F,
   show_row_names = F,
-  show_column_dend = F
+  show_column_dend = F,
+  cluster_columns = F
   )
   
   return(h)
@@ -148,34 +152,83 @@ plot_cistrom <- function(
   return(p)
 }
 
+
+##### LOADING TCHRONET FILES AND CREATE THE SERIES OBJECT
+
 # edge_files <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/th/" , full.names = T)
 # matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/lognorm_edgeR_limma_countsInCellReport_TheiCounts_NoStatic_mean.tsv"
 # seiries_obj <- build_TChroNetSeries_object(edge_files,matrix_path ,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 1234 , transitivity = FALSE)
 # write_rds(seiries_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/series_obj_thp1.rds")
 
+##### READING THE SERIES OBJECT RDS
+series_thp1 <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/series_obj_thp1.rds")
 
+##### FINDING THE BEST THRESHOLD
+series_thp1@best_th <- find_best_th(series_thp1)
 
-#### THP1
-series_thp1 <- read_rds("/Users/sdigiove/Downloads/rds/series_obj_thp1.rds")
+##### PLOTTING THE RAND INDEX MATRIX OF NEIGHBOURS THRESHOLD AND RESOLUTIONS
+plot_randindex_map(series_thp1)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/rand_index_map.pdf", 
+  device = cairo_pdf , 
+  height = 10, 
+  width = 8, 
+  units = 'in',
+  dpi = 300
+)
 
-series_thp1 <- find_best_th(series_thp1)
-
-plot_randindex_map(series_thp1 ,"/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/rand_index_map.png" )
+##### PLOTTING THE COMMUNITIES STABILITY ALONG THRESHOLDS
 plot_sankey_fixed_resolution(series_thp1 , resolution = 0.9)
-ggsave("/Users/sdigiove/Downloads/rds/thp1/pictures/sankey_plot_res_1_5.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/sankey_plot_res_1_5.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+##### PLOTTING THE REALTIVE LARGEST CONNECTED COMPONENTS FOR EACH THRESHOLD
 plot_metrics(series_thp1 , "relative_lcc") +
   theme(text = element_text(size = 15))
-#ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/relative_lcc.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/relative_lcc.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
-
+##### BUILDING TCHRONET OBJECT AT RESOLUTION OF 0.8 STARTING FROM THE SERIES
 thp1_th08 <- build_TCrhoNetNetwork_from_series(series_thp1 , threshold = 0.8)
+# write_rds(thp1_th08 , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/Network_obj_thp1.rds")
+thp1_th08 <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/Network_obj_thp1.rds")
+
+##### PLOT MODULARITY FOR ALL THE RESOLUTIONS
 plot_modularity(thp1_th08)+
   theme(text = element_text(size = 15))
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/modularity_th08.png" , height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/modularity_th08.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 plot_community_sankey(thp1_th08 , threshold = 0.8)
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/community_sankey_th08.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/community_sankey_th08.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
+
 
 thp1_th08 <- find_best_resolution(thp1_th08)
+
 thp1_th08@clusters |> group_by(clusters_0.9) |> 
   summarise(peaks = n()) |> 
   mutate(clusters_0.9 = as.factor(clusters_0.9)) |> 
@@ -186,11 +239,14 @@ ggplot(aes(x = clusters_0.9 , y = peaks)) +
   xlab("")+
   ylab("Size")+
   theme(text = element_text(size = 15))
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/community_size.png", height = 5 , width = 9 , units = 'in', dpi = 300)
-
-plot_sankey_fixed_resolution(series_thp1 , resolution = 0.9)
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/sankey_fixed_resolution.png", height = 5 , width = 9 , units = 'in', dpi = 300)
-
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/community_size.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 thp1_th08 <- lift_network_coordinates(thp1_th08 , chain_path = "../toy_data/data/hg19ToHg38.over.chain")
 thp1_th08 <- annotate_regions_from_bed(thp1_th08 , bed_path = "../toy_data/data/GRCh38-cCREs_2.bed" , genome = "hg38")
@@ -199,7 +255,14 @@ plot_stacked_annotation(thp1_th08) +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/stachek_annotations_th08_res09.png", height = 5 , width = 9 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/stachek_annotations_th08_res09.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 thp1_th08 <- run_GREAT_analysis(thp1_th08, genome = "hg19")
 
@@ -221,11 +284,25 @@ for (x in seq_along(list_communities_09)) {
 
 plot_trends_zscore(thp1_th08)+
   theme(text = element_text(size = 15))
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/boxplot_trends.png", height = 9 , width = 5 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/boxplot_trends.pdf", 
+  device = cairo_pdf , 
+  height = 9, 
+  width = 5, 
+  units = 'in',
+  dpi = 300
+)
+
 plot_line_trends_zscore(thp1_th08)+
     theme(text = element_text(size = 15))
-# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/lineplot_trends.png", height = 9 , width = 5 , units = 'in', dpi = 300)
-
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/lineplot_trends.pdf", 
+  device = cairo_pdf , 
+  height = 9, 
+  width = 5, 
+  units = 'in',
+  dpi = 300
+)
 
 
 msigdbr_collections(db_species = "Hs")
@@ -282,13 +359,257 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   theme(legend.position="top" , legend.text = element_text(size=10)) +
   scale_size(range = c(3, 10)) +
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/Hallmarks.png", height = 5 , width = 9 , units = 'in', dpi = 300)
 
-plot_cistrom("/Users/sdigiove/Downloads/cistromdb/" , tf_name_file = "~/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt", ) +
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/Hallmarks.pdf", 
+  device = cairo_pdf , 
+  height = 5, 
+  width =9, 
+  units = 'in',
+  dpi = 300
+)
+
+
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/cistromdb/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt", ) +
   theme(text = element_text(size = 15))
-ggsave("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/thp1/TFs_Cistrome.png",width = 7, height = 8 , units = 'in', dpi = 300)
+ggsave(
+  "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/YFs.pdf", 
+  device = cairo_pdf , 
+  height = 8, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
 
 
-png("/Users/sdigiove/Documents/Work/Projects/T-ChroNet/picture_review/thp1/heatmap.png", height = 9 , width = 5 , units = 'in', res = 300)
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/heatmap.pdf", height = 9 , width = 5)
 plot_heatmap_counts(thp1_th08)
+dev.off()
+
+
+communities_11 <- thp1_th08@clusters[,c('node' , "clusters_0.9")]
+list_communities_11 <- list()
+for (x in sort(unique(communities_11[["clusters_0.9"]])) ) {
+  nodes <- communities_11[communities_11["clusters_0.9"] == x, ] |> pull(node)
+  list_communities_11[[x]] <- nodes
+}
+
+genes_df <- read_delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/Genes_lognorm_edgeR_limma_countsInCellReport_TheiCounts_All_mean.tsv", delim ="\t" ) |> column_to_rownames('hgnc')
+
+all_long <- map_dfr(seq_along(list_communities_11), function(i) {
+
+  # ------------------------------
+  # Community name
+  # ------------------------------
+  comm_name <- paste0("Community_", i)
+
+  # ------------------------------
+  # ATAC peaks
+  # ------------------------------
+  peaks <- list_communities_11[[1]] #unname(unlist(thp1_th08@GREAT_targets[[i]]@))[unname(unlist(thp1_th08@GREAT_targets[[i]]$dist_to_TSS)) < 10000 & unname(unlist(thp1_th08@GREAT_targets[[i]]$dist_to_TSS)) > -10000] # list_communities_11[[i]]
+  peaks_use <- intersect(peaks, rownames(thp1_th08@matrix))
+
+  atac_mat <- thp1_th08@matrix[peaks_use, , drop = FALSE]
+
+  atac_z <- t(scale(t(atac_mat)))
+
+  atac_long <- as.data.frame(atac_z) |>
+    rownames_to_column("feature") |>
+    pivot_longer(
+      cols = -feature,
+      names_to = "time",
+      values_to = "value"
+    ) |>
+    mutate(
+      Dataset = "ATAC",
+      community = comm_name
+    )
+
+  # ------------------------------
+  # RNA genes
+  # ------------------------------
+  genes <- unname(unlist(thp1_th08@GREAT_targets[[i]]$annotated_genes))
+  genes_use <- intersect(genes, rownames(genes_df))
+
+  rna_mat <- genes_df[genes_use, , drop = FALSE]
+
+  rna_z <- t(scale(t(rna_mat)))
+
+  rna_long <- as.data.frame(rna_z) |>
+    rownames_to_column("feature") |>
+    pivot_longer(
+      cols = -feature,
+      names_to = "time",
+      values_to = "value"
+    ) |>
+    mutate(
+      Dataset = "RNA",
+      community = comm_name
+    )
+
+  # ------------------------------
+  # Combine
+  # ------------------------------
+  bind_rows(atac_long, rna_long)
+})
+time_levels <- colnames(thp1_th08@matrix)
+
+time_labels <- c(
+  "0min","30min","60min","90min",
+  "120min","240min","360min","1440min"
+)
+
+all_long$time <- factor(all_long$time, levels = time_levels)
+
+cols <- c("ATAC" = "orange", "RNA" = "blue")
+
+p <- ggplot(
+  all_long,
+  aes(x = time, y = value, color = Dataset, group = Dataset)
+) +
+  scale_color_manual(values = cols)+
+  stat_summary(
+    fun = mean,
+    geom = "line",
+    linewidth = 1
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 2
+  ) +
+  facet_wrap(
+     ~ community,
+    scales = "free_y"
+  ) +
+  scale_x_discrete(labels = time_labels) +
+  labs(
+    x = NULL,
+    y = "Z-score"
+  ) +
+  theme_classic() +
+  theme(
+    strip.background = element_blank(),
+    strip.text = element_text(size = 9),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "top",
+    text = element_text(size = 15)
+  )
+
+p
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/pdf/rna_genes.pdf" ,
+  device = cairo_pdf , 
+  height = 8, 
+  width = 7, 
+  units = 'in',
+  dpi = 300
+)
+
+
+sites_th1_cellreport <- read_delim(
+  "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/their_regions_timepoints.bed", delim = "\t"
+) 
+
+sites_th1_cellreport <- sites_th1_cellreport |>
+  mutate(
+    sites = paste(chr, start, end, sep = "-")
+  ) |>
+  select(sites, cluster) |>
+  filter(sites %in% rownames(thp1_th08@matrix))
+sites_th1_cellreport[!duplicated(sites_th1_cellreport$sites),]
+
+communities_name <- c(
+  "dn.early","dn.grad","dn.mid","dn.var",
+  "up.grad","up.late","up.mid","up.var"
+)
+
+communities_list_comparison <- lapply(
+  communities_name,
+  function(x) {
+    sites_th1_cellreport |>
+      filter(cluster == x) |>
+      pull(sites)
+  }
+)
+
+count_overlaps <- function(list1, list2) {
+  # list1, list2: lists of vectors (character or numeric)
+
+  overlaps <- vector("list", length(list1))
+
+  for (i in seq_along(list1)) {
+    overlap_row <- numeric(length(list2))
+
+    for (j in seq_along(list2)) {
+      common_elements <- intersect(list1[[i]], list2[[j]])
+      overlap_row[j] <- length(common_elements)
+    }
+
+    overlaps[[i]] <- overlap_row
+  }
+
+  # Convert to matrix for easier downstream use
+  do.call(rbind, overlaps)
+}
+overlap_ratios <- function(list1, list2) {
+  # list1, list2: lists of vectors
+  # Returns matrix with rows = list1, cols = list2
+
+  ratios <- vector("list", length(list1))
+
+  for (i in seq_along(list1)) {
+    ratio_row <- numeric(length(list2))
+
+    for (j in seq_along(list2)) {
+      common_elements <- intersect(list1[[i]], list2[[j]])
+
+      if (length(list2[[j]]) > 0) {
+        ratio_row[j] <- length(common_elements) / length(list2[[j]])
+      } else {
+        ratio_row[j] <- 0
+      }
+    }
+
+    ratios[[i]] <- ratio_row
+  }
+
+  do.call(rbind, ratios)
+}
+
+
+
+overlap_counts_sp_control <- overlap_ratios(
+  communities_list_comparison,
+  list_communities_11
+)
+
+overlap_counts_sp_control <- t(overlap_counts_sp_control)
+colnames(overlap_counts_sp_control) <- communities_name
+rownames(overlap_counts_sp_control) <- paste0('Community_' , c(1:6) , sep = "")
+
+
+mat <- overlap_counts_sp_control
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/overlaps_communities.pdf" , height = 6 , width = 6)
+ht <- ComplexHeatmap::Heatmap(mat,
+  name = "Z-score(Overlaps)",
+cluster_rows = F,
+cluster_columns = F,
+show_column_dend = F,
+show_row_dend = F ,
+rect_gp = gpar(col = "white", lwd = 5),
+cell_fun = function(j, i, x, y, width, height, fill) {
+    grid.text(sprintf("%.2f", mat[i, j]), x, y, gp = gpar(fontsize = 10,    # change text size
+        col = "white"))
+  },
+  col = viridis::viridis(100),
+heatmap_legend_param = list(
+    direction = "horizontal",
+    title_position = "topcenter",
+    legend_height = unit(8, "mm"),          # increases the color bar thickness
+    title_gp = gpar(fontsize = 12, fontface = "bold"),  # legend title size
+    labels_gp = gpar(fontsize = 10)         
+  ))
+draw(ht, heatmap_legend_side = "top")
 dev.off()

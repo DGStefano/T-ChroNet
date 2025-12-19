@@ -189,7 +189,6 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
     # Store results
     obj@communities[[as.character(thr)]] <- th_cluster_df
     obj@modularity[[as.character(thr)]] <- modularity_at_th
-    print(trans_val)
     obj@metrics <- rbind(
       obj@metrics,
       data.frame(

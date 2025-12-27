@@ -7,7 +7,8 @@ library(limma)
 library(edgeR)
 library(MatrixGenerics)
 library(tidyverse)
-
+library(circlize)
+library(grid)
 
 # FUNCTIONS
 normlization_cpm = function (df ,groups) {
@@ -57,7 +58,7 @@ filter_genes <- function(data) {
 
 # THP1 NORMALIZATION
 
-counts <- read.delim("~/T-ChroNet/paper_analysis/data/THP1/Multicov_AllAnalyzedPeaksWithAnnotations_NOSTATIC.tsv", sep = "\t") |> 
+counts <- read.delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/Multicov_AllAnalyzedPeaksWithAnnotations_NOSTATIC.tsv", sep = "\t") |> 
   unite('peaks', c('chromosome', 'start', 'end'), sep = "-")
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> select(-'_') |> column_to_rownames('peaks')
 
@@ -90,10 +91,16 @@ use.pcs <- c(1,2)
 labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percentVar[use.pcs], 2), "%"))
 
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
-  geom_point(size=3) +
-  xlab(labs[1]) + ylab(labs[2])
-# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
-
+  geom_point(size=5) +
+  xlab(labs[1]) + ylab(labs[2]) +
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/PCA.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 # correct for the batch which here is the "kit"
 batch <- factor(y$samples$replicated)
 timepoints <- factor(y$samples$timepoint)
@@ -114,22 +121,35 @@ use.pcs <- c(1,2)
 labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percentVar[use.pcs], 2), "%"))
 
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
-  geom_point(size=3) +
-  xlab(labs[1]) + ylab(labs[2])
-# ggsave("~/T-ChroNet/paper_analysis/data/THP1/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
-
+  xlab(labs[1]) + ylab(labs[2]) +
+  geom_point(size=5) +
+  xlab(labs[1]) + ylab(labs[2]) +
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/PCA_after_correction.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 logCPMs_corrected_filtered <- logCPMs_corrected#[rownames(counts),]
 
 cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
+rownames(cor_matrix) <- sub(".*_(\\d+min_REP\\d+)$", "\\1", rownames(cor_matrix))
+colnames(cor_matrix) <- sub(".*_(\\d+min_REP\\d+)$", "\\1", colnames(cor_matrix))
 
-# Plot the heatmap
-# png("~/T-ChroNet/paper_analysis/data/THP1/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , res = 300)
-pheatmap(cor_matrix, 
-         display_numbers = TRUE, # Show correlation values on the heatmap
-         clustering_method = "complete", # Clustering method
-         color = colorRampPalette(c("blue", "white", "red"))(100)) # Color gradient
-# dev.off()
+col_fun = circlize::colorRamp2(c(0,0.5 , 1), c("white", "#6BAED6", "#08306B"))
+ht <- ComplexHeatmap::Heatmap(
+  cor_matrix,
+  name = "Spearman Correlation",
+  col = col_fun,
+  rect_gp = gpar(col = "white", lwd = 2),
+  heatmap_legend_param = list(col_fun = col_fun, title = "Spearman Correlation", direction = "horizontal",legend_width = unit(6, "cm"))
+)
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/correlation_heatmap.pdf" , height = 9 , width = 9)
+ComplexHeatmap::draw(ht , heatmap_legend_side = "top", annotation_legend_side = "top")
+dev.off()
 
 row_mean = rowMeans2(logCPMs_corrected_filtered)
 row_var = rowVars(logCPMs_corrected_filtered)
@@ -147,7 +167,7 @@ dim(logCPMs_corrected_filtered)
 # LIVER DEVELOPMENT
 #### STARDARD EDGER AND LIMMA ANALYSIS
 
-counts <- read.delim("~/T-ChroNet/paper_analysis/data/LiverDevelopment/multicov_all_sites_all_timepoint.tsv" , #
+counts <- read.delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/multicov_all_sites_all_timepoint.tsv" , #
                      sep = "\t" ) |> unite('peaks' , c('chromosome','start','end') , sep ="-")                     
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> dplyr::select(-'_') |> column_to_rownames('peaks')
 
@@ -184,7 +204,7 @@ labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percent
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
   geom_point(size=3) +
   xlab(labs[1]) + ylab(labs[2])
-ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+# ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/BEFORE_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 # correct for the batch which here is the "kit"
 batch <- factor(y$samples$replicated)
@@ -207,9 +227,17 @@ use.pcs <- c(1,2)
 labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percentVar[use.pcs], 2), "%"))
 
 ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) + 
-  geom_point(size=3) +
-  xlab(labs[1]) + ylab(labs[2])
-ggsave("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+  xlab(labs[1]) + ylab(labs[2]) +
+  geom_point(size=5) +
+  xlab(labs[1]) + ylab(labs[2]) +
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/PCA_after_correction.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 
@@ -217,14 +245,17 @@ logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
 
-# Plot the heatmap
-ph <- pheatmap(cor_matrix, 
-         display_numbers = TRUE, # Show correlation values on the heatmap
-         clustering_method = "complete", # Clustering method
-         color = colorRampPalette(c("blue", "white", "red"))(100)) # Color gradient
-#png("~/T-ChroNet/paper_analysis/data/LiverDevelopment/results/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
-ph
-#dev.off()
+col_fun = circlize::colorRamp2(c(0,0.5 , 1), c("white", "#6BAED6", "#08306B"))
+ht <- ComplexHeatmap::Heatmap(
+  cor_matrix,
+  name = "Spearman Correlation",
+  col = col_fun,
+  rect_gp = gpar(col = "white", lwd = 2),
+  heatmap_legend_param = list(col_fun = col_fun, title = "Spearman Correlation", direction = "horizontal",legend_width = unit(6, "cm"))
+)
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/correlation_heatmap.pdf" , height = 9 , width = 9)
+ComplexHeatmap::draw(ht , heatmap_legend_side = "top", annotation_legend_side = "top")
+dev.off()
 
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered[!grepl("chrX", rownames(logCPMs_corrected_filtered)) , ]
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered_noextra[!grepl("chrY", rownames(logCPMs_corrected_filtered_noextra)) , ]
@@ -256,7 +287,7 @@ colnames(result)  <- c('t11_5', 't12_5','t13_5' , 't14_5','t15_5', 't16_5')
 # B-ALL
 #### STARDARD EDGER AND LIMMA ANALYSIS
 
-counts <- read_delim("~/T-ChroNet/paper_analysis/data/BCP-ALL/consensus_peaks.mLb.clN.featureCounts.txt" , #
+counts <- read_delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/BCP-ALL/consensus_peaks.mLb.clN.featureCounts.txt" , #
                      delim = "\t" , comment = "#") |> select(-Geneid , -Strand , -Length)  |> unite('peaks' , c('Chr','Start','End') , sep ="-")
 counts <- counts[!duplicated(counts$peaks),] |> rownames_to_column("_") |> dplyr::select(-'_') |> column_to_rownames('peaks')
 counts <- counts |> select('patient_6_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_9_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_4_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_7_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_5_Healthy_ATACseq_REP1.mLb.clN.sorted.bam','patient_8_Healthy_ATACseq_REP1.mLb.clN.sorted.bam',
@@ -327,8 +358,16 @@ use.pcs <- c(1,2)
 labs <- paste0(paste0("PC", use.pcs, " - "), paste0("Var.expl = ", round(percentVar[use.pcs], 2), "%"))
 
 ggplot(to_plot, aes(x=PC1, y=PC2,  color=timepoint)) + 
-  geom_point(size=3) +
-  xlab(labs[1]) + ylab(labs[2])
+  geom_point(size=5) +
+  xlab(labs[1]) + ylab(labs[2]) +
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/PCA_size5_after_correction.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 # ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
@@ -337,14 +376,17 @@ logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 cor_matrix <- cor(logCPMs_corrected_filtered , method = "pearson") # Use 'spearman' or 'kendall' if needed
 
 
-# Plot the heatmap
-ph  <- pheatmap(cor_matrix, 
-         #display_numbers = TRUE, # Show correlation values on the heatmap
-         clustering_method = "complete", # Clustering method
-         color = colorRampPalette(c("blue", "white", "red"))(100)) # Color gradient
-# png("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_Correlation.png" , height = 5 , width = 9 , units = 'in' , res = 300)
-ph
-# dev.off()
+col_fun = circlize::colorRamp2(c(0,0.5 , 1), c("white", "#6BAED6", "#08306B"))
+ht <- ComplexHeatmap::Heatmap(
+  cor_matrix,
+  name = "Spearman Correlation",
+  col = col_fun,
+  # rect_gp = gpar(col = "white", lwd = 2),
+  heatmap_legend_param = list(col_fun = col_fun, title = "Spearman Correlation", direction = "horizontal",legend_width = unit(6, "cm"))
+)
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/correlation_heatmap.pdf" , height = 9 , width = 9)
+ComplexHeatmap::draw(ht , heatmap_legend_side = "top", annotation_legend_side = "top")
+dev.off()
 
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered[!grepl("chrX", rownames(logCPMs_corrected_filtered)) , ]
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered_noextra[!grepl("chrY", rownames(logCPMs_corrected_filtered_noextra)) , ]
@@ -359,8 +401,14 @@ data.frame("rowMean" = row_mean , "rowVar" = row_var ) |>
   ggplot(aes(x = rowMean , y = rowVar))+
   geom_point() +
   geom_hline(yintercept = 1.0) +
-  theme_classic()
-# ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/Means_vs_Variance_BALL_nostrangeCHR.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/selection_sites.pdf", device = cairo_pdf , 
+  height = 5, 
+  width = 9, 
+  units = 'in',
+  dpi = 300
+)
 
 
 cor_matrix <- cor(logCPMs_corrected_filtered_noextra , method = "pearson") # Use 'spearman' or 'kendall' if needed

@@ -63,7 +63,7 @@ If computed during the series construction phase, **transitivity** (the clusteri
 
 ```{r}
 # Automatically determine the best threshold parameter
-obj_series <- find_best_th(obj_series)
+obj_series@best_th <- find_best_th(obj_series)
 ```
 
 # 3. Visualizing Community Detection Results

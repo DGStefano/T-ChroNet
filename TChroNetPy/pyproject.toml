@@ -23,7 +23,6 @@ dependencies = [
     "pandas",
     "numpy",
     "deepgraph",
-    "h5py",
 ]
 
 [project.scripts]

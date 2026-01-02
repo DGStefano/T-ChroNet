@@ -21,7 +21,20 @@
 #' @export
 #' 
 
-.add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
+build_TChroNetSeries_object <-  function(edge_files, matrix_path,
+                                      method = c("Leiden", "Louvain"),
+                                      resolutions_list = seq(0.1, 0.9, 0.1),
+                                      run_cd = FALSE,
+                                      transitivity = FALSE,
+                                      min_size = 100,
+                                      merged_id = 1000,
+                                      seed = 123) {
+  library(igraph)
+  library(leidenAlg)
+  library(dplyr)
+  library(arrow)
+
+  .add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
   iso <- which(degree(G) == 0)
   if (length(iso) == 0) return(G)
 
@@ -61,18 +74,6 @@
   return(membership)
 }
 
-build_TChroNetSeries_object <-  function(edge_files, matrix_path,
-                                      method = c("Leiden", "Louvain"),
-                                      resolutions_list = seq(0.1, 0.9, 0.1),
-                                      run_cd = FALSE,
-                                      transitivity = FALSE,
-                                      min_size = 100,
-                                      merged_id = 1000,
-                                      seed = 123) {
-  library(igraph)
-  library(leidenAlg)
-  library(dplyr)
-  library(arrow)
 
   method <- match.arg(method)
   if (!run_cd) method <- ""

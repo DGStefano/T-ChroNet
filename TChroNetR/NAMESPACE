@@ -2,7 +2,6 @@
 
 export(.add_weighted_self_loops_iso)
 export(annotate_regions_from_bed)
-export(build_TChroNetSeries_object_old)
 export(build_TCrhoNetNetwork_from_series)
 export(compute_membership_nodes)
 export(find_best_resolution)

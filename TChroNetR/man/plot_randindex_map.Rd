@@ -5,9 +5,9 @@
 \alias{plot_randindex_map}
 \title{Plot the random index map in which communities are compared among neighbors at increased threshold and resolution.}
 \usage{
-plot_randindex_map(object, output_path = NULL, color_limits = c(0, 1))
+plot_randindex_map(object, color_limits = c(0, 1))
 
-plot_randindex_map(object, output_path = NULL, color_limits = c(0, 1))
+plot_randindex_map(object, color_limits = c(0, 1))
 }
 \arguments{
 \item{object}{TCrhoNetSeries object}

@@ -183,6 +183,7 @@ series_ball@best_th <- find_best_th(series_ball)
 
 ball_obj <- build_TCrhoNetNetwork_from_series(series_ball)
 # write_rds(ball_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/obj_ball.rds")
+# ball_obj <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/obj_ball.rds")
 # colnames(ball_obj@matrix) <- c("H6","H9","H4","H7","H5","H8","P14","P12","P10","P13","P11","P16","P7","P19","P17","P27","P26","REM21","REM22","REM18","REM26","REM20","REM25","REM23","REM24","REL31","REL28","REL29","REL33","REL32","REL27","REL30","REL14")
 
 
@@ -249,7 +250,7 @@ ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/stachek_annota
 )
 
 
-ball_obj <- run_GREAT_analysis(ball_obj, resolution = as.numeric(ball_obj@resolution), genome = "hg19")
+ball_obj <- run_GREAT_analysis(ball_obj, resolution = 0.9 , genome = "hg19") #as.numeric(ball_obj@resolution)
 
 plot_trends_zscore(ball_obj)+
   theme(text = element_text(size = 15)) +
@@ -589,12 +590,14 @@ upset(
 ### Save communities hg38
 for (x in seq_along(list_communities_11)) {
   comm <- list_communities_11[[x]]
-  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
+  comm_hg38 <- ball_obj@lifted_coords[ball_obj@lifted_coords$node %in% comm , ] |> pull(lifted_coord)
+  comm_hg38 <- comm_hg38[!is.na(comm_hg38)]
+  comm_hg38 <- comm_hg38 |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
   out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/beds/community_hg38_" , as.character(x) , ".bed" , sep ="")
   write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
 }
 
-plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/cistrom/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/cistrom" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
   theme(text = element_text(size = 15))+
   theme(legend.position="top" , legend.text = element_text(size=15))
 ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/TFs.pdf", device = cairo_pdf , 

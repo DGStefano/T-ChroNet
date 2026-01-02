@@ -294,12 +294,13 @@ upset(
 liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.1, genome = "mm10")
 
 ### Save communities hg38
-# for (x in seq_along(list_communities_11)) {
-#   comm <- list_communities_11[[x]]
+for (x in seq_along(list_communities_11)) {
+  comm <- list_communities_11[[x]]
 #   comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
-#   out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/bed/community_hg38_" , as.character(x) , ".bed" , sep ="")
-#   write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
-# }
+  comm_hg38 <- data.frame(list(peaks = comm))
+  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/bed/community_mm10_" , as.character(x) , ".bed" , sep ="")
+  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
+}
 
 plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/cistrom_liver/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" )+
   theme(text = element_text(size = 15))

@@ -24,7 +24,8 @@ setClass(
     metadata = "list",
     resolution = 'numeric',
     annotations = 'data.frame',
-    GREAT_targets = 'list'
+    GREAT_targets = 'list',
+    TFs = 'list'
   )
 )
 

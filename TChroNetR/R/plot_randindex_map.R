@@ -78,7 +78,7 @@ plot_randindex_map <- function(object,
   }
 
   pairs <- pairs[seq_len(k - 1), ]
-  print("plotting")
+  
   p <- ggplot2::ggplot(pairs) +
     ggplot2::geom_segment(
       ggplot2::aes(

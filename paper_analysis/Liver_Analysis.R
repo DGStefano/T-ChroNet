@@ -150,9 +150,9 @@ plot_cistrom <- function(
 }
 
 
-# edge_files_liver <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/th/" , full.names = T)
-# matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv"
-# seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
+edge_files_liver <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/th/" , full.names = T)
+matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv"
+seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
 # write_rds(seiries_obj_liver , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/series_obj_liver.rds")
 
 

@@ -25,7 +25,8 @@ setClass(
     resolution = 'numeric',
     annotations = 'data.frame',
     GREAT_targets = 'list',
-    TFs = 'list'
+    TFs = 'list',
+    threshold = 'numeric'
   )
 )
 

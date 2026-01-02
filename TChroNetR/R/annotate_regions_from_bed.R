@@ -15,7 +15,7 @@
 #' @param bed_path Path to a bed file containing regions and annotations
 #' @return A TChroNetNetwork object
 #' @export
-annotate_regions_from_bed <- function(object, bed_path , genome = 'hg39' ) {
+annotate_regions_from_bed <- function(object, bed_path , genome = 'hg38' ) {
   if (!inherits(object, "TCrhoNetNetwork")) {
     stop("The 'object' must be a TCrhoNetNetwork instance.")
   }

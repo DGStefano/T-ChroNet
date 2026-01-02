@@ -73,7 +73,8 @@ make_TChroNetNetwork_obj <- function(edge_files , matrix_path  , threshold = 0) 
     genomicRegions = peaks_ranges,
     clusters =data.frame(),
     modularity = data.frame(),
-    metadata = list( n_nodes = vcount(G), n_edges = ecount(G))#source = network_path,
+    metadata = list( n_nodes = vcount(G), n_edges = ecount(G)),
+    threshold = threshold
   )
   
   return(obj)

@@ -147,9 +147,10 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
       for (res in resolutions_list) {
         message(sprintf("🧩 Leiden clustering at resolution %.2f...", res))
 
-        set.seed(seed)
+        
         G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
 
+        set.seed(seed)
         membership_nodes <- leidenAlg::find_partition_with_rep(
           G_loop,
           resolution = res,

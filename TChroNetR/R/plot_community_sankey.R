@@ -4,11 +4,11 @@
 #' @import dplyr
 #' 
 #' 
-#' @param object TCrhoNetSeries object
-#' @param threshold Set the threshold 
+#' @param object TCrhoNetSeries or TCrhoNetNetwork object
+#' @param threshold Set the threshold to be plotted if TCrhoNetSeries object was passed. default = NULL
 #' @return A ggplot2 object
 #' @export
-plot_community_sankey <- function(object, threshold, output_path = NULL) {
+plot_community_sankey <- function(object, threshold = NULL , output_path = NULL) {
   
   # --- Check input ---
   if (!inherits(object, "TCrhoNetSeries") & !inherits(object, "TCrhoNetNetwork") ) {
@@ -20,6 +20,7 @@ plot_community_sankey <- function(object, threshold, output_path = NULL) {
     }
     # --- Extract the data ---
     d <- object@communities[[as.character(threshold)]]
+    
     
     if (!"node" %in% colnames(d)) {
       stop("Community table must contain a 'node' column.")

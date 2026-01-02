@@ -17,8 +17,47 @@
 #' @param seed Set a seed for computational reproducibility
 #' @return An object of class TChroNetNetwork
 #' @export
-compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden", "Louvain") , niter = 2 , seed = 1234) {
+compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden", "Louvain") , niter = 2 , min_size = 100, merged_id = 1000, seed = 1234) {
 
+  .add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
+  iso <- which(degree(G) == 0)
+  if (length(iso) == 0) return(G)
+
+  add_edges(
+    G,
+    as.vector(rbind(iso, iso)),
+    attr = list(weight = rep(loop_weight, length(iso)))
+  )
+  }
+
+  .fix_leiden_membership <- function(G, membership, min_size = 100, merged_id = 1000) {
+
+    # Ensure full length
+    if (length(membership) < vcount(G)) {
+      full <- rep(NA_integer_, vcount(G))
+      full[seq_along(membership)] <- membership
+      membership <- full
+    }
+
+    # Handle degree-0 nodes → unique singleton communities
+    iso <- which(degree(G) == 0)
+    if (length(iso) > 0) {
+      max_id <- max(membership, na.rm = TRUE)
+      membership[iso] <- seq_len(length(iso)) + max_id
+    }
+
+    # Community sizes
+    comm_sizes <- table(membership)
+
+    # Communities smaller than min_size
+    small_comms <- as.integer(names(comm_sizes[comm_sizes < min_size]))
+
+    if (length(small_comms) > 0) {
+      membership[membership %in% small_comms] <- merged_id
+    }
+
+    return(membership)
+  }
     method <- match.arg(method)
     
     if (!inherits(object@graph, "igraph")) {
@@ -57,25 +96,31 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
         else {
           message(sprintf("Running Leiden clustering at resolution %.2f...", res))
           
-          set.seed(seed)
- 
-          nodes_membership <- leidenAlg::find_partition_with_rep(object@graph, resolution = res, edge_weights = E(object@graph)$weight , nrep = 5)
+        G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
 
-          nodes_membership <- nodes_membership+1
+        set.seed(seed)
+        membership_nodes <- leidenAlg::find_partition_with_rep(
+          G_loop,
+          resolution = res,
+          edge_weights = E(G_loop)$weight,
+          nrep = 5
+        )
 
-          if (length(nodes_membership$membership) != vcount(object@graph)) {
-            stop(sprintf(
-              "Leiden returned %d assignments but the graph has %d vertices.",
-              length(nodes_membership$membership), vcount(object@graph)
-            ))
-          }
-          # Build data frame for this resolution
-          cluster_col <- paste0("clusters_", as.character(res))
-          tmp_df <- data.frame(
-            node = V(object@graph)$name,
-            stringsAsFactors = FALSE
-          )
-          tmp_df[[cluster_col]] <- as.integer(nodes_membership$membership)
+        rm(G_loop)
+        invisible(gc())
+        
+        membership_nodes <- membership_nodes+1
+        
+        membership_nodes_print <- .fix_leiden_membership(
+          G,
+          membership_nodes,
+          min_size = min_size,
+          merged_id = merged_id
+        )
+
+        cluster_col <- paste0("clusters_", res)
+        tmp_df <- data.frame(node = V(G)$name, stringsAsFactors = FALSE)
+        tmp_df[[cluster_col]] <- membership_nodes_print
           
           # Handle first run (clusters empty)
           if (nrow(object@clusters) == 0) {

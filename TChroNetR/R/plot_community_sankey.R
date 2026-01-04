@@ -29,7 +29,7 @@ plot_community_sankey <- function(object, threshold = NULL , output_path = NULL)
     # Convert to long format for Sankey plotting
     d_long <- d %>% 
       ggsankey::make_long(colnames(d)[colnames(d) != "node"])
-    
+    levels(d_long$x) <- gsub("clusters_", "", levels(d_long$x))
     # --- Plot ---
     p <- ggplot(d_long, 
                 aes(x = x, 
@@ -39,7 +39,12 @@ plot_community_sankey <- function(object, threshold = NULL , output_path = NULL)
                     fill = factor(node))) +
       geom_sankey(alpha = 0.8, show.legend = FALSE) +
       scale_fill_discrete(drop = FALSE) +
-      theme_bw(base_size = 14) +
+      theme_minimal(base_size = 14) +
+      theme(axis.text.y = element_blank()) +
+      geom_vline(
+        xintercept = seq_along(levels(d_long$x)),
+        linetype = "dashed",
+        color = "grey70" ) +
       labs(
         title = paste("Sankey Plot of Communities – Threshold", threshold),
         x = "Resolution",
@@ -57,7 +62,7 @@ plot_community_sankey <- function(object, threshold = NULL , output_path = NULL)
     # Convert to long format for Sankey plotting
     d_long <- d %>% 
       ggsankey::make_long(colnames(d)[colnames(d) != "node"])
-    
+    levels(d_long$x) <- gsub("clusters_", "", levels(d_long$x))
     # --- Plot ---
     p <- ggplot(d_long, 
                 aes(x = x, 

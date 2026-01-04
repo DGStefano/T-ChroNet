@@ -11,7 +11,12 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = TRUE
+  eval = TRUE,
+  dev = "png", 
+  fig.width = 7, 
+  fig.height = 5, 
+  message = FALSE, 
+  warning = FALSE
 )
 ```
 
@@ -104,12 +109,12 @@ Once the optimal parameters are identified, the series object can be converted i
 
 ```{r}
 # Build the final TChroNet object
-obj <- build_TChroNetNetwork_from_series(obj_series, threshold = 0.8)
+obj <- build_TCrhoNetNetwork_from_series(obj_series, threshold = 0.8)
 ```
 
 Alternatively, if you already have a target threshold, you can bypass the series step and build the object directly:
 
-```{r}
+```{r, eval = FALSE, echo = FALSE}
 # Directly build TChroNet object without scanning thresholds
 obj <- make_TChroNetNetwork_obj(
   edge_files,
@@ -124,7 +129,7 @@ By default, a `TChroNet` object inherits the community assignments stored within
 
 The `compute_membership_nodes` function allows you to execute the Leiden algorithm at a single resolution or across a range of resolutions ($R$). This flexibility is essential for fine-tuning the granularity of the detected clusters.
 
-```{r}
+```{r, eval = FALSE, echo = FALSE}
 # Compute memberships across multiple resolutions
 obj <- compute_membership_nodes(obj, resolutions = seq(0.5, 1.5, 0.1))
 ```
@@ -136,7 +141,7 @@ plot_modularity(obj)
 
 ```{r}
 # Plot the community flow at the selected thresholds for the range of resolutions stored in TChroNet object
-plot_community_sankey(obj)
+plot_community_sankey(obj , threshold = 0.8)
 ```
 
 ```{r}
@@ -150,7 +155,7 @@ To understand the quantitative behavior of the detected communities, you can plo
 
 ```{r}
 # Plot trends as lines 
-plot_line_trends(obj)
+plot_line_trends_zscore(obj)
 
 # Plot trends as violin
 plot_trends_zscore(obj)
@@ -165,10 +170,10 @@ plot_trends_zscore(obj)
 obj <- lift_network_coordinates(obj, chain_path = "~/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
 
 # Annotate with SCREEN cCRE database
-obj <- annotate_regions_from_bed(obj, bed_path =  "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed")
+obj <- annotate_regions_from_bed(obj, bed_path =  "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed" , genome = "hg38")
 
 # Visualize the distribution of genomic annotations across communities
-genomic_position_stackbar(obj)
+plot_stacked_annotation(obj)
 ```
 
 # 8. Target Gene Identification
@@ -189,6 +194,8 @@ To understand the regulatory drivers behind each community, `TChroNetR` integrat
 First, we retrieve the Position Weight Matrices (PWMs) from the **JASPAR2024** database. In this example, we focus on the vertebrate "CORE" collection.
 
 ```{r}
+library(JASPAR2024)
+library(TFBSTools)
 JASPAR2024 <- JASPAR2024()
 JASPARConnect <- RSQLite::dbConnect(RSQLite::SQLite(), db(JASPAR2024))
 pwms <- getMatrixSet(JASPARConnect,

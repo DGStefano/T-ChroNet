@@ -187,6 +187,9 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         )
       }
     }
+    else {
+      membership_nodes_print = NA
+    }
 
     # Store results
     obj@communities[[as.character(thr)]] <- th_cluster_df

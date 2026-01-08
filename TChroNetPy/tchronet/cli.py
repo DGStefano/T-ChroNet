@@ -19,21 +19,20 @@ from multiprocessing import Pool
 import deepgraph as dg
 import shutil
 from scipy import stats
-# import h5py
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 
 class ei_args:
     """Container class for edge computation arguments."""
-    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir, in_th , in_significance_level ):
+    def __init__(self, *, in_graph, in_pos_array, in_matrix, in_n_samples, in_tmp_dir, in_th , in_type_th ):
         self.graph = in_graph
         self.pos_array = in_pos_array
         self.data_matrix = in_matrix
         self.n_samples = in_n_samples
         self.tmp_dir = in_tmp_dir
-        self.th = in_th,
-        self.significance_level = in_significance_level
+        self.th = in_th
+        self.type_th = in_type_th
 
 
 def reset_dir(path):
@@ -48,17 +47,14 @@ def corr_from_pvalue(p_value, n_samples):
     r = round(np.sqrt(t_stat**2 / (t_stat**2 + dof)),1)
     return r
 
-def spearman_corr(index_s, index_t, data_matrix, n_samples,significance_level=0.05):
+def spearman_corr(index_s, index_t, data_matrix, n_samples,min_th ):
     """Compute pairwise Spearman correlations efficiently."""
     features_s = data_matrix[index_s].astype(np.float32)
     features_t = data_matrix[index_t].astype(np.float32)
     corr = np.einsum('ij,ij->i', features_s, features_t) / n_samples
     corr = np.clip(corr, -1.0, 1.0)
-    dof = n_samples - 2
-    t_stat = corr * np.sqrt(dof / (1 - corr**2 + 1e-8))
-    p_values = 2 * (1 - stats.t.cdf(np.abs(t_stat), dof))
     
-    significant_mask = p_values >= significance_level
+    significant_mask = corr < min_th
     
     # Return only significant results to save memory
     corr[significant_mask] = 0
@@ -79,6 +75,7 @@ def create_ei(i, ei_args):
     step_size = 1e5
     chunk_size = 10000
     th = ei_args.th
+    type_th = ei_args.type_th
 
     from_pos = pos_array[i]
     to_pos = pos_array[i + 1]
@@ -87,7 +84,7 @@ def create_ei(i, ei_args):
         """
         Local wrapper for spearman_corr that captures ei_args from closure.
         """
-        corr = spearman_corr(index_s, index_t, ei_args.data_matrix, ei_args.n_samples,ei_args.significance_level )
+        corr = spearman_corr(index_s, index_t, ei_args.data_matrix, ei_args.n_samples,ei_args.th )
         return corr
 
     edge_chunks = range(from_pos, to_pos, chunk_size)
@@ -125,18 +122,16 @@ def main():
                         help="Prefix for output HDF5 files (one per threshold range)")
     parser.add_argument("-s", "--stepsize", type=int, required=False, default=1e5,
                         help="Stepsize for RAM parameters (DeepGraph parameter)")
-    parser.add_argument("-@", "--threads", type=int, required=False, default=8,
+    parser.add_argument("-@", "--threads", type=int, required=False, default=1,
                         help="Number of threads to use for parallel processing")
     parser.add_argument("-t", "--tempdir", type=str, required=False,
                         help="Temporary directory to use. Will create a '/tmp' directory inside it")
-    parser.add_argument("--min_th", type=float, default=0.4,
-                        help="Minimum correlation threshold (start of first interval)")
-    parser.add_argument("--max_th", type=float, default=1.0,
+    parser.add_argument("--max_t_val", type=float, default=1.0,required=False,
                         help="Maximum correlation threshold (end of last interval)")
-    parser.add_argument("--step", type=float, default=0.1,
-                        help="Size of each correlation interval (e.g., 0.1 for 0.4–0.5, 0.5–0.6, etc.)")
-    parser.add_argument("--pval", type=float, default=0.05,
-                        help="Pvalue threshold")
+    parser.add_argument("--min_t_type", type=str, default="pval",choices=["pval", "cor"], 
+                        help="Selection criteria for filtering results: 'pval' for significance testing or 'cor' for correlation coefficient strength")
+    parser.add_argument("--min_t_val", type=float, default=0.1,required=False,
+                        help="Numerical threshold limit. Results exceeding this value (for pval) or falling below it (for cor) will be filtered out.")
 
     args = parser.parse_args()
 
@@ -160,8 +155,10 @@ def main():
 
     # Preprocess for Spearman
     print("Preprocessing matrix for Spearman correlation...")
-    data_matrix = data_matrix.argsort(axis=1).argsort(axis=1)
-    data_matrix = (data_matrix - data_matrix.mean(axis=1, keepdims=True)) / data_matrix.std(axis=1, keepdims=True)
+    data_matrix_rank = stats.rankdata(data_matrix , axis = 1) # data_matrix.argsort(axis=1).argsort(axis=1)
+    # data_matrix_rank = data_matrix.argsort(axis=1).argsort(axis=1)
+    # print(data_matrix_rank)
+    data_matrix_rank = (data_matrix_rank - data_matrix_rank.mean(axis=1, keepdims=True)) / data_matrix_rank.std(axis=1, keepdims=True)
 
     # Prepare DeepGraph vertex DataFrame
     v = pd.DataFrame({'index': range(data_matrix.shape[0]), 'row_name': row_names})
@@ -174,27 +171,33 @@ def main():
         pos_array = np.array(np.linspace(0, n_features * (n_features - 1) // 2, args.threads), dtype=int)
         indices = np.arange(0, args.threads - 1)
 
+
+    if (args.min_t_type == "pval") :
+        min_th = corr_from_pvalue(args.min_t_val , n_samples)
+    else :
+        min_th = args.min_t_val
+
     # Create shared parameters
     ei_args_obj = ei_args(
         in_graph=dg.DeepGraph(v),
         in_pos_array=pos_array,
-        in_matrix=data_matrix,
+        in_matrix=data_matrix_rank,
         in_n_samples=n_samples,
         in_tmp_dir=final_tempdir,
-        in_th=corr_from_pvalue(args.pval , n_samples),
-        in_significance_level = args.pval
+        in_th=min_th,
+        in_type_th = args.min_t_type
     )
 
     ##############################################
     ##### Modified: save per threshold interval
     ##############################################
-    thresholds = np.round(np.arange(corr_from_pvalue(args.pval , n_samples), args.max_th, args.step),1)
+    thresholds = np.round(np.arange(min_th, args.max_t_val, 0.1),1)
 
     for low_th in thresholds:
         if low_th == 1.0 :
             continue
         
-        high_th = round(low_th + args.step, 1)
+        high_th = round(low_th + 0.1, 1)
         ei_args_obj.th = low_th
 
         print(f"\n>>> Processing threshold range: {low_th:.2f} - {high_th:.2f}")

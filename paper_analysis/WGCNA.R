@@ -105,6 +105,7 @@ ggplot(final_comparison, aes(axis1 = clusters_100, axis2 = cluster_TCNR , axis3 
 ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/WGCNA_seq_100_our_1000_LIVER.pdf" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 library(rGREAT)
+library(GenomicRanges)
 interrogate_GREAT_regions <- function(gr,
                                       comm_name,
                                       species) {
@@ -135,7 +136,7 @@ for (comm in sort(unique(peak_clusters_100$clusters_100))) {
   
   regions <- peak_clusters_100[peak_clusters_100$clusters_100 == comm, ] |> select(peaks) |> separate(peaks,c('chr','start','end') , sep ="-")
 
-  if (nrow(regions.df) == 0) next
+  if (nrow(regions) == 0) next
     
   gr <- makeGRangesFromDataFrame(
     regions,
@@ -168,7 +169,7 @@ i = 1
 j=0
 for (x in final_target_genes) {
     target_genes = x
-    x_enrichr <- enricher( target_genes , TERM2GENE = genesets_removed  , universe = final_list_genes) #   , universe = unname(unlist(reults[[1]]))
+    x_enrichr <- enricher( target_genes , TERM2GENE = genesets_removed  ) #   , universe = unname(unlist(reults[[1]]))
     x_df  <- x_enrichr@result |> filter(qvalue < 0.05)
     x_df$FoldEnrichment <- (parse_ratio(x_df$GeneRatio)) /
                       (parse_ratio(x_df$BgRatio))
@@ -224,14 +225,14 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
   #       axis.text.y=element_blank(),
   #       legend.position="none")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/Cell_annotations_WGCNA_100.pdf",device = cairo_pdf , 
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/Cell_annotations_WGCNA_100_2.pdf",device = cairo_pdf , 
   height = 5, 
   width = 9, 
   units = 'in',
   dpi = 300
 )
 
-#### THP1
+#### LIVER
 powers = c(c(1:10), seq(from = 12, to = 40, by = 2))
 
 input_mat <- read_tsv("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv") |> tibble::column_to_rownames('peaks')input_mat <- read_tsv("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/lognorm_edgeR_limma_countsInCellReport_TheiCounts_NoStatic_mean.tsv") |> tibble::column_to_rownames('peaks')
@@ -289,10 +290,11 @@ plotDendroAndColors(geneTree, dynamicColors, "Dynamic Tree Cut", dendroLabels = 
 peak_clusters_100 <- data.frame(list(peaks = colnames(input_mat) , clusuters = dynamicMods_100))
 colnames(peak_clusters_100) <- c('peaks' , "clusters_100")
 write_delim(peak_clusters_100 , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/clusters_min100_THP1.tsv" , delim ="\t")
+peak_clusters_100 <- read_delim("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/clusters_min100.tsv" , delim ="\t")
 peak_clusters_1000 <- data.frame(list(peaks = colnames(input_mat) , clusuters = dynamicMods_1000))
 colnames(peak_clusters_1000) <- c('peaks' , "clusters_1000")
 write_delim(peak_clusters_1000 , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/clusters_min1000_THP1.tsv" , delim ="\t")
-
+peak_clusters_1000 <- read_delim("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/clusters_min1000.tsv" , delim ="\t")
 
 files_lists <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/beds/" , full.names = T)
 i = 0
@@ -331,3 +333,247 @@ ggplot(final_comparison, aes(axis1 = clusters_100, axis2 = cluster_TCNR , axis3 
   theme(text = element_text(size = 15))
 ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/WGCNA_seq_100_our_1000_THP1.pdf" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
+
+#### MonaLisa evaluation
+library(monaLisa)
+library(JASPAR2024)
+library(TFBSTools)
+JASPAR2024 <- JASPAR2024()
+JASPARConnect <- RSQLite::dbConnect(RSQLite::SQLite(), db(JASPAR2024))
+pwms <- getMatrixSet(JASPARConnect,
+                     opts = list(
+                      tax_group = "vertebrates",
+                      collection="CORE",
+                      matrixtype = "PWM"))
+
+# disconnect Db
+RSQLite::dbDisconnect(JASPARConnect)
+
+genome_obj <- BSgenome.Mmusculus.UCSC.mm10::BSgenome.Mmusculus.UCSC.mm10
+monaLisa_enrichments <- list()
+  for (i in sort(unique(peak_clusters_1000$clusters_1000))) {
+    community_nodes <- peak_clusters_1000[peak_clusters_1000$clusters_1000 == i, ] |> dplyr::select(peaks) |> tidyr::separate(peaks,c('chr','start','end') , sep ="-")
+
+    gr <- GenomicRanges::makeGRangesFromDataFrame(
+    community_nodes,
+    seqnames.field = colnames(community_nodes)[1],
+    start.field = colnames(community_nodes)[2],
+    end.field = colnames(community_nodes)[3],
+    keep.extra.columns = TRUE
+    )
+
+    seqs <- BSgenome::getSeq(genome_obj, gr)
+
+    se_genome <- monaLisa::calcBinnedMotifEnrR(
+    seqs = seqs,
+    pwmL = pwms,                      
+    background = "genome",            
+    genome = genome_obj, 
+    genome.oversample = 2,
+    BPPARAM = BiocParallel::MulticoreParam(20)
+    )
+    i = i+1
+    monaLisa_enrichments[[i]] <- se_genome
+}
+
+negLog10Padj_th  = 4.0
+log2enr_th = 1.0
+top_n = 20
+
+for (enrichments_num in seq_along(monaLisa_enrichments)) {
+    enrichments <- monaLisa_enrichments[[enrichments_num]]
+      # select strongly enriched motifs
+    sel <- apply(SummarizedExperiment::assay(enrichments, "negLog10Padj"), 1,
+                function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
+    sel_enr <- apply(SummarizedExperiment::assay(enrichments, "log2enr"), 1, 
+                  function(x) max(x, na.rm = TRUE)) > log2enr_th # 2-fold enriched
+    final_sel <- sel & sel_enr
+    seSel <- enrichments[final_sel,]
+
+
+    matrix_enrich <- seSel@assays@data$log2enr
+    id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
+    rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
+    colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
+    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
+      
+    if (enrichments_num == 1 ) {
+      final_enrich <- matrix_enrich
+    }
+    else {
+      final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
+    }
+    }
+    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
+
+
+    saved_tfs <- c()
+
+    for (column_name in colnames(final_enrich_2)) {
+      col_df <- final_enrich_2[!is.na(final_enrich_2[[column_name]]), column_name, drop = FALSE]
+      col_df <- col_df[order(-col_df[[column_name]]),, drop = FALSE]
+      top_values <- head(col_df, top_n)
+      saved_tfs <- c(saved_tfs, rownames(top_values))
+    }
+
+    saved_tfs <- unique(saved_tfs)
+
+    # matrix for ordering
+    cluster_map <- final_enrich_2[saved_tfs, ]
+    cluster_map[is.na(cluster_map)] <- 0
+
+    r.cluster <- fastcluster::hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
+
+    # -------------------------
+    # 5. Long-format for plotting
+    # -------------------------
+    final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
+      rownames_to_column("Factor") |>
+      pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
+
+    final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,
+                                            levels = r.cluster$labels[r.cluster$order])
+
+    final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
+
+    final_homer_scatterplot$Community <- factor(
+      final_homer_scatterplot$Community,
+      levels = sort(unique(final_homer_scatterplot$Community))
+  )
+    # -------------------------
+    # 6. Plot
+    # -------------------------
+ggplot(final_homer_scatterplot, aes(x = Community, y = Factor)) +
+      geom_point(aes(size = ComboScore),
+                shape = 21, stroke = 0.6, color = "black") +
+      geom_point(aes(size = ComboScore),
+                shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
+      scale_x_discrete(drop=F)+
+      theme_classic() +
+      ylab("")+
+  theme(text = element_text(size=10)) +
+    theme(
+      legend.position = "top",
+      legend.text = element_text(size = 10)
+    )
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/monalisa_min1000.pdf",device = cairo_pdf , 
+  height = 9, 
+  width = 5, 
+  units = 'in',
+  dpi = 300
+)
+
+
+
+monaLisa_enrichments <- list()
+  for (i in sort(unique(peak_clusters_100$clusters_100))) {
+    community_nodes <- peak_clusters_100[peak_clusters_100$clusters_100 == i, ] |> dplyr::select(peaks) |> tidyr::separate(peaks,c('chr','start','end') , sep ="-")
+
+    gr <- GenomicRanges::makeGRangesFromDataFrame(
+    community_nodes,
+    seqnames.field = colnames(community_nodes)[1],
+    start.field = colnames(community_nodes)[2],
+    end.field = colnames(community_nodes)[3],
+    keep.extra.columns = TRUE
+    )
+
+    seqs <- BSgenome::getSeq(genome_obj, gr)
+
+    se_genome <- monaLisa::calcBinnedMotifEnrR(
+    seqs = seqs,
+    pwmL = pwms,                      
+    background = "genome",            
+    genome = genome_obj, 
+    genome.oversample = 2,
+    BPPARAM = BiocParallel::MulticoreParam(20)
+    )
+    i = i +1
+    monaLisa_enrichments[[i]] <- se_genome
+}
+
+negLog10Padj_th  = 4.0
+log2enr_th = 1.0
+top_n = 20
+
+for (enrichments_num in seq_along(monaLisa_enrichments)) {
+    enrichments <- monaLisa_enrichments[[enrichments_num]]
+      # select strongly enriched motifs
+    sel <- apply(SummarizedExperiment::assay(enrichments, "negLog10Padj"), 1,
+                function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
+    sel_enr <- apply(SummarizedExperiment::assay(enrichments, "log2enr"), 1, 
+                  function(x) max(x, na.rm = TRUE)) > log2enr_th # 2-fold enriched
+    final_sel <- sel & sel_enr
+    seSel <- enrichments[final_sel,]
+
+
+    matrix_enrich <- seSel@assays@data$log2enr
+    id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
+    rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
+    colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
+    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
+      
+    if (enrichments_num == 1 ) {
+      final_enrich <- matrix_enrich
+    }
+    else {
+      final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
+    }
+    }
+    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
+
+
+    saved_tfs <- c()
+
+    for (column_name in colnames(final_enrich_2)) {
+      col_df <- final_enrich_2[!is.na(final_enrich_2[[column_name]]), column_name, drop = FALSE]
+      col_df <- col_df[order(-col_df[[column_name]]),, drop = FALSE]
+      top_values <- head(col_df, top_n)
+      saved_tfs <- c(saved_tfs, rownames(top_values))
+    }
+
+    saved_tfs <- unique(saved_tfs)
+
+    # matrix for ordering
+    cluster_map <- final_enrich_2[saved_tfs, ]
+    cluster_map[is.na(cluster_map)] <- 0
+
+    r.cluster <- fastcluster::hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
+
+    # -------------------------
+    # 5. Long-format for plotting
+    # -------------------------
+    final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
+      rownames_to_column("Factor") |>
+      pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
+
+    final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,
+                                            levels = r.cluster$labels[r.cluster$order])
+
+    final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
+
+    final_homer_scatterplot$Community <- factor(
+      final_homer_scatterplot$Community,
+      levels = sort(unique(final_homer_scatterplot$Community))
+  )
+    # -------------------------
+    # 6. Plot
+    # -------------------------
+ggplot(final_homer_scatterplot, aes(x = Community, y = Factor)) +
+      geom_point(aes(size = ComboScore),
+                shape = 21, stroke = 0.6, color = "black") +
+      geom_point(aes(size = ComboScore),
+                shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
+      scale_x_discrete(drop=F)+
+      theme_classic() +
+      ylab("")+
+  theme(text = element_text(size=10)) +
+    theme(
+      legend.position = "top",
+      legend.text = element_text(size = 10)
+    )
+ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/monalisa_min100.pdf",device = cairo_pdf , 
+  height = 18, 
+  width = 10, 
+  units = 'in',
+  dpi = 300
+)

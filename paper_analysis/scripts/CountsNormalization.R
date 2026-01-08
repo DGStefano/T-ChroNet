@@ -10,52 +10,6 @@ library(tidyverse)
 library(circlize)
 library(grid)
 
-# FUNCTIONS
-normlization_cpm = function (df ,groups) {
-  e=data.matrix(df)
-  e=subset(e, rowMeans(e) > 5)
-  e=subset(e, rowMeans(e) < 5000)
-  
-  #make DGE list object(EdgeR basic object)
-  regions <- DGEList(counts=e, group=groups)
-  
-  #check if opportune correct for the common dispersion by using housekeeping genes as suggested on EDGEr manual (do not do)
-  keep <- filterByExpr(regions , group=groups , min.prop = 0.1)
-  regions<- regions[keep,,keep.lib.sizes=FALSE]
-  
-  #EdgeR data correction
-  regions <- estimateCommonDisp(regions)
-  regions <- estimateTagwiseDisp(regions)
-  
-  #TMM normalization
-  regions <- calcNormFactors(regions, method="TMM" )
-  cpm_tmm <- cpm(regions , log = TRUE) #
-  return( list("regions" = regions , "cpm" = cpm_tmm ))
-}
-
-# Function to select genes present in both replicates for each sample
-filter_genes <- function(data) {
-  # Find replicate pairs by sample (assumes naming convention "SampleX_RepY")
-  replicate_pairs <- split(colnames(data), sub("_REP\\d+$", "", colnames(data)))
-
-  # Logical vector for genes present in all replicate pairs
-  # keep_genes <- Reduce(`&`, lapply(replicate_pairs, function(replicates) {
-  #   # Ensure the genes are expressed in all replicates for the sample
-  #   rowSums(data[, replicates]) == length(replicates)
-  # }))
-
-
-  # Logical vector for peaks present in both replicates for at least one condition
-  keep_peaks <- Reduce(`|`, lapply(replicate_pairs, function(replicates) {
-    # Check if the peak is present (value != 0) in both replicates for the sample
-    rowSums(data[, replicates] != -3.474) == length(replicates)
-  }))
-  # Filter the data for these genes
-  data[keep_peaks, ]
-}
-
-
-
 # THP1 NORMALIZATION
 
 counts <- read.delim("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/THP1/Multicov_AllAnalyzedPeaksWithAnnotations_NOSTATIC.tsv", sep = "\t") |> 
@@ -101,6 +55,7 @@ ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/PCA.p
   units = 'in',
   dpi = 300
 )
+
 # correct for the batch which here is the "kit"
 batch <- factor(y$samples$replicated)
 timepoints <- factor(y$samples$timepoint)
@@ -178,8 +133,10 @@ sample.annot = c('t11_5','t11_5' , 't12_5','t12_5','t13_5','t13_5' , 't14_5','t1
 replicates <- rep(c('1','2') , times = 6)
 
 # Make a DGEList and add metadata
-y <- DGEList(counts = counts)
-
+y <- DGEList(counts = counts , group = sample.annot)
+keep <- filterByExpr(y)
+y <- y[keep,,keep.lib.sizes=FALSE]
+y <- normLibSizes(y)
 y$samples$timepoint <- factor(sample.annot)
 y$samples$replicated <- factor(replicates)
 
@@ -232,12 +189,12 @@ ggplot(to_plot, aes(x=PC1, y=PC2, shape=replicates, color=timepoint)) +
   xlab(labs[1]) + ylab(labs[2]) +
   theme_minimal() +
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/PCA_after_correction.pdf", device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/PCA_after_correction.pdf", device = cairo_pdf , 
+#   height = 5, 
+#   width = 9, 
+#   units = 'in',
+#   dpi = 300
+# )
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
 
@@ -253,9 +210,9 @@ ht <- ComplexHeatmap::Heatmap(
   rect_gp = gpar(col = "white", lwd = 2),
   heatmap_legend_param = list(col_fun = col_fun, title = "Spearman Correlation", direction = "horizontal",legend_width = unit(6, "cm"))
 )
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/correlation_heatmap.pdf" , height = 9 , width = 9)
+# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/correlation_heatmap.pdf" , height = 9 , width = 9)
 ComplexHeatmap::draw(ht , heatmap_legend_side = "top", annotation_legend_side = "top")
-dev.off()
+# dev.off()
 
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered[!grepl("chrX", rownames(logCPMs_corrected_filtered)) , ]
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered_noextra[!grepl("chrY", rownames(logCPMs_corrected_filtered_noextra)) , ]
@@ -362,12 +319,12 @@ ggplot(to_plot, aes(x=PC1, y=PC2,  color=timepoint)) +
   xlab(labs[1]) + ylab(labs[2]) +
   theme_minimal() +
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/PCA_size5_after_correction.pdf", device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/PCA_size5_after_correction.pdf", device = cairo_pdf , 
+#   height = 5, 
+#   width = 9, 
+#   units = 'in',
+#   dpi = 300
+# )
 # ggsave("~/T-ChroNet/paper_analysis/data/BCP-ALL/results/AFTER_correction_PCA.png" , height = 5 , width = 9 , units = 'in' , dpi = 300)
 
 logCPMs_corrected_filtered <- logCPMs_corrected #|> as.data.frame()
@@ -384,9 +341,9 @@ ht <- ComplexHeatmap::Heatmap(
   # rect_gp = gpar(col = "white", lwd = 2),
   heatmap_legend_param = list(col_fun = col_fun, title = "Spearman Correlation", direction = "horizontal",legend_width = unit(6, "cm"))
 )
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/correlation_heatmap.pdf" , height = 9 , width = 9)
+# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/correlation_heatmap.pdf" , height = 9 , width = 9)
 ComplexHeatmap::draw(ht , heatmap_legend_side = "top", annotation_legend_side = "top")
-dev.off()
+# dev.off()
 
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered[!grepl("chrX", rownames(logCPMs_corrected_filtered)) , ]
 logCPMs_corrected_filtered_noextra <- logCPMs_corrected_filtered_noextra[!grepl("chrY", rownames(logCPMs_corrected_filtered_noextra)) , ]
@@ -403,12 +360,12 @@ data.frame("rowMean" = row_mean , "rowVar" = row_var ) |>
   geom_hline(yintercept = 1.0) +
   theme_minimal() +
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/selection_sites.pdf", device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+# ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/selection_sites.pdf", device = cairo_pdf , 
+#   height = 5, 
+#   width = 9, 
+#   units = 'in',
+#   dpi = 300
+# )
 
 
 cor_matrix <- cor(logCPMs_corrected_filtered_noextra , method = "pearson") # Use 'spearman' or 'kendall' if needed

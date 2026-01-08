@@ -595,7 +595,7 @@ mat <- overlap_counts_sp_control
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/overlaps_communities.pdf" , height = 6 , width = 6)
 ht <- ComplexHeatmap::Heatmap(mat,
-  name = "Z-score(Overlaps)",
+  name = "Overlaps",
 cluster_rows = F,
 cluster_columns = F,
 show_column_dend = F,

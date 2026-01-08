@@ -52,7 +52,7 @@ obj_series <- build_TChroNetSeries_object(
 
 # 2. Selecting the Optimal Threshold
 
-A critical step in network analysis is identifying an optimal threshold (\$T\$) that ensures biological relevance while maintaining structural integrity. The find_best_th function automates this selection by identifying a "transition point" based on the relative size of the largest connected component (LCC).
+A critical step in network analysis is identifying an optimal threshold (\$T\$) that ensures biological relevance while maintaining structural integrity. The find_best_th function automates this selection by identifying a "transition point" based on the relative size of the largest connected component (rLCC).
 
 By prioritizing the LCC, `TChroNetR` encourages the analysis of well-connected networks. However, the package remains flexible:
 
@@ -151,9 +151,9 @@ obj <- find_best_resolution(obj)
 
 # 6. Visualizing Community Trends
 
-To understand the quantitative behavior of the detected communities, you can plot their trends (e.g., z-scores of chromatin activity or expression) across samples.
+To understand the quantitative behavior of the detected communities, you can plot their trends (e.g., z-scores of chromatin activity) across samples.
 
-```{r}
+```{r , fig.width=5, fig.height=9}
 # Plot trends as lines 
 plot_line_trends_zscore(obj)
 

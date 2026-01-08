@@ -27,7 +27,7 @@ This short tutorial explains how to run **T-ChroNet** using the included **toy d
 1. Run tchronet tool to evalute correlation parameters among all the peaks: 
 ```
 conda activate T-CHRONET
-tchronet -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --step 0.1 --pval 0.1
+tchronet -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --min_t_type pval --min_t_val 0.1
 ```
 2. Use TChronetR for netowrk analysis
 The full TChronetR vignette is avaliable [html](https://htmlpreview.github.io/?https://github.com/DGStefano/T-ChroNet/blob/main/TChroNetR/vignettes/TchronetR_Vignette.html) [rmd](./TChroNetR/vignettes/TchronetR_Vignette.Rmd)
@@ -41,9 +41,8 @@ To run the tchronet tool, there are some positional arguments to be set :
 - -s or --stepsize : Stepsize for RAM parameters
 - -@ or --threads : Number of threads to use
 - -t or --tempdir : Temporary directory to use. Will create a \"/tmp\" directory inside it
-- --min_th : Minimum correlation threshold (start of first interval)
-- --max_th : Maximum correlation threshold (end of last interval)
-- --step : Size of each correlation interval (e.g., 0.1 for 0.4–0.5, 0.5–0.6, etc.)
-- --pval : Pvalue threshold
+- --min_t_type : Selection criteria for filtering results: 'pval' for significance testing or 'cor' for correlation coefficient strength
+- --max_t_val : Maximum correlation threshold (end of last interval)
+- --min_t_val : Numerical threshold limit. Results exceeding this value (for pval) or falling below it (for cor) will be filtered out.
 
 [![DOI](https://zenodo.org/badge/933292065.svg)](https://doi.org/10.5281/zenodo.16737392)

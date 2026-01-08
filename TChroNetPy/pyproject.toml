@@ -26,4 +26,4 @@ dependencies = [
 ]
 
 [project.scripts]
-tchronet = "tchronet.cli:entry_point"
+tchronetpy = "tchronetpy.cli:entry_point"

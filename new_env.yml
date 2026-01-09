@@ -1,0 +1,15 @@
+name: tchronet_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10  # Reliable version for these libraries
+  - pandas=2.3.3
+  - numpy=2.2.6
+  - scipy=1.15.2
+  - pyarrow=22.0.0
+  - pip=25.3
+  - pip:
+    - deepgraph==1.2.0
+    - zstandard==0.25.0
+

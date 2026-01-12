@@ -5,9 +5,7 @@ library(tidyverse)
 library(ComplexHeatmap)
 library(clusterProfiler)
 library(msigdbr)
-
-setwd("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/TChroNetR")
-devtools::load_all()
+library(TChroNetR)
 
 plot_heatmap_counts <- function(object , resolution = NULL) {
   if (!inherits(object, "TCrhoNetNetwork")) {
@@ -72,7 +70,7 @@ plot_cistrom <- function(
     homer_tfs <- homer_tfs |>
       group_by(Factor) |>
       summarise(max_value = max(GIGGLE_score)) |>
-      select(Factor, max_value)
+      dplyr::select(Factor, max_value)
 
     colnames(homer_tfs) <- c("Factor", community_num)
 
@@ -151,62 +149,65 @@ plot_cistrom <- function(
   return(p)
 }
 
-# edge_files_ball <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/th/" , full.names = T)
-# matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
-# series_ball <- build_TChroNetSeries_object(edge_files_ball,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
-# write_rds(series_ball , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/series_obj_ball.rds")
+edge_files_ball <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/th/" , full.names = T)
+matrix_path <- "~/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
+series_ball <- build_TChroNetSeries_object(edge_files_ball,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
+write_rds(series_ball , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/series_obj_ball.rds")
 
-series_ball <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/series_obj_ball.rds")
+series_ball <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/series_obj_ball.rds")
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/rand_index_map.pdf"  ,
+  height = 9, 
+  width = 5,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_randindex_map(series_ball )
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/rand_index_map.pdf" ,device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/relative_lcc.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_metrics(series_ball , "relative_lcc") +
   geom_point( size = 3)+
   xlab("Threshold")+
   ylab("Relative LCC")+
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/relative_lcc.pdf" ,device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
 series_ball@best_th <- find_best_th(series_ball) 
 
 ball_obj <- build_TCrhoNetNetwork_from_series(series_ball)
-# write_rds(ball_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/obj_ball.rds")
-# ball_obj <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/obj_ball.rds")
+# write_rds(ball_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/obj_ball.rds")
+# ball_obj <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/obj_ball.rds")
 # colnames(ball_obj@matrix) <- c("H6","H9","H4","H7","H5","H8","P14","P12","P10","P13","P11","P16","P7","P19","P17","P27","P26","REM21","REM22","REM18","REM26","REM20","REM25","REM23","REM24","REL31","REL28","REL29","REL33","REL32","REL27","REL30","REL14")
 
-
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/community_sankey_th_05.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_community_sankey(series_ball , threshold = 0.5)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/community_sankey_th_05.pdf", device = cairo_pdf , 
+dev.off()
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/modularity.pdf"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
-
-
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_modularity(ball_obj)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/modularity.pdf", device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
 ball_obj <- find_best_resolution(ball_obj)
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/community_size.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 ball_obj@clusters |> group_by(clusters_1) |> 
   summarise(peaks = n()) |> 
   mutate(clusters_1 = as.factor(clusters_1)) |> 
@@ -217,41 +218,40 @@ ggplot(aes(x = clusters_1 , y = peaks)) +
   xlab("")+
   ylab("Size")+
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/community_size.pdf", device = cairo_pdf , 
+dev.off()
+
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/sankey_plot_best_res.pdf"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
-
-
-
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_sankey_fixed_resolution(series_ball , resolution = 1.0)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/sankey_plot_best_res.pdf" ,device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
 ball_obj <- lift_network_coordinates(ball_obj , chain_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
 ball_obj <- annotate_regions_from_bed(ball_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/GRCh38-cCREs_2.bed" , genome = 'hg38')
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/sankey_plot_best_res.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_stacked_annotation(ball_obj , resolution = as.numeric(ball_obj@resolution)) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/stachek_annotations_bestth_bestres.pdf",device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
 ball_obj <- run_GREAT_analysis(ball_obj, resolution = 0.9 , genome = "hg19") #as.numeric(ball_obj@resolution)
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/boxplot_trends.pdf"  ,
+  height = 10, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_trends_zscore(ball_obj)+
   theme(text = element_text(size = 15)) +
   scale_x_discrete(
@@ -290,13 +290,13 @@ plot_trends_zscore(ball_obj)+
  "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
  "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
     ))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/boxplot_trends.pdf",device = cairo_pdf , 
-  height = 10, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/lineplot_trends.pdf"  ,
+  height = 10, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_line_trends_zscore(ball_obj)+
     theme(text = element_text(size = 15)) +
   scale_x_discrete(
@@ -335,13 +335,7 @@ plot_line_trends_zscore(ball_obj)+
  "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
  "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
     ))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/lineplot_trends.pdf", device = cairo_pdf , 
-  height = 10, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
-
+dev.off()
 
 patient_groups <- c(
   Healthy = 6,
@@ -381,6 +375,12 @@ all_melted <- lapply(seq_along(list_communities_11), function(x) {
 median_df <- all_melted |> 
   group_by(community, group) |> 
   summarise(median_expr = median(expression, na.rm = TRUE), .groups = "drop")
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/violin_trends.pdf"  ,
+  height = 10, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
 
 ggplot(
   all_melted,
@@ -459,12 +459,7 @@ ggplot(
  "patient_30_Relapse_ATACseq_REP1.mLb.clN.sorted.bam" = "REL30",
  "patient_14_Relapse_ATACseq_REP1.mLb.clN.sorted.bam"  = "REL14"
     ))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/violin_trends.pdf" ,device = cairo_pdf , 
-  height = 10, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
 
@@ -515,6 +510,12 @@ final_df_selected_Columns$Description <- final_df_selected_Columns$Description |
   str_replace_all("MALIGNANT", "MAL") |>
   str_replace_all("METAPROGRAM", "MP")
 
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/Metaprograms.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
   geom_point() + #color =Percent  , , size = 5
   scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
@@ -524,13 +525,36 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   theme(legend.position="top" ,  legend.box = "vertical" , legend.text = element_text(size=10)) +
   scale_size(range = c(3, 10)) +
   theme(text = element_text(size = 10))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/Metaprograms.pdf", device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
+### Save communities hg38
+for (x in seq_along(list_communities_11)) {
+  comm <- list_communities_11[[x]]
+  comm_hg38 <- ball_obj@lifted_coords[ball_obj@lifted_coords$node %in% comm , ] |> pull(lifted_coord)
+  comm_hg38 <- comm_hg38[!is.na(comm_hg38)]
+  comm_hg38 <- comm_hg38 |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
+  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/beds/community_hg38_" , as.character(x) , ".bed" , sep ="")
+  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
+}
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/Metaprograms.pdf"  ,
+  height = 8, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/cistrom" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
+  theme(text = element_text(size = 15))+
+  theme(legend.position="top" , legend.text = element_text(size=15))
+dev.off()
+
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/Heatmap.pdf"  ,
+  height = 9, 
+  width = 5,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_heatmap_counts(ball_obj)
+dev.off()
 
 
 
@@ -549,67 +573,42 @@ for (x in seq_along(communities_paper)) {
   list_communities_paper[[x]] <- read_delim(communities_paper[x], delim ="\t" , col_names = F) |> unite('nodes' , c(X1,X2,X3) , sep ="-") |> pull(nodes)
 }
 
-listA <- list_communities_11
-names(listA) <- paste0("TChroNetR_" , as.character(c(1:4)))
-listB <- list_communities_paper
-names(listB) <- paste0("paper_" , as.character(c(1:4)))
 
-intersections <- expand.grid(A = names(listA), B = names(listB))
-
-intersections$overlap <- mapply(
-  function(a, b) length(intersect(listA[[a]], listB[[b]])),
-  intersections$A,
-  intersections$B
-)
-library(UpSetR)
-
-# Get universe of elements
-all_elems <- unique(unlist(c(listA, listB)))
-
-# Convert each list into binary membership matrix
-make_binary <- function(lst) {
-  sapply(lst, function(x) as.numeric(all_elems %in% x))
-}
-
-binA <- make_binary(listA)
-binB <- make_binary(listB)
-
-# Combine sets
-binary_matrix <- cbind(binA, binB)
-
-# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/paper_vs_TCNR.pdf", height = 5 , width = 9 , units = 'in', res = 300)
-upset(
-  as.data.frame(binary_matrix),
-  sets = colnames(binary_matrix),
-  keep.order = T
-  # order.by = "freq",
-)
-# dev.off()
-
-
-### Save communities hg38
-for (x in seq_along(list_communities_11)) {
-  comm <- list_communities_11[[x]]
-  comm_hg38 <- ball_obj@lifted_coords[ball_obj@lifted_coords$node %in% comm , ] |> pull(lifted_coord)
-  comm_hg38 <- comm_hg38[!is.na(comm_hg38)]
-  comm_hg38 <- comm_hg38 |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
-  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/beds/community_hg38_" , as.character(x) , ".bed" , sep ="")
-  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
-}
-
-plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/cistrom" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
-  theme(text = element_text(size = 15))+
-  theme(legend.position="top" , legend.text = element_text(size=15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/TFs.pdf", device = cairo_pdf , 
-  height = 8, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
+overlap_counts_sp_control <- overlap_ratios(
+  list_communities_11,
+  list_communities_paper
 )
 
+overlap_counts_sp_control <- t(overlap_counts_sp_control)
+rownames(overlap_counts_sp_control) <- paste0('Community_old_' , c(1:5) , sep = "")
+colnames(overlap_counts_sp_control) <- paste0('Community_' , c(1:5) , sep = "")
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/ball/pictures/Heatmap.pdf", height = 9 , width = 5 )
-plot_heatmap_counts(ball_obj)
+
+mat <- overlap_counts_sp_control
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/overlaps_communities_with_olds.pdf"  ,
+  height = 6, 
+  width = 6,
+  family = "ArialMT",
+  useDingbats = FALSE)
+ht <- ComplexHeatmap::Heatmap(mat,
+  name = "Overlaps",
+cluster_rows = F,
+cluster_columns = F,
+show_column_dend = F,
+show_row_dend = F ,
+rect_gp = gpar(col = "white", lwd = 5),
+cell_fun = function(j, i, x, y, width, height, fill) {
+    grid.text(sprintf("%.2f", mat[i, j]), x, y, gp = gpar(fontsize = 10,    # change text size
+        col = "white"))
+  },
+  col = viridis::viridis(100),
+heatmap_legend_param = list(
+    direction = "horizontal",
+    title_position = "topcenter",
+    legend_height = unit(8, "mm"),          # increases the color bar thickness
+    title_gp = gpar(fontsize = 12, fontface = "bold"),  # legend title size
+    labels_gp = gpar(fontsize = 10 , col="black")         
+  ))
+draw(ht, heatmap_legend_side = "top")
 dev.off()
-
-

@@ -178,7 +178,7 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         else th_cluster_df <- merge(th_cluster_df, tmp_df, by = "node", all = TRUE)
 
         mod_val <- suppressWarnings(
-          igraph::modularity(G, membership = membership_nodes, weights = E(G)$weight, resolution = 1)
+          igraph::modularity(G, membership = membership_nodes, weights = E(G)$weight, resolution = res)
         )
 
         modularity_at_th <- rbind(

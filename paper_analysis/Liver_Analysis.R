@@ -5,8 +5,7 @@ library(tidyverse)
 library(ComplexHeatmap)
 library(clusterProfiler)
 library(msigdbr)
-setwd("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/TChroNetR")
-devtools::load_all()
+library(TChroNetR)
 
 plot_heatmap_counts <- function(object , resolution = NULL) {
   if (!inherits(object, "TCrhoNetNetwork")) {
@@ -70,7 +69,7 @@ plot_cistrom <- function(
     homer_tfs <- homer_tfs |>
       group_by(Factor) |>
       summarise(max_value = max(GIGGLE_score)) |>
-      select(Factor, max_value)
+      dplyr::select(Factor, max_value)
 
     colnames(homer_tfs) <- c("Factor", community_num)
 
@@ -150,184 +149,138 @@ plot_cistrom <- function(
 }
 
 
-edge_files_liver <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/th/" , full.names = T)
-matrix_path <- "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv"
-seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
-# write_rds(seiries_obj_liver , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/series_obj_liver.rds")
+# edge_files_liver <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/th/" , full.names = T)
+# matrix_path <- "~/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv"
+# seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
+# write_rds(seiries_obj_liver , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/series_obj_liver.rds")
 
 
 ### Liver
-series_liver <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/series_obj_liver.rds")
+series_liver <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/series_obj_liver.rds")
+##### FINDING THE BEST THRESHOLD
+series_liver@best_th <- find_best_th(series_liver)
 
-plot_randindex_map(series_liver )
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/rand_index_map.pdf" ,device = cairo_pdf , 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/rand_index_map.pdf"  ,
   height = 9, 
-  width = 5, 
-  units = 'in',
-  dpi = 300
-)
+  width = 5,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_randindex_map(series_liver )
+dev.off()
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/sankey_plot_res_1.1.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_sankey_fixed_resolution(series_liver , resolution = 0.8)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/sankey_plot_res_1.1.pdf" ,device = cairo_pdf , 
+dev.off()
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/relative_lcc.pdf"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_metrics(series_liver , "relative_lcc")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/relative_lcc.pdf",device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
+
 
 liver_obj <- build_TCrhoNetNetwork_from_series(series_liver , threshold = 0.8)
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/modularity.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_modularity(liver_obj)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/modularity.pdf",device = cairo_pdf , 
+dev.off()
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/community_sankey_th08.pdf"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_community_sankey(liver_obj , threshold = 0.8)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/community_sankey_th08.pdf",device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 liver_obj <- find_best_resolution(liver_obj)
 
-liver_obj@clusters |> group_by(clusters_1.1) |> 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/community_size.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
+liver_obj@clusters |> group_by(clusters_1) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_0.9 = as.factor(clusters_1.1)) |> 
-ggplot(aes(x = clusters_1.1 , y = peaks)) +
+  mutate(clusters_0.9 = as.factor(clusters_1)) |> 
+ggplot(aes(x = clusters_1 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
   xlab("")+
   ylab("Size")+
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/community_size.pdf",device = cairo_pdf , 
+dev.off()
+
+
+liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "~/T-ChroNet/toy_data/data/mm10-cCREs.bed" , genome = 'mm10')
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/stachek_annotations_th08_res1.1.pdf"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
-
-
-liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/mm10-cCREs_mod.bed" , genome = 'mm10')
-plot_stacked_annotation(liver_obj , resolution = 1.1) +
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_stacked_annotation(liver_obj , resolution = 1.0) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/stachek_annotations_th08_res1.1.pdf",device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
-)
+dev.off()
 
 
-communities_08 <- liver_obj@clusters[,c('node' , "clusters_0.8")]
-list_communities_08 <- list()
-for (x in sort(unique(communities_08[["clusters_0.8"]])) ) {
-  nodes <- communities_08[communities_08["clusters_0.8"] == x, ] |> pull(node)
-  list_communities_08[[x]] <- nodes
-}
 
-communities_11 <- liver_obj@clusters[,c('node' , "clusters_1.1")]
-list_communities_11 <- list()
-for (x in sort(unique(communities_11[["clusters_1.1"]])) ) {
-  nodes <- communities_11[communities_11["clusters_1.1"] == x, ] |> pull(node)
-  list_communities_11[[x]] <- nodes
-}
 
-communities_paper <- list.files("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , full.names = T)
-list_communities_paper <- list()
-for (x in seq_along(communities_paper)) {
-  #print(x)
-  # print(communities_paper[[x]])
-  list_communities_paper[[x]] <- read_delim(communities_paper[x], delim ="\t" , col_names = F) |> unite('nodes' , c(X1,X2,X3) , sep ="-") |> pull(nodes)
-}
-
-listA <- list_communities_11
-names(listA) <- paste0("TChroNetR_" , as.character(c(1:5)))
-listB <- list_communities_08
-names(listB) <- paste0("paper_" , as.character(c(1:4)))
-
-intersections <- expand.grid(A = names(listA), B = names(listB))
-
-intersections$overlap <- mapply(
-  function(a, b) length(intersect(listA[[a]], listB[[b]])),
-  intersections$A,
-  intersections$B
-)
-library(UpSetR)
-
-# Get universe of elements
-all_elems <- unique(unlist(c(listA, listB)))
-
-# Convert each list into binary membership matrix
-make_binary <- function(lst) {
-  sapply(lst, function(x) as.numeric(all_elems %in% x))
-}
-
-binA <- make_binary(listA)
-binB <- make_binary(listB)
-
-# Combine sets
-binary_matrix <- cbind(binA, binB)
-
-# pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/thp1/pictures/paper_vs_TCNR.pdf", height = 5 , width = 9 , units = 'in', res = 300)
-upset(
-  as.data.frame(binary_matrix),
-  sets = colnames(binary_matrix),
-  keep.order = T
-  # order.by = "freq",
-)
-# dev.off()
-
-liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.1, genome = "mm10")
+liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.0, genome = "mm10")
 
 ### Save communities hg38
 for (x in seq_along(list_communities_11)) {
   comm <- list_communities_11[[x]]
-#   comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
-  comm_hg38 <- data.frame(list(peaks = comm))
-  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/bed/community_mm10_" , as.character(x) , ".bed" , sep ="")
+  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> dplyr::select(chr,start,end) 
+  # comm_hg38 <- data.frame(list(peaks = comm))
+  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/bed/community_mm10_" , as.character(x) , ".bed" , sep ="")
   write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
 }
 
-plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/cistrom_liver/" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" )+
-  theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/TFs.pdf",device = cairo_pdf , 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/TFs.pdf"  ,
   height = 8, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/cistrome/" , tf_name_file = "~/T-ChroNet/paper_analysis/TFs_screening/mouse_tfs.txt" )+
+  theme(text = element_text(size = 15))
+dev.off()
 
-
-plot_trends_zscore(liver_obj , resolution = 1.1)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/trends_violin.pdf",device = cairo_pdf , 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/trends_violin.pdf"  ,
   height = 10, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
-plot_line_trends_zscore(liver_obj , resolution = 1.1)
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/trends_lines.pdf",device = cairo_pdf , 
-  height = 10, 
-  width = 7, 
-  units = 'in',
-  dpi = 300
-)
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_trends_zscore(liver_obj , resolution = 1.0)
+dev.off()
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/Heatmap_trends.pdf", height = 9 , width = 5)
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/trends_lines.pdf"  ,
+  height = 10, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
+plot_line_trends_zscore(liver_obj , resolution = 1.0)
+dev.off()
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/headtmaps_trends.pdf"  ,
+  height = 9, 
+  width = 5,
+  family = "ArialMT",
+  useDingbats = FALSE)
 plot_heatmap_counts(liver_obj)
 dev.off()
 
@@ -342,9 +295,9 @@ for (x in liver_obj@GREAT_targets) {
   final_list_genes <- unname(unlist(final_list_genes))
 }
 
-msigdbr_collections(db_species = "Mm") |> View()
+# msigdbr_collections(db_species = "Mm") |> View()
 genesets <- msigdbr(species = "Mus musculus" , db_species = 'MM', collection = "M8" )
-genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
+genesets_removed  <- genesets |> dplyr::select(gs_name ,gene_symbol )
 i = 1
 j=0
 for (x in liver_obj@GREAT_targets) {
@@ -372,7 +325,7 @@ for (x in liver_obj@GREAT_targets) {
     i = i + 1
 }
 
-final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
+final_df_selected_Columns  <- final_df |> dplyr::select(community, Description , FoldEnrichment ,qvalue )
 final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
 
 clusteing_df = final_df_selected_Columns |> dplyr::select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
@@ -391,6 +344,11 @@ final_df_selected_Columns$Description <- final_df_selected_Columns$Description |
   str_remove("TABULA_MURIS") |>
   str_replace_all("_", " ")
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/Cell_annotations.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
   geom_point() + #color =Percent  , , size = 5
   scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
@@ -405,11 +363,107 @@ ggplot(final_df_selected_Columns , aes(x = community , y = Description , color =
   # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
   #       axis.text.y=element_blank(),
   #       legend.position="none")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/picture/Cell_annotations.pdf",device = cairo_pdf , 
-  height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
+dev.off()
+
+#### Overlap old communities
+
+count_overlaps <- function(list1, list2) {
+  # list1, list2: lists of vectors (character or numeric)
+
+  overlaps <- vector("list", length(list1))
+
+  for (i in seq_along(list1)) {
+    overlap_row <- numeric(length(list2))
+
+    for (j in seq_along(list2)) {
+      common_elements <- intersect(list1[[i]], list2[[j]])
+      overlap_row[j] <- length(common_elements)
+    }
+
+    overlaps[[i]] <- overlap_row
+  }
+
+  # Convert to matrix for easier downstream use
+  do.call(rbind, overlaps)
+}
+overlap_ratios <- function(list1, list2) {
+  # list1, list2: lists of vectors
+  # Returns matrix with rows = list1, cols = list2
+
+  ratios <- vector("list", length(list1))
+
+  for (i in seq_along(list1)) {
+    ratio_row <- numeric(length(list2))
+
+    for (j in seq_along(list2)) {
+      common_elements <- intersect(list1[[i]], list2[[j]])
+
+      if (length(list2[[j]]) > 0) {
+        ratio_row[j] <- length(common_elements) / length(list2[[j]])
+      } else {
+        ratio_row[j] <- 0
+      }
+    }
+
+    ratios[[i]] <- ratio_row
+  }
+
+  do.call(rbind, ratios)
+}
+
+
+communities_11 <- liver_obj@clusters[,c('node' , "clusters_1")]
+list_communities_11 <- list()
+for (x in sort(unique(communities_11[["clusters_1"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1"] == x, ] |> pull(node)
+  list_communities_11[[x]] <- nodes
+}
+
+communities_paper <- list.files("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/communities/" , full.names = T)
+list_communities_paper <- list()
+for (x in seq_along(communities_paper)) {
+  #print(x)
+  # print(communities_paper[[x]])
+  list_communities_paper[[x]] <- read_delim(communities_paper[x], delim ="\t" , col_names = F) |> unite('nodes' , c(X1,X2,X3) , sep ="-") |> pull(nodes)
+}
+
+
+
+overlap_counts_sp_control <- overlap_ratios(
+  list_communities_11,
+  list_communities_paper
 )
 
-  
+overlap_counts_sp_control <- t(overlap_counts_sp_control)
+rownames(overlap_counts_sp_control) <- paste0('Community_old_' , c(1:5) , sep = "")
+colnames(overlap_counts_sp_control) <- paste0('Community_' , c(1:5) , sep = "")
+
+
+mat <- overlap_counts_sp_control
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/overlaps_communities_with_olds.pdf"  ,
+  height = 6, 
+  width = 6,
+  family = "ArialMT",
+  useDingbats = FALSE)
+ht <- ComplexHeatmap::Heatmap(mat,
+  name = "Overlaps",
+cluster_rows = F,
+cluster_columns = F,
+show_column_dend = F,
+show_row_dend = F ,
+rect_gp = gpar(col = "white", lwd = 5),
+cell_fun = function(j, i, x, y, width, height, fill) {
+    grid.text(sprintf("%.2f", mat[i, j]), x, y, gp = gpar(fontsize = 10,    # change text size
+        col = "white"))
+  },
+  col = viridis::viridis(100),
+heatmap_legend_param = list(
+    direction = "horizontal",
+    title_position = "topcenter",
+    legend_height = unit(8, "mm"),          # increases the color bar thickness
+    title_gp = gpar(fontsize = 12, fontface = "bold"),  # legend title size
+    labels_gp = gpar(fontsize = 10 , col="black")         
+  ))
+draw(ht, heatmap_legend_side = "top")
+dev.off()

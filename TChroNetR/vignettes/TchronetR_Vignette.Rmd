@@ -52,9 +52,9 @@ obj_series <- build_TChroNetSeries_object(
 
 # 2. Selecting the Optimal Threshold
 
-A critical step in network analysis is identifying an optimal threshold (\$T\$) that ensures biological relevance while maintaining structural integrity. The find_best_th function automates this selection by identifying a "transition point" based on the relative size of the largest connected component (rLCC).
+A critical step in network analysis is identifying an optimal threshold (_T_) that ensures biological relevance while maintaining structural integrity. The `find_best_th` function automates this selection by identifying a "transition point" based on the relative size of the largest connected component (rLCC).
 
-By prioritizing the LCC, `TChroNetR` encourages the analysis of well-connected networks. However, the package remains flexible:
+By prioritizing the rLCC, `TChroNetR` encourages the analysis of well-connected networks. However, the package remains flexible:
 
 -   **Connectivity:** Lower thresholds focus on the most robust, connected interactions.
 
@@ -73,7 +73,7 @@ obj_series@best_th <- find_best_th(obj_series)
 
 # 3. Visualizing Community Detection Results
 
-`TChroNetR` provides a suite of visualization tools to compare community structures across different thresholds and resolutions. These plots allow for a qualitative and quantitative inspection of network stability.
+`TChroNetR` provides a suite of visualization tools to compare community structures across different thresholds (_T_) and resolutions (_R_). These plots allow for a qualitative and quantitative inspection of network stability.
 
 ## Adjusted Rand Index Map
 
@@ -97,10 +97,14 @@ Sankey diagrams are useful for tracking how nodes migrate between communities as
 
 ```{r}
 # Visualize community flow across resolutions at a fixed threshold
-plot_community_sankey(obj_series, threshold = 0.8)
+plot_community_sankey(obj_series, 
+                      threshold = 0.8
+                      )
 
 # Visualize community flow across thresholds at a fixed resolution
-plot_sankey_fixed_resolution(obj_series, resolution = 0.8)
+plot_sankey_fixed_resolution(obj_series,
+                            resolution = 0.8
+                            )
 ```
 
 # 4. Building a TChroNet Object
@@ -109,12 +113,14 @@ Once the optimal parameters are identified, the series object can be converted i
 
 ```{r}
 # Build the final TChroNet object
-obj <- build_TCrhoNetNetwork_from_series(obj_series, threshold = 0.8)
+obj <- build_TCrhoNetNetwork_from_series(obj_series, 
+                                        threshold = 0.8
+                                        )
 ```
 
-Alternatively, if you already have a target threshold, you can bypass the series step and build the object directly:
+Alternatively, if you already have a target threshold, you can bypass the series step and build the object directly.
 
-```{r, eval = FALSE, echo = FALSE}
+```{r, eval = FALSE}
 # Directly build TChroNet object without scanning thresholds
 obj <- make_TChroNetNetwork_obj(
   edge_files,
@@ -129,9 +135,11 @@ By default, a `TChroNet` object inherits the community assignments stored within
 
 The `compute_membership_nodes` function allows you to execute the Leiden algorithm at a single resolution or across a range of resolutions ($R$). This flexibility is essential for fine-tuning the granularity of the detected clusters.
 
-```{r, eval = FALSE, echo = FALSE}
+```{r, eval = FALSE}
 # Compute memberships across multiple resolutions
-obj <- compute_membership_nodes(obj, resolutions = seq(0.5, 1.5, 0.1))
+obj <- compute_membership_nodes(obj,
+                                resolutions = seq(0.5, 1.5, 0.1)
+                                )
 ```
 
 ```{r}
@@ -141,7 +149,9 @@ plot_modularity(obj)
 
 ```{r}
 # Plot the community flow at the selected thresholds for the range of resolutions stored in TChroNet object
-plot_community_sankey(obj , threshold = 0.8)
+plot_community_sankey(obj , 
+                      threshold = 0.8
+                      )
 ```
 
 ```{r}
@@ -167,10 +177,14 @@ plot_trends_zscore(obj)
 
 ```{r}
 # Lift hg19 to hg38 if required
-obj <- lift_network_coordinates(obj, chain_path = "~/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
+obj <- lift_network_coordinates(obj, 
+                                chain_path = "~/T-ChroNet/toy_data/data/hg19ToHg38.over.chain"
+                                )
 
 # Annotate with SCREEN cCRE database
-obj <- annotate_regions_from_bed(obj, bed_path =  "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed" , genome = "hg38")
+obj <- annotate_regions_from_bed(obj, 
+                                bed_path =  "~/T-ChroNet/toy_data/data/GRCh38-cCREs.bed" , genome = "hg38"
+                                )
 
 # Visualize the distribution of genomic annotations across communities
 plot_stacked_annotation(obj)
@@ -180,7 +194,7 @@ plot_stacked_annotation(obj)
 
 To interpret the biological role of each community, `TChroNetR` interfaces with **rGREAT**. This identifies enriched functions and potential target genes for the genomic regions within each cluster.
 
-```{r}
+```{r, results='hide'}
 # Run GREAT functional analysis on the communities
 obj <- run_GREAT_analysis(obj, genome = 'hg19')
 ```
@@ -217,10 +231,15 @@ With the PWMs loaded, we use the `run_monalisa_enrichment` function. This functi
 ```{r}
 # Execute motif enrichment analysis
 # Adjust 'resolution' to match your selected community structure. If not specified, it uses the obj@resolution parameter
-obj@TFs <- run_monalisa_enrichment(obj , resolution = 0.8 , pwms = pwms , genome = "hg19" , num_cores = 2)
+obj@TFs <- run_monalisa_enrichment(obj , 
+                                  resolution = 0.8 , 
+                                  pwms = pwms , 
+                                  genome = "hg19" , 
+                                  num_cores = 2
+                                  )
 
 # Visualize the enrichment results
 plot_enrichments_tfs(obj)
 ```
 
-The resulting scatterplot allows you to pinpoint specific transcription factors that may be orchestrating the chromatin interactions within distinct communities, providing a deeper layer of regulatory insight.
+The resulting bubble chart allows you to pinpoint specific transcription factors that may be orchestrating the chromatin interactions within distinct communities, providing a deeper layer of regulatory insight.

@@ -168,7 +168,7 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
       
       mod_val <- modularity(membership_nodes)
       object@modularity <- rbind(object@modularity, data.frame(
-        resolution = 1,
+        resolution = res,
         modularity = mod_val,
         method = "Louvain",
         stringsAsFactors = FALSE

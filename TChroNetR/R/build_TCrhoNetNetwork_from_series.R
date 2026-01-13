@@ -7,7 +7,7 @@
 #' @import liftOver
 #' @import leidenAlg
 #' @import dplyr
-#' @importFrom tibble tibble
+#' @importFrom tibble
 #' @importFrom tidyr pivot_longer
 #' 
 #' @param object TCrhoNetSeries object

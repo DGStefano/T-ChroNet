@@ -173,12 +173,12 @@ plot_randindex_map(series_thp1)
 dev.off()
 
 ##### PLOTTING THE COMMUNITIES STABILITY ALONG THRESHOLDS
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/sankey_plot_res_1_5.pdf" ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/sankey_plot_res_1_3.pdf" ,
   height = 5, 
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_sankey_fixed_resolution(series_thp1 , resolution = 1.0)
+plot_sankey_fixed_resolution(series_thp1 , resolution = 1.3)
 dev.off()
 
 ##### PLOTTING THE REALTIVE LARGEST CONNECTED COMPONENTS FOR EACH THRESHOLD
@@ -195,8 +195,8 @@ dev.off()
 
 ##### BUILDING TCHRONET OBJECT AT RESOLUTION OF 0.8 STARTING FROM THE SERIES
 thp1_th08 <- build_TCrhoNetNetwork_from_series(series_thp1 , threshold = 0.8)
-write_rds(thp1_th08 , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/Network_obj_thp1.rds")
-thp1_th08 <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/Network_obj_thp1.rds")
+# write_rds(thp1_th08 , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/Network_obj_thp1.rds")
+# thp1_th08 <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/Network_obj_thp1.rds")
 
 ##### PLOT MODULARITY FOR ALL THE RESOLUTIONS
 to_plot <- plot_modularity(thp1_th08)+
@@ -220,10 +220,10 @@ dev.off()
 
 thp1_th08 <- find_best_resolution(thp1_th08)
 
-to_plot <- thp1_th08@clusters |> group_by(clusters_1) |> 
+to_plot <- thp1_th08@clusters |> group_by(clusters_1.3) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_1 = as.factor(clusters_1)) |> 
-ggplot(aes(x = clusters_1 , y = peaks)) +
+  mutate(clusters_1.3 = as.factor(clusters_1.3)) |> 
+ggplot(aes(x = clusters_1.3 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
@@ -245,7 +245,7 @@ to_plot <- plot_stacked_annotation(thp1_th08) +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/stachek_annotations_th08_res09.pdf" ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/stachek_annotations_th08_res1_3.pdf" ,
   height = 5, 
   width = 9,
   family = "ArialMT",
@@ -256,10 +256,10 @@ dev.off()
 
 thp1_th08 <- run_GREAT_analysis(thp1_th08, genome = "hg19")
 
-communities_09 <- thp1_th08@clusters[,c('node' , "clusters_1")]
+communities_09 <- thp1_th08@clusters[,c('node' , "clusters_1.3")]
 list_communities_09 <- list()
-for (x in sort(unique(communities_09[["clusters_1"]])) ) {
-  nodes <- communities_09[communities_09["clusters_1"] == x, ] |> pull(node)
+for (x in sort(unique(communities_09[["clusters_1.3"]])) ) {
+  nodes <- communities_09[communities_09["clusters_1.3"] == x, ] |> pull(node)
   list_communities_09[[x]] <- nodes
 }
 
@@ -384,10 +384,10 @@ plot_heatmap_counts(thp1_th08)
 dev.off()
 
 
-communities_11 <- thp1_th08@clusters[,c('node' , "clusters_1")]
+communities_11 <- thp1_th08@clusters[,c('node' , "clusters_1.3")]
 list_communities_11 <- list()
-for (x in sort(unique(communities_11[["clusters_1"]])) ) {
-  nodes <- communities_11[communities_11["clusters_1"] == x, ] |> pull(node)
+for (x in sort(unique(communities_11[["clusters_1.3"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1.3"] == x, ] |> pull(node)
   list_communities_11[[x]] <- nodes
 }
 

@@ -159,8 +159,10 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         # )
         partition_current_graph <- leidenbase::leiden_find_partition(
           igraph = G,
-          partition_type = "ModularityVertexPartition", # Options: ModularityVertexPartition, etc.
-          resolution_parameter = res
+          edge_weights = E(G)$weight,
+          partition_type = "RBConfigurationVertexPartition", # Options: ModularityVertexPartition, etc.
+          resolution_parameter = res,
+          seed = seed
         )
 
         
@@ -192,7 +194,7 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
 
         modularity_at_th <- rbind(
           modularity_at_th,
-          data.frame(resolution = res, modularity = partition_current_graph$quality, threshold = thr, stringsAsFactors = FALSE)
+          data.frame(resolution = res, modularity = partition_current_graph$modularity, quality =partition_current_graph$quality,  threshold = thr, stringsAsFactors = FALSE)
         )
       }
     }

@@ -168,12 +168,12 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
 plot_randindex_map(series_liver )
 dev.off()
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/sankey_plot_res_1.1.pdf"  ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/sankey_plot_res_1.3.pdf"  ,
   height = 5, 
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_sankey_fixed_resolution(series_liver , resolution = 0.8)
+plot_sankey_fixed_resolution(series_liver , resolution = 1.3)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/relative_lcc.pdf"  ,
@@ -210,10 +210,10 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-liver_obj@clusters |> group_by(clusters_0.5) |> 
+liver_obj@clusters |> group_by(clusters_1.3) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_0.9 = as.factor(clusters_0.5)) |> 
-ggplot(aes(x = clusters_0.5 , y = peaks)) +
+  mutate(clusters_1.3 = as.factor(clusters_1.3)) |> 
+ggplot(aes(x = clusters_1.3 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
@@ -225,12 +225,12 @@ dev.off()
 
 liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "~/T-ChroNet/toy_data/data/mm10-cCREs.bed" , genome = 'mm10')
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/stachek_annotations_th08_res1.1.pdf"  ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/stachek_annotations_th08_res1.3.pdf"  ,
   height = 5, 
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_stacked_annotation(liver_obj , resolution = 1.0) +
+plot_stacked_annotation(liver_obj , resolution = 1.3) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
@@ -240,16 +240,8 @@ dev.off()
 
 
 
-liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.0, genome = "mm10")
+liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.3, genome = "mm10")
 
-### Save communities hg38
-for (x in seq_along(list_communities_11)) {
-  comm <- list_communities_11[[x]]
-  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> dplyr::select(chr,start,end) 
-  # comm_hg38 <- data.frame(list(peaks = comm))
-  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/bed/community_mm10_" , as.character(x) , ".bed" , sep ="")
-  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
-}
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/TFs.pdf"  ,
   height = 8, 
@@ -265,7 +257,7 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 7,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_trends_zscore(liver_obj , resolution = 1.0)
+plot_trends_zscore(liver_obj , resolution = 1.3)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/trends_lines.pdf"  ,
@@ -273,7 +265,7 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 7,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_line_trends_zscore(liver_obj , resolution = 1.0)
+plot_line_trends_zscore(liver_obj , resolution = 1.3)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/headtmaps_trends.pdf"  ,
@@ -412,10 +404,10 @@ overlap_ratios <- function(list1, list2) {
 }
 
 
-communities_11 <- liver_obj@clusters[,c('node' , "clusters_1")]
+communities_11 <- liver_obj@clusters[,c('node' , "clusters_1.3")]
 list_communities_11 <- list()
-for (x in sort(unique(communities_11[["clusters_1"]])) ) {
-  nodes <- communities_11[communities_11["clusters_1"] == x, ] |> pull(node)
+for (x in sort(unique(communities_11[["clusters_1.3"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1.3"] == x, ] |> pull(node)
   list_communities_11[[x]] <- nodes
 }
 
@@ -467,3 +459,12 @@ heatmap_legend_param = list(
   ))
 draw(ht, heatmap_legend_side = "top")
 dev.off()
+
+### Save communities hg38
+for (x in seq_along(list_communities_11)) {
+  comm <- list_communities_11[[x]]
+  comm_hg38 <- comm |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> dplyr::select(chr,start,end) 
+  # comm_hg38 <- data.frame(list(peaks = comm))
+  out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/bed/community_mm10_" , as.character(x) , ".bed" , sep ="")
+  write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
+}

@@ -9,6 +9,8 @@ compute_membership_nodes(
   resolutions = 1,
   method = c("Leiden", "Louvain"),
   niter = 2,
+  min_size = 100,
+  merged_id = 1000,
   seed = 1234
 )
 }

@@ -85,6 +85,9 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
         !is.data.frame(object@clusters)) {
       object@clusters <- data.frame()
     }
+  
+    G <- object@graph
+  
     set.seed(seed)
     # --- LEIDEN METHOD ---
     if (method == "Leiden") {

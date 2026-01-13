@@ -149,12 +149,13 @@ plot_cistrom <- function(
   return(p)
 }
 
-edge_files_ball <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/th/" , full.names = T)
-matrix_path <- "~/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
+# edge_files_ball <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/th/" , full.names = T)
+# matrix_path <- "~/T-ChroNet/paper_analysis/data/BCP-ALL/allPatientsPatientsNOMERGED_Ball_Multicov_nfcore.tsv"
 series_ball <- build_TChroNetSeries_object(edge_files_ball,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
-write_rds(series_ball , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/series_obj_ball.rds")
+# write_rds(series_ball , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/series_obj_ball.rds")
 
 series_ball <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/series_obj_ball.rds")
+
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/rand_index_map.pdf"  ,
   height = 9, 
@@ -183,6 +184,8 @@ ball_obj <- build_TCrhoNetNetwork_from_series(series_ball)
 # write_rds(ball_obj , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/obj_ball.rds")
 # ball_obj <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/obj_ball.rds")
 # colnames(ball_obj@matrix) <- c("H6","H9","H4","H7","H5","H8","P14","P12","P10","P13","P11","P16","P7","P19","P17","P27","P26","REM21","REM22","REM18","REM26","REM20","REM25","REM23","REM24","REL31","REL28","REL29","REL33","REL32","REL27","REL30","REL14")
+# ball_obj@clusters <- data.frame()
+ball_obj <- compute_membership_nodes(ball_obj ,resolutions = seq(0.5, 1.5, 0.1))
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/community_sankey_th_05.pdf"  ,
   height = 5, 

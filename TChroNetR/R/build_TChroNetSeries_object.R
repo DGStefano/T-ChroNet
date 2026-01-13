@@ -5,7 +5,7 @@
 #' @import GenomicRanges
 #' @import rtracklayer
 #' @import liftOver
-#' @import leidenAlg
+#' @import leidenbase
 #' @import dplyr
 #' @importFrom tibble tibble
 #' @importFrom tidyr pivot_longer
@@ -164,21 +164,27 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         membership_nodes <- membership_nodes+1
         
         membership_nodes_print <- .fix_leiden_membership(
-          G,
+          G_loop,
           membership_nodes,
           min_size = min_size,
           merged_id = merged_id
         )
 
         cluster_col <- paste0("clusters_", res)
-        tmp_df <- data.frame(node = V(G)$name, stringsAsFactors = FALSE)
+        tmp_df <- data.frame(node = V(G_loop)$name, stringsAsFactors = FALSE)
         tmp_df[[cluster_col]] <- membership_nodes_print
 
         if (nrow(th_cluster_df) == 0) th_cluster_df <- tmp_df
         else th_cluster_df <- merge(th_cluster_df, tmp_df, by = "node", all = TRUE)
 
-        mod_val <- suppressWarnings(
-          igraph::modularity(G, membership = membership_nodes, weights = E(G)$weight, resolution = res)
+        # mod_val <- suppressWarnings(
+        #  igraph::modularity(G_loop, membership = membership_nodes, weights = E(G_loop)$weight, resolution = res)
+        # )
+        mod_val <- leidenbase::quality_modularity(
+          graph = G_loop,
+          membership = membership_nodes,
+          weights = E(G_loop)$weight,
+          resolution_parameter = res
         )
 
         modularity_at_th <- rbind(

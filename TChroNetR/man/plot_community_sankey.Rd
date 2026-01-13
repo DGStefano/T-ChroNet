@@ -4,12 +4,12 @@
 \alias{plot_community_sankey}
 \title{Plot the sankey plot of communities at increased resolution for a fixed threshold}
 \usage{
-plot_community_sankey(object, threshold, output_path = NULL)
+plot_community_sankey(object, threshold = NULL, output_path = NULL)
 }
 \arguments{
-\item{object}{TCrhoNetSeries object}
+\item{object}{TCrhoNetSeries or TCrhoNetNetwork object}
 
-\item{threshold}{Set the threshold}
+\item{threshold}{Set the threshold to be plotted if TCrhoNetSeries object was passed. default = NULL}
 }
 \value{
 A ggplot2 object

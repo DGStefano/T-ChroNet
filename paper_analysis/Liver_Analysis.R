@@ -210,10 +210,10 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-liver_obj@clusters |> group_by(clusters_1) |> 
+liver_obj@clusters |> group_by(clusters_0.5) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_0.9 = as.factor(clusters_1)) |> 
-ggplot(aes(x = clusters_1 , y = peaks)) +
+  mutate(clusters_0.9 = as.factor(clusters_0.5)) |> 
+ggplot(aes(x = clusters_0.5 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+

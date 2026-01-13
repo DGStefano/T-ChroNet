@@ -33,6 +33,7 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
   library(leidenAlg)
   library(dplyr)
   library(arrow)
+  library(leidenbase)
 
   .add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
   iso <- which(degree(G) == 0)

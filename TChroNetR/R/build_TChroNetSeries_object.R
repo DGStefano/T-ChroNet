@@ -143,13 +143,12 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
     # --- Initialize storage ---
     th_cluster_df <- data.frame()
     modularity_at_th <- data.frame()
-
+    G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
+    
     if (method == "Leiden") {
       for (res in resolutions_list) {
         message(sprintf("🧩 Leiden clustering at resolution %.2f...", res))
 
-        
-        G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
 
         set.seed(seed)
         membership_nodes <- leidenAlg::find_partition_with_rep(
@@ -159,8 +158,6 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
           nrep = 5
         )
 
-        rm(G_loop)
-        invisible(gc())
         
         membership_nodes <- membership_nodes+1
         
@@ -215,6 +212,8 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         stringsAsFactors = FALSE
       )
     )
+    rm(G_loop)
+    invisible(gc())
     obj@graph <- G
 
     message(sprintf("✅ %s: %d nodes, %d edges, lcc=%.1f",

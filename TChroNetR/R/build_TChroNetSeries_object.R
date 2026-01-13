@@ -143,33 +143,38 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
     # --- Initialize storage ---
     th_cluster_df <- data.frame()
     modularity_at_th <- data.frame()
-    G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
+    # G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
     
     if (method == "Leiden") {
       for (res in resolutions_list) {
         message(sprintf("🧩 Leiden clustering at resolution %.2f...", res))
 
 
-        set.seed(seed)
-        membership_nodes <- leidenAlg::find_partition_with_rep(
-          G_loop,
-          resolution = res,
-          edge_weights = E(G_loop)$weight,
-          nrep = 5
+        # set.seed(seed)
+        # membership_nodes <- leidenAlg::find_partition_with_rep(
+        #   G_loop,
+        #   resolution = res,
+        #   edge_weights = E(G_loop)$weight,
+        #   nrep = 5
+        # )
+        res <- leidenbase::leiden_find_partition(
+          igraph = G,
+          partition_type = "ModularityVertexPartition", # Options: ModularityVertexPartition, etc.
+          resolution_parameter = 0.5
         )
 
         
-        membership_nodes <- membership_nodes+1
+        # membership_nodes <- membership_nodes+1
         
         membership_nodes_print <- .fix_leiden_membership(
-          G_loop,
+          G,
           membership_nodes,
           min_size = min_size,
           merged_id = merged_id
         )
 
         cluster_col <- paste0("clusters_", res)
-        tmp_df <- data.frame(node = V(G_loop)$name, stringsAsFactors = FALSE)
+        tmp_df <- data.frame(node = V(G)$name, stringsAsFactors = FALSE)
         tmp_df[[cluster_col]] <- membership_nodes_print
 
         if (nrow(th_cluster_df) == 0) th_cluster_df <- tmp_df
@@ -178,12 +183,12 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         # mod_val <- suppressWarnings(
         #  igraph::modularity(G_loop, membership = membership_nodes, weights = E(G_loop)$weight, resolution = res)
         # )
-        mod_val <- leidenbase::quality_modularity(
-          graph = G_loop,
-          membership = membership_nodes,
-          weights = E(G_loop)$weight,
-          resolution_parameter = res
-        )
+        # mod_val <- leidenbase::quality_modularity(
+        #   graph = G_loop,
+        #  membership = membership_nodes,
+        #  weights = E(G_loop)$weight,
+        #  resolution_parameter = res
+        #)
 
         modularity_at_th <- rbind(
           modularity_at_th,
@@ -212,8 +217,8 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
         stringsAsFactors = FALSE
       )
     )
-    rm(G_loop)
-    invisible(gc())
+    # rm(G_loop)
+    # invisible(gc())
     obj@graph <- G
 
     message(sprintf("✅ %s: %d nodes, %d edges, lcc=%.1f",

@@ -210,10 +210,10 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-ball_obj@clusters |> group_by(clusters_0.5) |> 
+ball_obj@clusters |> group_by(clusters_1) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_0.5 = as.factor(clusters_0.5)) |> 
-ggplot(aes(x = clusters_0.5 , y = peaks)) +
+  mutate(clusters_1 = as.factor(clusters_1)) |> 
+ggplot(aes(x = clusters_1 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
@@ -233,8 +233,8 @@ dev.off()
 
 
 ball_obj <- lift_network_coordinates(ball_obj , chain_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/hg19ToHg38.over.chain")
-ball_obj <- annotate_regions_from_bed(ball_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/GRCh38-cCREs_2.bed" , genome = 'hg38')
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/sankey_plot_best_res.pdf"  ,
+ball_obj <- annotate_regions_from_bed(ball_obj , bed_path = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/toy_data/data/GRCh38-cCREs.bed" , genome = 'hg38')
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/stacked.pdf"  ,
   height = 5, 
   width = 9,
   family = "ArialMT",
@@ -247,7 +247,7 @@ plot_stacked_annotation(ball_obj , resolution = as.numeric(ball_obj@resolution))
 dev.off()
 
 
-ball_obj <- run_GREAT_analysis(ball_obj, resolution = 0.9 , genome = "hg19") #as.numeric(ball_obj@resolution)
+ball_obj <- run_GREAT_analysis(ball_obj, resolution = 1.0 , genome = "hg19") #as.numeric(ball_obj@resolution)
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/boxplot_trends.pdf"  ,
   height = 10, 
@@ -467,7 +467,7 @@ dev.off()
 
 msigdbr_collections(db_species = "Hs")
 genesets <- msigdbr(species = "Homo sapiens" , db_species = 'HS', collection = "C4" , subcollection = "3CA" ) #
-genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
+genesets_removed  <- genesets |> dplyr::select(gs_name ,gene_symbol )
 i = 1
 j=0
 for (x in ball_obj@GREAT_targets) {
@@ -492,7 +492,7 @@ for (x in ball_obj@GREAT_targets) {
     i = i + 1
 }
 
-final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
+final_df_selected_Columns  <- final_df |> dplyr::select(community, Description , FoldEnrichment ,qvalue )
 final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
 
 clusteing_df = final_df_selected_Columns |> dplyr::select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
@@ -534,17 +534,17 @@ for (x in seq_along(list_communities_11)) {
   comm <- list_communities_11[[x]]
   comm_hg38 <- ball_obj@lifted_coords[ball_obj@lifted_coords$node %in% comm , ] |> pull(lifted_coord)
   comm_hg38 <- comm_hg38[!is.na(comm_hg38)]
-  comm_hg38 <- comm_hg38 |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> select(chr,start,end) 
+  comm_hg38 <- comm_hg38 |> as.data.frame() |> separate(col = 1 , c("chr" , "start", "end") , sep = "-") |> dplyr::select(chr,start,end) 
   out_file <- paste("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/beds/community_hg38_" , as.character(x) , ".bed" , sep ="")
   write_delim(comm_hg38 , out_file , delim ="\t" , col_names = F)
 }
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/Metaprograms.pdf"  ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/pictures/TFs.pdf"  ,
   height = 8, 
   width = 7,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/cistrom" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
+plot_cistrom("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/ball/cistrome" , tf_name_file = "/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/TFs_screening/TF_names_v_1.01.txt" )+
   theme(text = element_text(size = 15))+
   theme(legend.position="top" , legend.text = element_text(size=15))
 dev.off()
@@ -582,8 +582,8 @@ overlap_counts_sp_control <- overlap_ratios(
 )
 
 overlap_counts_sp_control <- t(overlap_counts_sp_control)
-rownames(overlap_counts_sp_control) <- paste0('Community_old_' , c(1:5) , sep = "")
-colnames(overlap_counts_sp_control) <- paste0('Community_' , c(1:5) , sep = "")
+rownames(overlap_counts_sp_control) <- paste0('Community_old_' , c(1:4) , sep = "")
+colnames(overlap_counts_sp_control) <- paste0('Community_' , c(1:4) , sep = "")
 
 
 mat <- overlap_counts_sp_control

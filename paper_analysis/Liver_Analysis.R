@@ -151,12 +151,12 @@ plot_cistrom <- function(
 
 # edge_files_liver <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/th/" , full.names = T)
 # matrix_path <- "~/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv"
-# seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T,seed = 123, transitivity = FALSE)
+# seiries_obj_liver <- build_TChroNetSeries_object(edge_files_liver,matrix_path,method = "Leiden",resolutions_list = seq(0.5, 1.5, 0.1),run_cd = T, seed = 200, transitivity = FALSE)
 # write_rds(seiries_obj_liver , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/series_obj_liver.rds")
 
 
 ### Liver
-series_liver <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/series_obj_liver.rds")
+series_liver <- read_rds("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/series_obj_liver_123.rds")
 ##### FINDING THE BEST THRESHOLD
 series_liver@best_th <- find_best_th(series_liver)
 
@@ -168,12 +168,12 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
 plot_randindex_map(series_liver )
 dev.off()
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/sankey_plot_res_1.3.pdf"  ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/sankey_plot_res_1.0.pdf"  ,
   height = 5, 
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_sankey_fixed_resolution(series_liver , resolution = 1.3)
+plot_sankey_fixed_resolution(series_liver , resolution = 1.1)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/relative_lcc.pdf"  ,
@@ -210,10 +210,10 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-liver_obj@clusters |> group_by(clusters_1.3) |> 
+liver_obj@clusters |> group_by(clusters_1.1) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_1.3 = as.factor(clusters_1.3)) |> 
-ggplot(aes(x = clusters_1.3 , y = peaks)) +
+  mutate(clusters_1.1 = as.factor(clusters_1.1)) |> 
+ggplot(aes(x = clusters_1.1 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
@@ -225,12 +225,12 @@ dev.off()
 
 liver_obj <- annotate_regions_from_bed(liver_obj , bed_path = "~/T-ChroNet/toy_data/data/mm10-cCREs.bed" , genome = 'mm10')
 
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/stachek_annotations_th08_res1.3.pdf"  ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/stachek_annotations_th08_res1.0.pdf"  ,
   height = 5, 
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_stacked_annotation(liver_obj , resolution = 1.3) +
+plot_stacked_annotation(liver_obj , resolution = 1.1) +
   coord_flip() +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
@@ -240,7 +240,7 @@ dev.off()
 
 
 
-liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.3, genome = "mm10")
+liver_obj <- run_GREAT_analysis(liver_obj, resolution = 1.1, genome = "mm10")
 
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/TFs.pdf"  ,
@@ -257,7 +257,7 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 7,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_trends_zscore(liver_obj , resolution = 1.3)
+plot_trends_zscore(liver_obj , resolution = 1.1)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/trends_lines.pdf"  ,
@@ -265,7 +265,7 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/live
   width = 7,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_line_trends_zscore(liver_obj , resolution = 1.3)
+plot_line_trends_zscore(liver_obj , resolution = 1.1)
 dev.off()
 
 pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/picture/headtmaps_trends.pdf"  ,
@@ -287,14 +287,15 @@ for (x in liver_obj@GREAT_targets) {
   final_list_genes <- unname(unlist(final_list_genes))
 }
 
-# msigdbr_collections(db_species = "Mm") |> View()
+msigdbr_collections(db_species = "Mm") |> View()
 genesets <- msigdbr(species = "Mus musculus" , db_species = 'MM', collection = "M8" )
 genesets_removed  <- genesets |> dplyr::select(gs_name ,gene_symbol )
 i = 1
 j=0
 for (x in liver_obj@GREAT_targets) {
+  print(x)
     target_genes = unname(unlist(as.data.frame(x)$annotated_genes))
-    x_enrichr <- enricher( target_genes , TERM2GENE = genesets_removed  , universe = final_list_genes) #   , universe = unname(unlist(reults[[1]]))
+    x_enrichr <- enricher( target_genes , TERM2GENE = unique(genesets_removed) ) #   , universe = unname(unlist(reults[[1]])) #, universe = final_list_genes
     x_df  <- x_enrichr@result |> filter(qvalue < 0.05)
     x_df$FoldEnrichment <- (parse_ratio(x_df$GeneRatio)) /
                       (parse_ratio(x_df$BgRatio))
@@ -404,10 +405,10 @@ overlap_ratios <- function(list1, list2) {
 }
 
 
-communities_11 <- liver_obj@clusters[,c('node' , "clusters_1.3")]
+communities_11 <- liver_obj@clusters[,c('node' , "clusters_1.1")]
 list_communities_11 <- list()
-for (x in sort(unique(communities_11[["clusters_1.3"]])) ) {
-  nodes <- communities_11[communities_11["clusters_1.3"] == x, ] |> pull(node)
+for (x in sort(unique(communities_11[["clusters_1.1"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1.1"] == x, ] |> pull(node)
   list_communities_11[[x]] <- nodes
 }
 

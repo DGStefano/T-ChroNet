@@ -178,7 +178,7 @@ pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1
   width = 9,
   family = "ArialMT",
   useDingbats = FALSE)
-plot_sankey_fixed_resolution(series_thp1 , resolution = 1.3)
+plot_sankey_fixed_resolution(series_thp1 , resolution = 1.0)
 dev.off()
 
 ##### PLOTTING THE REALTIVE LARGEST CONNECTED COMPONENTS FOR EACH THRESHOLD
@@ -220,10 +220,10 @@ dev.off()
 
 thp1_th08 <- find_best_resolution(thp1_th08)
 
-to_plot <- thp1_th08@clusters |> group_by(clusters_1.3) |> 
+to_plot <- thp1_th08@clusters |> group_by(clusters_1) |> 
   summarise(peaks = n()) |> 
-  mutate(clusters_1.3 = as.factor(clusters_1.3)) |> 
-ggplot(aes(x = clusters_1.3 , y = peaks)) +
+  mutate(clusters_1 = as.factor(clusters_1)) |> 
+ggplot(aes(x = clusters_1 , y = peaks)) +
   geom_bar(stat = 'identity' , fill = "black") +
   theme_classic() + 
   coord_flip()+
@@ -245,7 +245,7 @@ to_plot <- plot_stacked_annotation(thp1_th08) +
   theme(legend.position = "top" , text = element_text(size = 15)) +
   ylab("") +
   xlab("")
-pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/stachek_annotations_th08_res1_3.pdf" ,
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/pictures/pdf/stachek_annotations_th08_res1_0.pdf" ,
   height = 5, 
   width = 9,
   family = "ArialMT",
@@ -256,10 +256,10 @@ dev.off()
 
 thp1_th08 <- run_GREAT_analysis(thp1_th08, genome = "hg19")
 
-communities_09 <- thp1_th08@clusters[,c('node' , "clusters_1.3")]
+communities_09 <- thp1_th08@clusters[,c('node' , "clusters_1")]
 list_communities_09 <- list()
-for (x in sort(unique(communities_09[["clusters_1.3"]])) ) {
-  nodes <- communities_09[communities_09["clusters_1.3"] == x, ] |> pull(node)
+for (x in sort(unique(communities_09[["clusters_1"]])) ) {
+  nodes <- communities_09[communities_09["clusters_1"] == x, ] |> pull(node)
   list_communities_09[[x]] <- nodes
 }
 
@@ -384,10 +384,10 @@ plot_heatmap_counts(thp1_th08)
 dev.off()
 
 
-communities_11 <- thp1_th08@clusters[,c('node' , "clusters_1.3")]
+communities_11 <- thp1_th08@clusters[,c('node' , "clusters_1")]
 list_communities_11 <- list()
-for (x in sort(unique(communities_11[["clusters_1.3"]])) ) {
-  nodes <- communities_11[communities_11["clusters_1.3"] == x, ] |> pull(node)
+for (x in sort(unique(communities_11[["clusters_1"]])) ) {
+  nodes <- communities_11[communities_11["clusters_1"] == x, ] |> pull(node)
   list_communities_11[[x]] <- nodes
 }
 
@@ -662,3 +662,11 @@ heatmap_legend_param = list(
   ))
 draw(ht, heatmap_legend_side = "top")
 dev.off()
+
+
+##### Making table of communities and original annotation
+tchronet_communities <- thp1_th08@clusters |> dplyr::select(node , clusters_1)
+
+merged_annotations_clusters <- merge.data.frame(sites_th1_cellreport , tchronet_communities , by.x = 'sites', by.y = 'node' , all = T)
+
+merged_annotations_clusters |> separate(sites , c('chr','start','end') , sep ="-") |> write_delim( "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/annotations_and_clusters_thp1.tsv" , delim = "\t" )

@@ -26,8 +26,8 @@ This short tutorial explains how to run **T-ChroNet** using the included **toy d
 
 1. Run tchronet tool to evalute correlation parameters among all the peaks: 
 ```
-conda activate T-CHRONET
-tchronet -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --min_t_type pval --min_t_val 0.1
+conda activate tchronet_env
+tchronetpy -m ~/T-ChroNet/toy_data/data/thp1_test.tsv -o ~/T-ChroNet/toy_data/results/th/ -@ 1 -t /tmp/thp1_test/ --min_t_type pval --min_t_val 0.1
 ```
 2. Use TChronetR for netowrk analysis
 The full TChronetR vignette is avaliable [html](https://htmlpreview.github.io/?https://github.com/DGStefano/T-ChroNet/blob/main/TChroNetR/vignettes/TchronetR_Vignette.html) [rmd](./TChroNetR/vignettes/TchronetR_Vignette.Rmd)
@@ -36,8 +36,8 @@ The full TChronetR vignette is avaliable [html](https://htmlpreview.github.io/?h
 
 ## Execution
 To run the tchronet tool, there are some positional arguments to be set :
-- -m or --matrix : Path to input matrix
-- -o or --output : Path to the output file
+- -m or --matrix : [Required] Path to input matrix
+- -o or --output : [Required] Path to the output file
 - -s or --stepsize : Stepsize for RAM parameters
 - -@ or --threads : Number of threads to use
 - -t or --tempdir : Temporary directory to use. Will create a \"/tmp\" directory inside it

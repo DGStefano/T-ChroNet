@@ -109,7 +109,7 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
                 
         membership_nodes_print <- .fix_leiden_membership(
           G,
-          membership_nodes,
+          partition_current_graph$membership,
           min_size = min_size,
           merged_id = merged_id
         )

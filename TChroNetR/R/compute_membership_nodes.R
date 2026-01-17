@@ -20,14 +20,13 @@
 compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden", "Louvain") , niter = 2 , min_size = 100, merged_id = 1000, seed = 1234) {
 
   .add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
-  iso <- which(degree(G) == 0)
-  if (length(iso) == 0) return(G)
-
-  add_edges(
-    G,
-    as.vector(rbind(iso, iso)),
-    attr = list(weight = rep(loop_weight, length(iso)))
-  )
+    iso <- which(degree(G) == 0)
+    if (length(iso) == 0) return(G)
+    add_edges(
+      G,
+      as.vector(rbind(iso, iso)),
+      attr = list(weight = rep(loop_weight, length(iso)))
+    )
   }
 
   .fix_leiden_membership <- function(G, membership, min_size = 100, merged_id = 1000) {
@@ -99,21 +98,15 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
         else {
           message(sprintf("Running Leiden clustering at resolution %.2f...", res))
           
-        G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
 
-        set.seed(seed)
-        membership_nodes <- leidenAlg::find_partition_with_rep(
-          G_loop,
-          resolution = res,
-          edge_weights = E(G_loop)$weight,
-          nrep = 5
+        partition_current_graph <- leidenbase::leiden_find_partition(
+          igraph = G,
+          edge_weights = E(G)$weight,
+          partition_type = "RBConfigurationVertexPartition", # Options: ModularityVertexPartition, etc.
+          resolution_parameter = res,
+          seed = seed
         )
-
-        rm(G_loop)
-        invisible(gc())
-        
-        membership_nodes <- membership_nodes+1
-        
+                
         membership_nodes_print <- .fix_leiden_membership(
           G,
           membership_nodes,
@@ -138,10 +131,12 @@ compute_membership_nodes <- function(object, resolutions = 1, method = c("Leiden
           }
           
           # Compute modularity
-          mod_val <- igraph::modularity(object@graph, membership = nodes_membership$membership, weights = E(object@graph)$corr , directed = FALSE)
+          mod_val <- partition_current_graph$modularity
+          qual_val <- partition_current_graph$quality
           object@modularity <- rbind(object@modularity, data.frame(
             resolution = res,
             modularity = mod_val,
+            quality = qual_val,
             method = "Leiden",
             stringsAsFactors = FALSE
           ))

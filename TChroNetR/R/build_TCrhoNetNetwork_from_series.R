@@ -1,80 +1,96 @@
 #' Convert a TCrhoNetSeries into a TCrhoNetNetwork 
-#' @import rhdf5
 #' @import igraph
-#' @import leidenAlg
 #' @import GenomicRanges
 #' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
+#' @import rhdf5
 #' @import dplyr
-#' @importFrom tibble
+#' @importFrom data.table fread
+#' @importFrom S4Vectors IRanges
+#' @importFrom tibble as_tibble
 #' @importFrom tidyr pivot_longer
 #' 
-#' @param object TCrhoNetSeries object
+#' @param series_object TCrhoNetSeries object
 #' @param threshold Choosen correlation threshold. If not provided it uses the best threshold parameter stored in the TCrhoNetSeries object
 #' @param matrix_path Path of the normalized log2 matrix used for correlation evaluation
 #' @param verbose (default=TRUE)
 #' @return A TCrhoNetNetwork object
 #' @export
+#' Optimized conversion of TCrhoNetSeries into a TCrhoNetNetwork 
 build_TCrhoNetNetwork_from_series <- function(series_object,
-                                              threshold ,
+                                              threshold,
                                               matrix_path,
                                               verbose = TRUE) {
-  # --- Load required packages ---
-#  require(igraph)
-#  require(rhdf5)
-#  require(dplyr)
   
-  # --- Input checks ---
+  # --- Input Validation & Thresholding ---
   if (!inherits(series_object, "TCrhoNetSeries")) {
     stop("❌ Input must be a 'TCrhoNetSeries' object.")
   }
   
-  if (missing(threshold) & !('best_th' %in% slotNames(series_object))  ) {
-    stop("❌ You must specify a 'threshold' (e.g., 0.7). or run 'find_best_th'")
+  if (missing(threshold)) {
+    if ('best_th' %in% slotNames(series_object)) {
+      threshold <- series_object@best_th
+    } else {
+      stop("❌ You must specify a 'threshold' or run 'find_best_th' first.")
+    }
   }
-  if(missing(threshold) & ('best_th' %in% slotNames(series_object) ) ){
-    threshold = series_object@best_th
-  }
-  if(missing(matrix_path) & !('matrix' %in% slotNames(series_object)) ){
-    stop("❌ You must specify the matrix path")
-  }
-  # --- Create TCrhoNetNetwork object ---
-  if (verbose) message("Creating TCrhoNetNetwork object at threshold ", threshold, "...")
+
+  # --- Graph Filtering ---
+  if (verbose) message("⚡ Filtering graph at threshold ", threshold, "...")
   
-  G <- delete_edges(series_object@graph, E(series_object@graph)[weight < threshold])
-  # G <- delete_vertices(G, V(G)[degree(G) == 0])
+  # --- Subgraph to remove edges below the threshold ---
+  edge_mask <- E(series_object@graph)$weight >= threshold
+  G <- igraph::subgraph_from_edges(series_object@graph, which(edge_mask), delete.vertices = FALSE)
 
-  # --- Read the input matrix ---
-  if( 'matrix' %in% slotNames(series_object) ){
+  # --- Reading matrix ---
+  if ('matrix' %in% slotNames(series_object)) {
     matrix_G <- series_object@matrix
-  }
-  else {
-    matrix_G <- read.delim(matrix_path , sep ="\t" ,row.names=1)
+  } else {
+    if (verbose) message("⚡ Loading matrix using ...")
+    raw_data <- data.table::fread(matrix_path, data.table = FALSE, sep = "\t")
+    
+    # Set rownames and remove the first column
+    rownames(matrix_G) <- raw_data[[1]]
+    matrix_G <- as.matrix(raw_data[, -1]) 
+    rm(raw_data) # Free memory
   }
 
-  # --- From the peaks in the counts matrix create a GRanges object ---
+  # --- Creation of genomic choordinates---
+  if (verbose) message("⚡ Parsing genomic coordinates...")
+  
+  node_names <- rownames(matrix_G)
+  
+  coords <- do.call(rbind, strsplit(node_names, "-"))
+  
+  peaks_ranges <- GenomicRanges::GRanges(
+    seqnames = coords[, 1],
+    ranges = IRanges::IRanges(
+      start = as.numeric(coords[, 2]),
+      end = as.numeric(coords[, 3])
+    ),
+    nodes = node_names
+  )
 
-  peaks <- matrix_G |> rownames() |> as.data.frame() |> dplyr::rename(peaks = 1) |> 
-    tidyr::separate('peaks' , c('Chromosome' , 'Start','End') , sep = '-')
-  peaks_ranges <- makeGRangesFromDataFrame(peaks)
-  peaks_ranges$nodes <- rownames(matrix_G)
+  # --- Object Assembly ---
+  th_str <- as.character(threshold)
   
   network_obj <- new(
     "TCrhoNetNetwork",
     graph = G,
-    #threshold = threshold,
-    clusters = series_object@communities[[as.character(threshold)]],
+    clusters = if(th_str %in% names(series_object@communities)) series_object@communities[[th_str]] else list(),
     matrix = matrix_G,
     genomicRegions = peaks_ranges,
-    modularity = as.data.frame(series_object@modularity[[as.character(threshold)]]),
-    metadata = list( n_nodes = vcount(G), n_edges = ecount(G))#source = network_path,
+    modularity = if(th_str %in% names(series_object@modularity)) as.data.frame(series_object@modularity[[th_str]]) else data.frame(),
+    metadata = list(
+      n_nodes = igraph::vcount(G), 
+      n_edges = igraph::ecount(G),
+      threshold = threshold
+    )
   )
 
   if (verbose) {
     message(sprintf(
-      "✅ Network built: %d nodes, %d edges, transitivity = %.3f",
-      vcount(G), ecount(G), series_object@metrics[series_object@metrics$threshold == threshold , 'transitivity']
+      "✅ Success: %d nodes, %d edges preserved.",
+      igraph::vcount(G), igraph::ecount(G)
     ))
   }
   

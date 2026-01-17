@@ -37,24 +37,27 @@ tca <- DBanalysis(tca , filter.type = 'raw' , filter.value = 5  )
 
 tca <- timecourseTable(tca , value = "expression" , control.group = "1" , norm.method = 'cpm' , filter = TRUE)
 
-std_data <- tca@clusterRes@data
-
+t <- tcTable(tca)
 # 2. Define the clustering function for clusGap
 # This function tells clusGap to use k-means
 km_func <- function(x, k) {
-  list(cluster = kmeans(x, centers = k, nstart = 25)$cluster)
+  list(cluster = kmeans(x, centers = k, nstart = 1)$cluster)
 }
 
 # 3. Calculate the Gap Statistic
 # K.max: maximum number of clusters to consider
 # B: Number of Monte Carlo samples (use B=50 for a quick look, B=500 for publication)
-gap_stat <- clusGap(std_data, 
+gap_stat <- clusGap(t, 
                     FUNcluster = km_func, 
                     K.max = 8, 
                     B = 50, 
                     verbose = FALSE)
 
+# method = "silhouette"
+res_k <- fviz_nbclust(t, kmeans, method = "silhouette", k.max = 10)
 
+# Extract the k with the highest average silhouette width
+best_k <- as.numeric(res_k$data$clusters[which.max(res_k$data$y)])
 
 # 4. Visualize the results
 fviz_gap_stat(gap_stat) +
@@ -64,7 +67,8 @@ tca <- timeclust(tca , algo = 'km' , k = 6 , standardize = TRUE)
 timeclustplot(tca , col = 3)
 save_files_community(tca , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/km")
 
-std_data <- tca@clusterRes@data
+
+t <- tcTable(tca)
 # 1. Define the Hierarchical Clustering wrapper
 hc_func <- function(x, k) {
   # Perform hierarchical clustering
@@ -76,7 +80,7 @@ hc_func <- function(x, k) {
 
 # 2. Calculate the Gap Statistic
 # B=50 is standard for testing; increase to 500 for final results
-gap_stat_hc <- clusGap(std_data, 
+gap_stat_hc <- clusGap(t, 
                        FUNcluster = hc_func, 
                        K.max = 10, 
                        B = 50, 

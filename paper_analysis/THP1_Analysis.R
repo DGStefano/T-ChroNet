@@ -670,3 +670,9 @@ tchronet_communities <- thp1_th08@clusters |> dplyr::select(node , clusters_1)
 merged_annotations_clusters <- merge.data.frame(sites_th1_cellreport , tchronet_communities , by.x = 'sites', by.y = 'node' , all = T)
 
 merged_annotations_clusters |> separate(sites , c('chr','start','end') , sep ="-") |> write_delim( "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/annotations_and_clusters_thp1.tsv" , delim = "\t" )
+
+matrix_path <- "~/T-ChroNet/paper_analysis/data/THP1/lognorm_edgeR_limma_countsInCellReport_TheiCounts_NoStatic_mean.tsv"
+matrix_values <- read_delim(matrix_path , delim = "\t")
+merged_annotations_clusters <- merge.data.frame(merged_annotations_clusters , matrix_values , by.x = 'sites',by.y = 'peaks')
+
+merged_annotations_clusters |> separate(sites , c('chr','start','end') , sep ="-") |> write_delim( "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/thp1/annotations_and_clusters_thp1.tsv" , delim = "\t" )

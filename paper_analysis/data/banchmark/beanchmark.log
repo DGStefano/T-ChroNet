@@ -1,0 +1,2665 @@
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_HC | Nodes: 10000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25hWarning message:
+package ‘readr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7561344 403.9   12393560 661.9  8565297 457.5
+Vcells 13264076 101.2   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_HC: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_KM | Nodes: 10000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TchronetR | Nodes: 10000 | Threads: 1
+
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:igraph’:
+
+    normalize, path, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following object is masked from ‘package:hdf5r’:
+
+    values
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+gwascat loaded.  Use makeCurrentGwascat() to extract current image.
+ from EBI.  The data folder of this package has some legacy extracts.
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+There were 22 warnings (use warnings() to see them)
+[?25h[?25h[?25h[?25h[?25h           used  (Mb) gc trigger   (Mb) max used  (Mb)
+Ncells 13906100 742.7   25880774 1382.2 16894927 902.3
+Vcells 24739761 188.8   41299743  315.1 28558155 217.9
+[?25h[?25h[?25h
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:BiocGenerics’:
+
+    type
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Error in build_TChroNetSeries_object(edge_files_list, matrix_path, run_cd = FALSE,  : 
+  No edge files provided.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /mnt/nas-safu02/sdigiove_workspace/prova_bench` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/mnt/nas-safu02/sdigiove_workspace/prova_bench']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 1
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hError in allowWGCNAThreads(nThreads = n_threads) : 
+  nThreads must be numeric and at least 2.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R 1 /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/raw_counts.tsv` failed. (See above for error)
+!!! Error running WGCNA: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R', '1', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/raw_counts.tsv']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 2
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 1
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 145, in main
+    reset_dir(final_tempdir)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 41, in reset_dir
+    shutil.rmtree(path)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 731, in rmtree
+    onerror(os.rmdir, path, sys.exc_info())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 729, in rmtree
+    os.rmdir(path)
+OSError: [Errno 39] Directory not empty: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 1 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '1', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: TCseq_KM | Nodes: 10000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_HC | Nodes: 10000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25hWarning message:
+package ‘readr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7561344 403.9   12393560 661.9  8565297 457.5
+Vcells 13264076 101.2   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_HC: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_KM | Nodes: 10000 | Threads: 1
+Consolidating temporary files into Parquet...
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TchronetR | Nodes: 10000 | Threads: 1
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:igraph’:
+
+    normalize, path, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following object is masked from ‘package:hdf5r’:
+
+    values
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+gwascat loaded.  Use makeCurrentGwascat() to extract current image.
+ from EBI.  The data folder of this package has some legacy extracts.
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+There were 22 warnings (use warnings() to see them)
+[?25h[?25h[?25h[?25h[?25h           used  (Mb) gc trigger   (Mb) max used  (Mb)
+Ncells 13906100 742.7   25880781 1382.2 16894927 902.3
+Vcells 24739761 188.8   41299743  315.1 28558155 217.9
+[?25h[?25h[?25h
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:BiocGenerics’:
+
+    type
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Error in build_TChroNetSeries_object(edge_files_list, matrix_path, run_cd = FALSE,  : 
+  No edge files provided.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /mnt/nas-safu02/sdigiove_workspace/prova_bench` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/mnt/nas-safu02/sdigiove_workspace/prova_bench']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 1
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hError in allowWGCNAThreads(nThreads = n_threads) : 
+  nThreads must be numeric and at least 2.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R 1 /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/raw_counts.tsv` failed. (See above for error)
+!!! Error running WGCNA: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R', '1', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/raw_counts.tsv']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 2
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 145, in main
+    reset_dir(final_tempdir)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 41, in reset_dir
+    shutil.rmtree(path)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 731, in rmtree
+    onerror(os.rmdir, path, sys.exc_info())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 729, in rmtree
+    os.rmdir(path)
+OSError: [Errno 39] Directory not empty: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 2 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '2', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 2
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 2 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25hmultiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 68, in run_create_ei
+    return create_ei(*args)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 112, in create_ei
+    graph.e.to_pickle(tmp_save_pickle)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/pandas/util/_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/pandas/core/generic.py", line 3187, in to_pickle
+    to_pickle(
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/pandas/io/pickle.py", line 103, in to_pickle
+    with get_handle(
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/pandas/io/common.py", line 749, in get_handle
+    check_parent_directory(str(handle))
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/pandas/io/common.py", line 616, in check_parent_directory
+    raise OSError(rf"Cannot save file into a non-existent directory: '{parent}'")
+OSError: Cannot save file into a non-existent directory: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 208, in main
+    for _ in pool.imap_unordered(run_create_ei, ei_args_list):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+OSError: Cannot save file into a non-existent directory: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 2 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '2', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 2
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 2 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+There were 12 warnings (use warnings() to see them)
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+There were 12 warnings (use warnings() to see them)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 10000 | Threads: 5
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 145, in main
+    reset_dir(final_tempdir)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 41, in reset_dir
+    shutil.rmtree(path)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 731, in rmtree
+    onerror(os.rmdir, path, sys.exc_info())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 729, in rmtree
+    os.rmdir(path)
+OSError: [Errno 39] Directory not empty: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 10000 | Threads: 5
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 5 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '5', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 5
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 5 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25hUsing: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+There were 30 warnings (use warnings() to see them)
+[?25h[?25h[?25hConsolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Warning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25hConsolidating temporary files into Parquet...
+[?25h[?25h>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 10000 | Threads: 15
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 145, in main
+    reset_dir(final_tempdir)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 41, in reset_dir
+    shutil.rmtree(path)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 731, in rmtree
+    onerror(os.rmdir, path, sys.exc_info())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 729, in rmtree
+    os.rmdir(path)
+OSError: [Errno 39] Directory not empty: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 15 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '15', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 15
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 15 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25hConsolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hConsolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 5
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 5 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 10000 | Threads: 20
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+There were 30 warnings (use warnings() to see them)
+[?25h[?25h[?25h>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+Warning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 10000 | Threads: 15
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 7, in <module>
+    sys.exit(entry_point())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 262, in entry_point
+    main()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 256, in main
+    reset_dir(final_tempdir)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py", line 41, in reset_dir
+    shutil.rmtree(path)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 731, in rmtree
+    onerror(os.rmdir, path, sys.exc_info())
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/shutil.py", line 729, in rmtree
+    os.rmdir(path)
+OSError: [Errno 39] Directory not empty: '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp'
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/prova_bench -@ 20 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '20', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 20
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+Consolidating temporary files into Parquet...
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 20 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/prova_bench', '-@', '15', '--min_t_type', 'pval', '--min_t_val', '0.1']' died with <Signals.SIGKILL: 9>.
+RUNNING: WGCNA | Nodes: 10000 | Threads: 15
+Consolidating temporary files into Parquet...
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 15 threads.
+[?25h[1mRows: [22m[34m10000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25hConsolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+   Power SFT.R.sq slope truncated.R.sq  mean.k. median.k. max.k.  Density
+1      1    0.035 -1.03          0.969 1930.000  1.92e+03 3000.0 1.93e-01
+2      2    0.237 -1.48          0.953  599.000  5.79e+02 1220.0 5.99e-02
+3      3    0.422 -1.27          0.977  240.000  2.21e+02  599.0 2.40e-02
+4      4    0.693 -1.67          0.995  113.000  9.84e+01  387.0 1.13e-02
+5      5    0.842 -1.93          0.984   59.900  4.90e+01  282.0 5.99e-03
+6      6    0.913 -2.02          0.977   34.700  2.61e+01  216.0 3.47e-03
+7      7    0.951 -2.00          0.971   21.400  1.48e+01  172.0 2.15e-03
+8      8    0.968 -1.97          0.973   14.000  8.68e+00  142.0 1.40e-03
+9      9    0.975 -1.93          0.973    9.550  5.30e+00  121.0 9.56e-04
+10    10    0.975 -1.89          0.972    6.760  3.34e+00  105.0 6.76e-04
+11    12    0.973 -1.78          0.969    3.700  1.41e+00   80.8 3.70e-04
+12    14    0.949 -1.72          0.947    2.220  6.41e-01   64.3 2.22e-04
+13    16    0.935 -1.66          0.941    1.430  3.07e-01   52.3 1.43e-04
+14    18    0.943 -1.59          0.954    0.969  1.55e-01   43.2 9.69e-05
+15    20    0.949 -1.54          0.964    0.687  8.09e-02   36.1 6.87e-05
+   Centralization Heterogeneity
+1         0.10600         0.167
+2         0.06170         0.309
+3         0.03600         0.441
+4         0.02740         0.575
+5         0.02220         0.720
+6         0.01820         0.879
+7         0.01510         1.050
+8         0.01280         1.240
+9         0.01120         1.440
+10        0.00979         1.640
+11        0.00771         2.070
+12        0.00621         2.510
+13        0.00509         2.940
+14        0.00423         3.340
+15        0.00355         3.720
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 20000 | Threads: 1
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: TCseq_KM | Nodes: 20000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_HC | Nodes: 20000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25hWarning message:
+package ‘readr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7561344 403.9   12393560 661.9  8565297 457.5
+Vcells 13264076 101.2   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_HC: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_KM | Nodes: 20000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TchronetR | Nodes: 20000 | Threads: 1
+
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:igraph’:
+
+    normalize, path, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following object is masked from ‘package:hdf5r’:
+
+    values
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+gwascat loaded.  Use makeCurrentGwascat() to extract current image.
+ from EBI.  The data folder of this package has some legacy extracts.
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+There were 22 warnings (use warnings() to see them)
+[?25h[?25h[?25h[?25h[?25h           used  (Mb) gc trigger   (Mb) max used  (Mb)
+Ncells 13906100 742.7   25880781 1382.2 16894927 902.3
+Vcells 24739761 188.8   41299743  315.1 28558155 217.9
+[?25h[?25h[?25h
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:BiocGenerics’:
+
+    type
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Error in build_TChroNetSeries_object(edge_files_list, matrix_path, run_cd = FALSE,  : 
+  No edge files provided.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /mnt/nas-safu02/sdigiove_workspace/prova_bench` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/mnt/nas-safu02/sdigiove_workspace/prova_bench']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 20000 | Threads: 1
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hError in allowWGCNAThreads(nThreads = n_threads) : 
+  nThreads must be numeric and at least 2.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R 1 /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/raw_counts.tsv` failed. (See above for error)
+!!! Error running WGCNA: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R', '1', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_20000/raw_counts.tsv']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 20000 | Threads: 2
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 20000 | Threads: 2
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 2 threads.
+[?25h[1mRows: [22m[34m20000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1   0.0421 -1.13          0.963 3870.00  3850.000 5980.0 1.93e-01
+2      2   0.2070 -1.52          0.942 1200.00  1160.000 2500.0 6.01e-02
+3      3   0.3880 -1.29          0.958  481.00   444.000 1220.0 2.40e-02
+4      4   0.6740 -1.64          0.990  227.00   198.000  774.0 1.14e-02
+5      5   0.8360 -1.92          0.988  121.00    97.900  566.0 6.03e-03
+6      6   0.8980 -2.07          0.973   69.90    52.300  445.0 3.49e-03
+7      7   0.9290 -2.11          0.965   43.30    29.600  363.0 2.17e-03
+8      8   0.9330 -2.09          0.951   28.30    17.400  303.0 1.42e-03
+9      9   0.9270 -2.05          0.934   19.40    10.600  258.0 9.69e-04
+10    10   0.9430 -1.95          0.944   13.70     6.580  223.0 6.87e-04
+11    12   0.9560 -1.81          0.953    7.55     2.760  171.0 3.78e-04
+12    14   0.9670 -1.68          0.962    4.55     1.260  135.0 2.28e-04
+13    16   0.9740 -1.59          0.971    2.94     0.608  109.0 1.47e-04
+14    18   0.9820 -1.52          0.980    2.01     0.305   89.6 1.00e-04
+15    20   0.9820 -1.47          0.981    1.43     0.160   75.4 7.15e-05
+   Centralization Heterogeneity
+1         0.10500         0.167
+2         0.06480         0.309
+3         0.03710         0.441
+4         0.02730         0.577
+5         0.02230         0.725
+6         0.01880         0.886
+7         0.01600         1.060
+8         0.01370         1.250
+9         0.01190         1.450
+10        0.01050         1.670
+11        0.00818         2.110
+12        0.00654         2.560
+13        0.00531         3.010
+14        0.00438         3.430
+15        0.00370         3.830
+There were 36 warnings (use warnings() to see them)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 20000 | Threads: 5
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 20000 | Threads: 5
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 5 threads.
+[?25h[1mRows: [22m[34m20000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1   0.0421 -1.13          0.963 3870.00  3850.000 5980.0 1.93e-01
+2      2   0.2070 -1.52          0.942 1200.00  1160.000 2500.0 6.01e-02
+3      3   0.3880 -1.29          0.958  481.00   444.000 1220.0 2.40e-02
+4      4   0.6740 -1.64          0.990  227.00   198.000  774.0 1.14e-02
+5      5   0.8360 -1.92          0.988  121.00    97.900  566.0 6.03e-03
+6      6   0.8980 -2.07          0.973   69.90    52.300  445.0 3.49e-03
+7      7   0.9290 -2.11          0.965   43.30    29.600  363.0 2.17e-03
+8      8   0.9330 -2.09          0.951   28.30    17.400  303.0 1.42e-03
+9      9   0.9270 -2.05          0.934   19.40    10.600  258.0 9.69e-04
+10    10   0.9430 -1.95          0.944   13.70     6.580  223.0 6.87e-04
+11    12   0.9560 -1.81          0.953    7.55     2.760  171.0 3.78e-04
+12    14   0.9670 -1.68          0.962    4.55     1.260  135.0 2.28e-04
+13    16   0.9740 -1.59          0.971    2.94     0.608  109.0 1.47e-04
+14    18   0.9820 -1.52          0.980    2.01     0.305   89.6 1.00e-04
+15    20   0.9820 -1.47          0.981    1.43     0.160   75.4 7.15e-05
+   Centralization Heterogeneity
+1         0.10500         0.167
+2         0.06480         0.309
+3         0.03710         0.441
+4         0.02730         0.577
+5         0.02230         0.725
+6         0.01880         0.886
+7         0.01600         1.060
+8         0.01370         1.250
+9         0.01190         1.450
+10        0.01050         1.670
+11        0.00818         2.110
+12        0.00654         2.560
+13        0.00531         3.010
+14        0.00438         3.430
+15        0.00370         3.830
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 20000 | Threads: 15
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 20000 | Threads: 15
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 15 threads.
+[?25h[1mRows: [22m[34m20000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1   0.0421 -1.13          0.963 3870.00  3850.000 5980.0 1.93e-01
+2      2   0.2070 -1.52          0.942 1200.00  1160.000 2500.0 6.01e-02
+3      3   0.3880 -1.29          0.958  481.00   444.000 1220.0 2.40e-02
+4      4   0.6740 -1.64          0.990  227.00   198.000  774.0 1.14e-02
+5      5   0.8360 -1.92          0.988  121.00    97.900  566.0 6.03e-03
+6      6   0.8980 -2.07          0.973   69.90    52.300  445.0 3.49e-03
+7      7   0.9290 -2.11          0.965   43.30    29.600  363.0 2.17e-03
+8      8   0.9330 -2.09          0.951   28.30    17.400  303.0 1.42e-03
+9      9   0.9270 -2.05          0.934   19.40    10.600  258.0 9.69e-04
+10    10   0.9430 -1.95          0.944   13.70     6.580  223.0 6.87e-04
+11    12   0.9560 -1.81          0.953    7.55     2.760  171.0 3.78e-04
+12    14   0.9670 -1.68          0.962    4.55     1.260  135.0 2.28e-04
+13    16   0.9740 -1.59          0.971    2.94     0.608  109.0 1.47e-04
+14    18   0.9820 -1.52          0.980    2.01     0.305   89.6 1.00e-04
+15    20   0.9820 -1.47          0.981    1.43     0.160   75.4 7.15e-05
+   Centralization Heterogeneity
+1         0.10500         0.167
+2         0.06480         0.309
+3         0.03710         0.441
+4         0.02730         0.577
+5         0.02230         0.725
+6         0.01880         0.886
+7         0.01600         1.060
+8         0.01370         1.250
+9         0.01190         1.450
+10        0.01050         1.670
+11        0.00818         2.110
+12        0.00654         2.560
+13        0.00531         3.010
+14        0.00438         3.430
+15        0.00370         3.830
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 30000 | Threads: 1
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: TCseq_KM | Nodes: 30000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_HC | Nodes: 30000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25hWarning message:
+package ‘readr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7561344 403.9   12393560 661.9  8565297 457.5
+Vcells 13264076 101.2   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_HC: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TCseq_KM | Nodes: 30000 | Threads: 1
+Warning message:
+replacing previous import ‘e1071::element’ by ‘ggplot2::element’ when loading ‘TCseq’ 
+[?25h
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Warning message:
+package ‘dplyr’ was built under R version 4.4.3 
+[?25h[?25h[?25hWarning message:
+NAs introduced by coercion 
+[?25h           used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells  7548293 403.2   12393560 661.9  8565297 457.5
+Vcells 13245185 101.1   19111436 145.9 15859530 121.0
+[?25h[?25h[?25h[1m[33mError[39m in `vroom::vroom()`:[22m
+[1m[22m[33m![39m `file` is not one of the supported inputs:
+[36m•[39m A filepath or character vector of filepaths
+[36m•[39m A connection or list of connections
+[36m•[39m Literal or raw input
+Backtrace:
+[90m    [39m▆
+[90m 1. [39m├─[1mbase[22m::as.data.frame(readr::read_delim(BED_DIR))
+[90m 2. [39m└─[1mreadr[22m::read_delim(BED_DIR)
+[90m 3. [39m  └─[1m[94mvroom::vroom([39m[22m...[1m[94m)[39m[22m
+[90m 4. [39m    └─vroom:::standardise_path(file)
+[90m 5. [39m      └─[1mcli[22m::cli_abort(...)
+[90m 6. [39m        └─[1mrlang[22m::abort(...)
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed` failed. (See above for error)
+!!! Error running TCseq_KM: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/subset.bed']' returned non-zero exit status 1.
+RUNNING: TchronetR | Nodes: 30000 | Threads: 1
+
+
+
+Attaching package: ‘BiocGenerics’
+
+The following objects are masked from ‘package:igraph’:
+
+    normalize, path, union
+
+The following objects are masked from ‘package:stats’:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from ‘package:base’:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, saveRDS, setdiff,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+
+Attaching package: ‘S4Vectors’
+
+The following objects are masked from ‘package:Matrix’:
+
+    expand, unname
+
+The following object is masked from ‘package:hdf5r’:
+
+    values
+
+The following object is masked from ‘package:utils’:
+
+    findMatches
+
+The following objects are masked from ‘package:base’:
+
+    expand.grid, I, unname
+
+gwascat loaded.  Use makeCurrentGwascat() to extract current image.
+ from EBI.  The data folder of this package has some legacy extracts.
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    'browseVignettes()'. To cite Bioconductor, see
+    'citation("Biobase")', and for packages 'citation("pkgname")'.
+
+There were 22 warnings (use warnings() to see them)
+[?25h[?25h[?25h[?25h[?25h           used  (Mb) gc trigger   (Mb) max used  (Mb)
+Ncells 13906100 742.7   25880774 1382.2 16894927 902.3
+Vcells 24739761 188.8   41299743  315.1 28558155 217.9
+[?25h[?25h[?25h
+Attaching package: ‘arrow’
+
+The following object is masked from ‘package:BiocGenerics’:
+
+    type
+
+The following object is masked from ‘package:utils’:
+
+    timestamp
+
+Error in build_TChroNetSeries_object(edge_files_list, matrix_path, run_cd = FALSE,  : 
+  No edge files provided.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /mnt/nas-safu02/sdigiove_workspace/prova_bench` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/mnt/nas-safu02/sdigiove_workspace/prova_bench']' returned non-zero exit status 1.
+RUNNING: WGCNA | Nodes: 30000 | Threads: 1
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hError in allowWGCNAThreads(nThreads = n_threads) : 
+  nThreads must be numeric and at least 2.
+Execution halted
+[?25hERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R 1 /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/raw_counts.tsv` failed. (See above for error)
+!!! Error running WGCNA: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R', '1', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_30000/raw_counts.tsv']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 30000 | Threads: 2
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 30000 | Threads: 2
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 2 threads.
+[?25h[1mRows: [22m[34m30000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1  0.00935 -0.588          0.969 5790.00  5750.000   9120 1.93e-01
+2      2  0.23700 -1.670          0.940 1800.00  1730.000   3760 5.99e-02
+3      3  0.41400 -1.410          0.954  720.00   663.000   1880 2.40e-02
+4      4  0.69100 -1.760          0.987  341.00   297.000   1210 1.14e-02
+5      5  0.83500 -2.030          0.982  182.00   147.000    898 6.06e-03
+6      6  0.91300 -2.110          0.981  106.00    78.600    702 3.52e-03
+7      7  0.94800 -2.090          0.979   65.80    44.500    569 2.19e-03
+8      8  0.96100 -2.050          0.976   43.20    26.300    476 1.44e-03
+9      9  0.96400 -1.990          0.971   29.70    16.100    408 9.90e-04
+10    10  0.95300 -1.940          0.957   21.20    10.100    354 7.05e-04
+11    12  0.92800 -1.850          0.933   11.70     4.250    276 3.91e-04
+12    14  0.93800 -1.730          0.944    7.14     1.930    221 2.38e-04
+13    16  0.94400 -1.650          0.954    4.66     0.934    181 1.55e-04
+14    18  0.93200 -1.590          0.949    3.21     0.471    150 1.07e-04
+15    20  0.93600 -1.540          0.959    2.31     0.248    126 7.68e-05
+   Centralization Heterogeneity
+1         0.11100         0.167
+2         0.06550         0.310
+3         0.03860         0.444
+4         0.02900         0.584
+5         0.02390         0.735
+6         0.01990         0.901
+7         0.01680         1.080
+8         0.01440         1.280
+9         0.01260         1.480
+10        0.01110         1.700
+11        0.00880         2.140
+12        0.00713         2.590
+13        0.00587         3.020
+14        0.00491         3.430
+15        0.00414         3.800
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 30000 | Threads: 5
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 30000 | Threads: 5
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252007 440.8  6987614 373.2
+Vcells 8388337  64.0   12548858  95.8 10390709  79.3
+[?25hAllowing multi-threading with up to 5 threads.
+[?25h[1mRows: [22m[34m30000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1  0.00935 -0.588          0.969 5790.00  5750.000   9120 1.93e-01
+2      2  0.23700 -1.670          0.940 1800.00  1730.000   3760 5.99e-02
+3      3  0.41400 -1.410          0.954  720.00   663.000   1880 2.40e-02
+4      4  0.69100 -1.760          0.987  341.00   297.000   1210 1.14e-02
+5      5  0.83500 -2.030          0.982  182.00   147.000    898 6.06e-03
+6      6  0.91300 -2.110          0.981  106.00    78.600    702 3.52e-03
+7      7  0.94800 -2.090          0.979   65.80    44.500    569 2.19e-03
+8      8  0.96100 -2.050          0.976   43.20    26.300    476 1.44e-03
+9      9  0.96400 -1.990          0.971   29.70    16.100    408 9.90e-04
+10    10  0.95300 -1.940          0.957   21.20    10.100    354 7.05e-04
+11    12  0.92800 -1.850          0.933   11.70     4.250    276 3.91e-04
+12    14  0.93800 -1.730          0.944    7.14     1.930    221 2.38e-04
+13    16  0.94400 -1.650          0.954    4.66     0.934    181 1.55e-04
+14    18  0.93200 -1.590          0.949    3.21     0.471    150 1.07e-04
+15    20  0.93600 -1.540          0.959    2.31     0.248    126 7.68e-05
+   Centralization Heterogeneity
+1         0.11100         0.167
+2         0.06550         0.310
+3         0.03860         0.444
+4         0.02900         0.584
+5         0.02390         0.735
+6         0.01990         0.901
+7         0.01680         1.080
+8         0.01440         1.280
+9         0.01260         1.480
+10        0.01110         1.700
+11        0.00880         2.140
+12        0.00713         2.590
+13        0.00587         3.020
+14        0.00491         3.430
+15        0.00414         3.800
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hRUNNING: tchronetpy | Nodes: 30000 | Threads: 15
+Using: /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tmp as temporary folder
+Loading input matrix...
+Preprocessing matrix for Spearman correlation...
+
+>>> Processing threshold range: 0.30 - 0.40
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.300_0.400.parquet <<<
+
+>>> Processing threshold range: 0.40 - 0.50
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.400_0.500.parquet <<<
+
+>>> Processing threshold range: 0.50 - 0.60
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.500_0.600.parquet <<<
+
+>>> Processing threshold range: 0.60 - 0.70
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.600_0.700.parquet <<<
+
+>>> Processing threshold range: 0.70 - 0.80
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.700_0.800.parquet <<<
+
+>>> Processing threshold range: 0.80 - 0.90
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.800_0.900.parquet <<<
+
+>>> Processing threshold range: 0.90 - 1.00
+Consolidating temporary files into Parquet...
+>>> Saved /mnt/nas-safu02/sdigiove_workspace/prova_bench/edges_0.900_1.000.parquet <<<
+
+All threshold intervals processed successfully.
+RUNNING: WGCNA | Nodes: 30000 | Threads: 15
+Loading required package: dynamicTreeCut
+Loading required package: fastcluster
+
+Attaching package: ‘fastcluster’
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+
+
+Attaching package: ‘WGCNA’
+
+The following object is masked from ‘package:stats’:
+
+    cor
+
+[?25h── [1mAttaching core tidyverse packages[22m ───────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+[32m✔[39m [34mdplyr    [39m 1.1.4     [32m✔[39m [34mreadr    [39m 2.1.6
+[32m✔[39m [34mforcats  [39m 1.0.1     [32m✔[39m [34mstringr  [39m 1.6.0
+[32m✔[39m [34mggplot2  [39m 4.0.1     [32m✔[39m [34mtibble   [39m 3.3.0
+[32m✔[39m [34mlubridate[39m 1.9.4     [32m✔[39m [34mtidyr    [39m 1.3.2
+[32m✔[39m [34mpurrr    [39m 1.2.0     
+── [1mConflicts[22m ─────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+[31m✖[39m [34mdplyr[39m::[32mfilter()[39m masks [34mstats[39m::filter()
+[31m✖[39m [34mdplyr[39m::[32mlag()[39m    masks [34mstats[39m::lag()
+[36mℹ[39m Use the conflicted package ([3m[34m<http://conflicted.r-lib.org/>[39m[23m) to force all conflicts to become errors
+Warning messages:
+1: package ‘ggplot2’ was built under R version 4.4.3 
+2: package ‘tibble’ was built under R version 4.4.3 
+3: package ‘readr’ was built under R version 4.4.3 
+4: package ‘purrr’ was built under R version 4.4.3 
+5: package ‘dplyr’ was built under R version 4.4.3 
+6: package ‘stringr’ was built under R version 4.4.3 
+[?25h
+Attaching package: ‘flashClust’
+
+The following object is masked from ‘package:fastcluster’:
+
+    hclust
+
+The following object is masked from ‘package:stats’:
+
+    hclust
+
+[?25h[?25h[?25h[?25h[?25h          used  (Mb) gc trigger  (Mb) max used  (Mb)
+Ncells 4945383 264.2    8252048 440.8  6987626 373.2
+Vcells 8388337  64.0   12548859  95.8 10390710  79.3
+[?25hAllowing multi-threading with up to 15 threads.
+[?25h[1mRows: [22m[34m30000[39m [1mColumns: [22m[34m33[39m
+[36m──[39m [1mColumn specification[22m [36m─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "\t"
+[31mchr[39m  (2): patient_14_Primary_ATACseq_REP1.mLb.clN.sorted.bam, patient_19_Pri...
+[32mdbl[39m (31): patient_21_Remission_ATACseq_REP1.mLb.clN.sorted.bam, patient_12_P...
+
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message.
+Warning message:
+[1m[22mOne or more parsing issues, call `problems()` on your data frame for details, e.g.:
+  dat <- vroom(...)
+  problems(dat) 
+[?25h[?25h[?25h   Power SFT.R.sq  slope truncated.R.sq mean.k. median.k. max.k.  Density
+1      1  0.00935 -0.588          0.969 5790.00  5750.000   9120 1.93e-01
+2      2  0.23700 -1.670          0.940 1800.00  1730.000   3760 5.99e-02
+3      3  0.41400 -1.410          0.954  720.00   663.000   1880 2.40e-02
+4      4  0.69100 -1.760          0.987  341.00   297.000   1210 1.14e-02
+5      5  0.83500 -2.030          0.982  182.00   147.000    898 6.06e-03
+6      6  0.91300 -2.110          0.981  106.00    78.600    702 3.52e-03
+7      7  0.94800 -2.090          0.979   65.80    44.500    569 2.19e-03
+8      8  0.96100 -2.050          0.976   43.20    26.300    476 1.44e-03
+9      9  0.96400 -1.990          0.971   29.70    16.100    408 9.90e-04
+10    10  0.95300 -1.940          0.957   21.20    10.100    354 7.05e-04
+11    12  0.92800 -1.850          0.933   11.70     4.250    276 3.91e-04
+12    14  0.93800 -1.730          0.944    7.14     1.930    221 2.38e-04
+13    16  0.94400 -1.650          0.954    4.66     0.934    181 1.55e-04
+14    18  0.93200 -1.590          0.949    3.21     0.471    150 1.07e-04
+15    20  0.93600 -1.540          0.959    2.31     0.248    126 7.68e-05
+   Centralization Heterogeneity
+1         0.11100         0.167
+2         0.06550         0.310
+3         0.03860         0.444
+4         0.02900         0.584
+5         0.02390         0.735
+6         0.01990         0.901
+7         0.01680         1.080
+8         0.01440         1.280
+9         0.01260         1.480
+10        0.01110         1.700
+11        0.00880         2.140
+12        0.00713         2.590
+13        0.00587         3.020
+14        0.00491         3.430
+15        0.00414         3.800
+There were 50 or more warnings (use warnings() to see the first 50)
+[?25h[?25h[?25hWarning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h[?25h[?25h[?25h[?25h[?25h[?25hBenchmark complete. Results saved to /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/final_performance_comparison.csv

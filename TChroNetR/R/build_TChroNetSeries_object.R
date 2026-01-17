@@ -35,16 +35,6 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
   library(arrow)
   library(leidenbase)
 
-  .add_weighted_self_loops_iso <- function(G, loop_weight = 1) {
-  iso <- which(degree(G) == 0)
-  if (length(iso) == 0) return(G)
-
-  add_edges(
-    G,
-    as.vector(rbind(iso, iso)),
-    attr = list(weight = rep(loop_weight, length(iso)))
-  )
-}
 
 .fix_leiden_membership <- function(G, membership, min_size = 100, merged_id = 1000) {
 
@@ -143,7 +133,6 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
     # --- Initialize storage ---
     th_cluster_df <- data.frame()
     modularity_at_th <- data.frame()
-    # G_loop <- .add_weighted_self_loops_iso(G, loop_weight = 1)
     
     if (method == "Leiden") {
       for (res in resolutions_list) {
@@ -165,9 +154,7 @@ build_TChroNetSeries_object <-  function(edge_files, matrix_path,
           seed = seed
         )
 
-        
-        # membership_nodes <- membership_nodes+1
-        
+                
         membership_nodes_print <- .fix_leiden_membership(
           G,
           partition_current_graph$membership,

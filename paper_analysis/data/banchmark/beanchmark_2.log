@@ -1,0 +1,51 @@
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 1
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 3, in <module>
+    from tchronetpy.cli import entry_point
+ImportError: cannot import name 'entry_point' from 'tchronetpy.cli' (/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py)
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet -@ 1 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet', '-@', '1', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: TchronetR | Nodes: 10000 | Threads: 1
+Error in library(TChroNetR) : there is no package called ‘TChroNetR’
+Execution halted
+ERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv /mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 2
+Traceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/bin/tchronetpy", line 3, in <module>
+    from tchronetpy.cli import entry_point
+ImportError: cannot import name 'entry_point' from 'tchronetpy.cli' (/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/site-packages/tchronetpy/cli.py)
+ERROR conda.cli.main_run:execute(127): `conda run tchronetpy -m /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv -o /mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet -@ 2 --min_t_type pval --min_t_val 0.1` failed. (See above for error)
+!!! Error running tchronetpy: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'tchronet_env', '--no-capture-output', 'tchronetpy', '-m', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '-o', '/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet', '-@', '2', '--min_t_type', 'pval', '--min_t_val', '0.1']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 5
+^C
+CondaError: KeyboardInterrupt
+
+
+CondaError: KeyboardInterrupt
+
+^CTraceback (most recent call last):
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1209, in wait
+    return self._wait(timeout=timeout)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1959, in _wait
+    (pid, sts) = self._try_wait(0)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1917, in _try_wait
+    (pid, sts) = os.waitpid(self.pid, wait_flags)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/benchmark2.py", line 124, in <module>
+    run_benchmark()
+  File "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/benchmark2.py", line 94, in run_benchmark
+    subprocess.run(full_cmd, check=True)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 505, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1146, in communicate
+    self.wait()
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1222, in wait
+    self._wait(timeout=sigint_timeout)
+  File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1953, in _wait
+    time.sleep(delay)
+KeyboardInterrupt

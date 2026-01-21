@@ -105,15 +105,22 @@ def create_ei(i, ei_args):
 
 def main():
     parser = argparse.ArgumentParser(prog="tchronetpy")
-    parser.add_argument("-m", "--matrix", type=str, required=True)
-    parser.add_argument("-o", "--output", type=str, required=True)
-    parser.add_argument("-s", "--stepsize", type=int, default=1e5)
-    parser.add_argument("-@", "--threads", type=int, default=1)
-    parser.add_argument("--max_t_val", type=float, default=1.0)
-    parser.add_argument("--min_t_type", type=str, default="pval", choices=["pval", "cor"])
-    parser.add_argument("--min_t_val", type=float, default=0.1)
+    parser.add_argument("-m", "--matrix", type=str, required=True,
+                        help="Path to the input matrix (TSV format, features as rows)")
+    parser.add_argument("-o", "--output", type=str, required=True,
+                        help="Prefix for output HDF5 files (one per threshold range)")
+    parser.add_argument("-s", "--stepsize", type=int, required=False, default=1e5,
+                        help="Stepsize for RAM parameters (DeepGraph parameter)")
+    parser.add_argument("-@", "--threads", type=int, required=False, default=1,
+                        help="Number of threads to use for parallel processing")
+    parser.add_argument("--max_t_val", type=float, default=1.0,required=False,
+                        help="Maximum correlation threshold (end of last interval)")
+    parser.add_argument("--min_t_type", type=str, default="pval",choices=["pval", "cor"], 
+                        help="Selection criteria for filtering results: 'pval' for significance testing or 'cor' for correlation coefficient strength")
+    parser.add_argument("--min_t_val", type=float, default=0.1,required=False,
+                        help="Numerical threshold limit. Results exceeding this value (for pval) or falling below it (for cor) will be filtered out.")
     args = parser.parse_args()
-
+ 
     reset_dir(args.output)
     df_input = pd.read_csv(args.matrix, sep="\t", index_col=0)
     row_names = list(df_input.index)
@@ -140,5 +147,9 @@ def main():
     with Pool(processes=args.threads) as pool:
         pool.map(run_create_ei, [(i, ei_args_obj) for i in range(args.threads)])
 
-if __name__ == "__main__":
+def entry_point():
     main()
+
+
+if __name__ == "__main__":
+    entry_point()

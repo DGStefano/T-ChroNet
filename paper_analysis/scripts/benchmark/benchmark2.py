@@ -5,8 +5,8 @@ import os
 import glob
 
 # --- CONFIGURATION ---
-NODE_INTERVALS = [10000, 20000, 40000, 60000, 80000, 100000]
-THREAD_LIST = [1,2,5, 15 ,20,25,30,35,40 ]  # Multi-threading will apply to tchronetpy and WGCNA # 5, 15, 20,25,30,35,40
+NODE_INTERVALS = [10000]#, 20000, 40000, 60000, 80000, 100000
+THREAD_LIST = [2]  # 1,2,5, 15 ,20,25,30,35,40 
 RESULTS_FILE = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tchronetr_final_performance_comparison.csv"
 OUT_DIR_TCN = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet"
 def get_command(base_path , tool_name, outdir, threads):
@@ -49,7 +49,7 @@ def run_benchmark():
     for n in NODE_INTERVALS:
         base_path = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_" + str(n)+"/"
         for t in THREAD_LIST:
-                parquet_path = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet/*.parquet"
+                parquet_path = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet/*"
         
                 # Find and remove all matching files
                 for f in glob.glob(parquet_path):
@@ -79,7 +79,7 @@ def run_benchmark():
                     if not cmd_args : 
                         continue
 
-                    stats_file = "stats.tmp"
+                    stats_file = "stats_tchronet.tmp"
                     if tool == "WGCNA" :
                         cpu_range = f"0-{t-1}"
                         taskset_prefix = ["taskset", "-c", cpu_range]

@@ -172,7 +172,9 @@ build_TChroNetSeries_object <- function(output_dir, matrix_path,
         ))
       }
     }
-
+    if(run_cd == FALSE) {
+      membership_nodes_print = NA
+    }
     # --- Save Results ---
     obj@communities[[as.character(thr)]] <- th_cluster_df
     obj@modularity[[as.character(thr)]] <- modularity_at_th
@@ -185,7 +187,7 @@ build_TChroNetSeries_object <- function(output_dir, matrix_path,
       lcc = lcc_size, 
       relative_lcc = relative_lcc,
       n_communities = ifelse(all(is.na(membership_nodes)), 0, length(unique(membership_nodes))),
-        stringsAsFactors = FALSE
+      stringsAsFactors = FALSE
     ))
     
     message(sprintf("   ✅ Added %d edges. Total edges: %d", nrow(e_df), igraph::ecount(G)))

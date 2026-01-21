@@ -5515,4 +5515,8 @@ python: can't open file '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchma
 14        0.00489         3.430
 15        0.00413         3.810
 There were 50 or more warnings (use warnings() to see the first 50)
-[?25h[?25h[?25h
+[?25h[?25h[?25h>>> Saved /mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet/edges_0.600_0.700.parquet <<<
+Warning message:
+In storage.mode(x) <- "double" : NAs introduced by coercion
+[?25h
+>>> Processing threshold range: 0.70 - 0.80

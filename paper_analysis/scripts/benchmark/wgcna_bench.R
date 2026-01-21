@@ -15,13 +15,22 @@ Sys.setenv(MKL_NUM_THREADS = n_threads)
 Sys.setenv(OPENBLAS_NUM_THREADS = n_threads)
 Sys.setenv(VECLIB_MAXIMUM_THREADS = n_threads)
 
+# This controls the R-level parallelization
+if (requireNamespace("RhpcBLASctl", quietly = TRUE)) {
+    RhpcBLASctl::blas_set_num_threads(n_threads)
+    RhpcBLASctl::omp_set_num_threads(n_threads)
+}
+
 library(WGCNA)
 library(tidyverse)
 library(flashClust)
 
 # Enable WGCNA multithreading
-allowWGCNAThreads(nThreads = n_threads)
-
+if(n_threads > 1) {
+    allowWGCNAThreads(nThreads = n_threads)
+} else {
+    WGCNA::disableWGCNAThreads()
+}
 # --- DATA LOADING ---
 # WGCNA expects genes/peaks in columns, samples in rows
 input_mat <- read_tsv(input_path) %>% 

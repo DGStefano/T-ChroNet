@@ -5,9 +5,9 @@ import os
 import glob
 
 # --- CONFIGURATION ---
-NODE_INTERVALS = [80000, 100000] #10000, 20000, 40000, 60000, 
+NODE_INTERVALS = [10000, 20000, 40000, 60000, 80000, 100000]
 THREAD_LIST = [1,2,5, 15 ,20,25,30,35,40 ]  # Multi-threading will apply to tchronetpy and WGCNA # 5, 15, 20,25,30,35,40
-RESULTS_FILE = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/final_performance_comparison.csv"
+RESULTS_FILE = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/tchronet_tchronetr_final_performance_comparison.csv"
 OUT_DIR_TCN = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet"
 def get_command(base_path , tool_name, outdir, threads):
     norm_path = os.path.join(base_path, "norm_counts.tsv")
@@ -44,7 +44,7 @@ def get_command(base_path , tool_name, outdir, threads):
 
 def run_benchmark():
     all_results = []
-    tools = [  "TCseq_KM" , "TCseq_HC", "WGCNA" ] #  "tchronetpy" , , "TchronetR"
+    tools = [ "tchronetpy" , "TchronetR"] #  
 
     for n in NODE_INTERVALS:
         base_path = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_" + str(n)+"/"

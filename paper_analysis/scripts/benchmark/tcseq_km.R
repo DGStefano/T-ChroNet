@@ -1,13 +1,14 @@
 library(TCseq)
 library(dplyr)
 library(cluster)
-
-# --- ARGUMENT PARSING ---
-args <- commandArgs(trailingOnly = TRUE)
-bed_path <- as.numeric(args[1])
+library(factoextra)
 
 # --- REMOVE GARBAGE ---
 gc(full = TRUE)
+
+# --- ARGUMENT PARSING ---
+args <- commandArgs(trailingOnly = TRUE)
+bed_path <- args[1]
 
 # --- CONFIGURATION ---
 BED_DIR <- bed_path
@@ -34,13 +35,10 @@ tca <- timecourseTable(tca , norm.method = 'cpm' , filter = FALSE)
 
 t <- tcTable(tca)
 # Find best cluster through silhouette score
-res_k <- fviz_nbclust(std_data, kmeans, method = "silhouette", k.max = 10)
+res_k <- fviz_nbclust(t, kmeans, method = "silhouette", k.max = 10)
 
 # Extract the k with the highest average silhouette width
 best_k <- as.numeric(res_k$data$clusters[which.max(res_k$data$y)])
-
-# Select the optimal k (first max or Tibs2001 method)
-best_k <- maxSE(gap_stat$Tab[, "gap"], gap_stat$Tab[, "SE.sim"], method = "Tibs2001SEmax")
 
 # Final clustering with the selected best_k
 tca <- timeclust(tca, algo = 'km', k = best_k, standardize = TRUE)

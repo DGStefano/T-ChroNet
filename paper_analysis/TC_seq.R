@@ -3,6 +3,69 @@ library(cluster)
 library(factoextra)
 library(dplyr)
 library(tidyverse)
+library(ggalluvial)
+
+get_great_genes <- function(cluster_df, coord_col, cluster_col, species = "mm10") {
+  library(GenomicRanges)
+  library(rGREAT)
+  library(tidyverse)
+  
+  gene_list <- list()
+  communities <- sort(unique(cluster_df[[cluster_col]]))
+  
+  for (comm in communities) {
+    message(paste("Interrogating GREAT for cluster:", comm))
+    
+    # Format regions
+    regions <- cluster_df[cluster_df[[cluster_col]] == comm, ] %>% 
+      select(all_of(coord_col)) %>% 
+      separate(!!sym(coord_col), c('chr','start','end'), sep ="-")
+    
+    gr <- makeGRangesFromDataFrame(regions)
+    
+    # Submit job
+    job <- submitGreatJob(gr, version = "4.0.4", species = species, 
+                          rule = "basalPlusExt", request_interval = 12)
+    
+    # Associate genes
+    associations <- getRegionGeneAssociations(job)
+    gene_list[[as.character(comm)]] <- unlist(unname(associations$annotated_genes))
+  }
+  return(gene_list)
+}
+
+run_pathway_enrichment <- function(target_genes_list, genesets_db, top_n_paths = 5) {
+  library(clusterProfiler)
+  library(DOSE)
+  library(tidyverse)
+  
+  final_df <- data.frame()
+  
+  for (i in seq_along(target_genes_list)) {
+    comm_name <- names(target_genes_list)[i]
+    genes <- target_genes_list[[i]]
+    
+    if (length(genes) == 0) next
+    
+    # Run Enrichment
+    x_enrichr <- enricher(genes, TERM2GENE = genesets_db)
+    
+    if (is.null(x_enrichr) || nrow(x_enrichr@result) == 0) next
+    
+    # Process results
+    x_df <- x_enrichr@result %>% 
+      filter(qvalue < 0.05) %>%
+      mutate(
+        FoldEnrichment = (parse_ratio(GeneRatio)) / (parse_ratio(BgRatio)),
+        community = comm_name
+      ) %>%
+      arrange(-FoldEnrichment) %>%
+      slice_max(FoldEnrichment, n = top_n_paths, with_ties = FALSE)
+    
+    final_df <- rbind(final_df, x_df)
+  }
+  return(final_df)
+}
 
 save_files_community <- function(tca, outdir ) {
   communities <- sort(unique(tca@clusterRes@cluster))
@@ -14,7 +77,7 @@ save_files_community <- function(tca, outdir ) {
     write_delim(comm_df , outpath , delim = "\t" , col_names = FALSE)
   }
 }
-
+species_genome <- "mm10"
 
 dir <- "/mnt/nas-safu01/analysis/PhDsdigiove/method_coAcces/data/liver_devel_mouse_ENCODE/bed/"
 gf <- peakreference(dir = dir , patter = "bed")
@@ -23,7 +86,7 @@ bamfiles <- data.frame(
     list(
         sampleid = c('t11_rep1','t11_rep2','t12_rep1','t12_rep2','t13_rep1','t13_rep2','t14_rep1','t14_rep2','t15_rep1','t15_rep2','t16_rep1','t16_rep2'),
         timepoint = c('t11','t11','t12','t12','t13','t13','t14','t14','t15','t15','t16','t16'),
-        group = c(1,1,2,2,3,3,4,4,5,5,6,6),
+        group = c("1","1","2","2","3","3","4","4","5","5","6","6"),
         bamfile = c("liver_mouse_t11_rep1.bam", "liver_mouse_t11_rep2.bam","liver_mouse_t12_rep1.bam", "liver_mouse_t12_rep2.bam","liver_mouse_t13_rep1.bam", "liver_mouse_t13_rep2.bam","liver_mouse_t14_rep1.bam", "liver_mouse_t14_rep2.bam","liver_mouse_t15_rep1.bam", "liver_mouse_t15_rep2.bam","liver_mouse_t16_rep1.bam", "liver_mouse_t16_rep2.bam")
     )
 )
@@ -38,59 +101,34 @@ tca <- DBanalysis(tca , filter.type = 'raw' , filter.value = 5  )
 tca <- timecourseTable(tca , value = "expression" , control.group = "1" , norm.method = 'cpm' , filter = TRUE)
 
 t <- tcTable(tca)
-# 2. Define the clustering function for clusGap
-# This function tells clusGap to use k-means
-km_func <- function(x, k) {
-  list(cluster = kmeans(x, centers = k, nstart = 1)$cluster)
-}
 
-# 3. Calculate the Gap Statistic
-# K.max: maximum number of clusters to consider
-# B: Number of Monte Carlo samples (use B=50 for a quick look, B=500 for publication)
-gap_stat <- clusGap(t, 
-                    FUNcluster = km_func, 
-                    K.max = 8, 
-                    B = 50, 
-                    verbose = FALSE)
-
-# method = "silhouette"
+# Find best cluster through silhouette score
 res_k <- fviz_nbclust(t, kmeans, method = "silhouette", k.max = 10)
 
 # Extract the k with the highest average silhouette width
 best_k <- as.numeric(res_k$data$clusters[which.max(res_k$data$y)])
 
-# 4. Visualize the results
-fviz_gap_stat(gap_stat) +
-  labs(title = "Gap Statistic for TCseq Clustering (k-means)")
-
-tca <- timeclust(tca , algo = 'km' , k = 6 , standardize = TRUE)
-timeclustplot(tca , col = 3)
+# Final clustering with the selected best_k
+tca <- timeclust(tca, algo = 'km', k = best_k, standardize = TRUE)
+timeclustplot(tca , col = 2)
 save_files_community(tca , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/km")
 
 
 t <- tcTable(tca)
-# 1. Define the Hierarchical Clustering wrapper
-hc_func <- function(x, k) {
-  # Perform hierarchical clustering
-  d <- dist(x)
-  hc <- hclust(d, method = "complete") # Default TCseq linkage
-  # Return cluster assignments
-  list(cluster = cutree(hc, k = k))
-}
+# std_data should be your standardized matrix (Z-scores)
+# method = "silhouette"
+# FUNcluster = hcut (this performs hierarchical clustering)
+res_k <- fviz_nbclust(t, 
+                      FUNcluster = hcut, 
+                      method = "silhouette", 
+                      hc_method = "ward.D2", # You can choose ward.D2, complete, etc.
+                      k.max = 10)
 
-# 2. Calculate the Gap Statistic
-# B=50 is standard for testing; increase to 500 for final results
-gap_stat_hc <- clusGap(t, 
-                       FUNcluster = hc_func, 
-                       K.max = 10, 
-                       B = 50, 
-                       verbose = FALSE)
+# Retrieve the optimal K
+best_k <- as.numeric(res_k$data$clusters[which.max(res_k$data$y)])
 
-# 3. Visualize
-fviz_gap_stat(gap_stat_hc) +
-  labs(title = "Gap Statistic: TCseq Hierarchical Clustering")
-
-tca <- timeclust(tca , algo = 'hc' , k = 3 , standardize = TRUE)
+# Final clustering with the selected best_k
+tca <- timeclust(tca, algo = 'hc', k = best_k, standardize = TRUE)
 timeclustplot(tca , col = 1)
 save_files_community(tca , "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/hc")
 
@@ -111,10 +149,10 @@ for ( x in  seq_along(files_lists)) {
 }
 
 
-files_lists <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/bed/" , full.names = T)
+files_lists <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/bed/" , full.names = T)
 i = 0
 for ( x in  seq_along(files_lists)) {
-  df <- read_delim(files_lists[[x]] , delim = "\t" , col_names = F)
+  df <- read_delim(files_lists[[x]] , delim = "\t" , col_names = F) |> unite('peaks' , c(X1,X2,X3) , sep ="-")
   df['cluster_TCNR'] <- x
   if ( i == 0 ){
     final_tcnr_clst <- df
@@ -125,11 +163,11 @@ for ( x in  seq_along(files_lists)) {
   }
 }
 
-final_comparison <- merge.data.frame(final_tcseq_clst , final_tcnr_clst , by.x = 'peaks' , by.y = 'X1')
+final_comparison <- merge.data.frame(final_tcseq_clst_hc , final_tcnr_clst , by = 'peaks')
 
 # Plotting the transition between 'clusters' and 'clusters_tcnr'
-ggplot(final_comparison, aes(axis1 = cluster_Tcseq, axis2 = cluster_TCNR)) +
-  geom_alluvium(aes(fill = cluster_Tcseq), width = 1/12) +
+ggplot(final_comparison, aes(axis1 = cluster_Tcseq_hc, axis2 = cluster_TCNR)) +
+  geom_alluvium(aes(fill = cluster_TCNR), width = 1/12) +
   geom_stratum(width = 1/12, fill = "grey80", color = "black") +
   geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
   scale_x_discrete(limits = c("TCseq Clusters", "TCNR Clusters"), expand = c(.05, .05)) +
@@ -154,10 +192,10 @@ for ( x in  seq_along(files_lists)) {
 }
 
 
-files_lists <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/liver/bed/" , full.names = T)
+files_lists <- list.files("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/liver/bed/" , full.names = T)
 i = 0
 for ( x in  seq_along(files_lists)) {
-  df <- read_delim(files_lists[[x]] , delim = "\t" , col_names = F)
+  df <- read_delim(files_lists[[x]] , delim = "\t" , col_names = F) |> unite('peaks' , c(X1,X2,X3) , sep ="-")
   df['cluster_TCNR'] <- x
   if ( i == 0 ){
     final_tcnr_clst <- df
@@ -168,13 +206,18 @@ for ( x in  seq_along(files_lists)) {
   }
 }
 
-final_comparison <- merge.data.frame(final_tcseq_clst_hc , final_tcnr_clst , by.x = 'peaks' , by.y = 'X1')
+final_comparison <- merge.data.frame(final_tcseq_clst_hc , final_tcnr_clst , by = 'peaks')
 final_comparison <- merge.data.frame(final_comparison , final_tcseq_clst_km , by = 'peaks')
 
 final_comparison$cluster_Tcseq_hc <- factor(final_comparison$cluster_Tcseq_hc , levels = sort(unique(final_comparison$cluster_Tcseq_hc)))
 final_comparison$cluster_TCNR <- factor(final_comparison$cluster_TCNR , levels = sort(unique(final_comparison$cluster_TCNR)))
 final_comparison$cluster_Tcseq_km <- factor(final_comparison$cluster_Tcseq_km , levels = sort(unique(final_comparison$cluster_Tcseq_km)))
 
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/TC_seq_hc_our_km_LIVER.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
 # Plotting the transition between 'clusters' and 'clusters_tcnr'
 ggplot(final_comparison, aes(axis1 = cluster_Tcseq_hc, axis2 = cluster_TCNR , axis3 = cluster_Tcseq_km)) +
   geom_alluvium(aes(fill = cluster_TCNR), width = 1/12) +
@@ -185,155 +228,235 @@ ggplot(final_comparison, aes(axis1 = cluster_Tcseq_hc, axis2 = cluster_TCNR , ax
        y = "Number of Peaks") +
   theme_minimal() +
   theme(text = element_text(size = 15))
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/TC_seq_hc_our_km_LIVER.pdf" , height = 5 , width = 9 , units = 'in' , dpi = 300)
+dev.off()
 
 
-library(rGREAT)
-interrogate_GREAT_regions <- function(gr,
-                                      comm_name,
-                                      species) {
-  suppressPackageStartupMessages({
-    library(rGREAT)
-    library(dplyr)
-  })
-  
-  job <- submitGreatJob(
-    gr,
-    version = "4.0.4",
-    species = species,
-    rule = "basalPlusExt",
-    adv_upstream = 2.0,
-    adv_downstream = 1.0,
-    request_interval = 12
-  )
-  
-  tbl <- getEnrichmentTables(job)
-  
-  target_genes <- getRegionGeneAssociations(job)
-  
-  return(target_genes)
-}
+##### ENRICHMENTS
+genes_km  <- get_great_genes(final_tcseq_clst_km, "peaks", "cluster_Tcseq_km", species_genome)
+genes_hc  <- get_great_genes(final_tcseq_clst_hc, "peaks", "cluster_Tcseq_hc", species_genome)
+genes_tcn <- get_great_genes(final_tcnr_clst,     "peaks", "cluster_TCNR",     species_genome)
 
-final_target_genes <- list()  
-for (comm in sort(unique(final_tcseq_clst_km$cluster_Tcseq_km))) {
-  
-  regions <- final_tcseq_clst_km[final_tcseq_clst_km$cluster_Tcseq_km == comm, ] |> select(peaks) |> separate(peaks,c('chr','start','end') , sep ="-")
-    
-  gr <- makeGRangesFromDataFrame(
-    regions,
-    seqnames.field = colnames(regions)[1],
-    start.field = colnames(regions)[2],
-    end.field = colnames(regions)[3],
-    keep.extra.columns = TRUE
-  )
-    
-  GREAT_results <- interrogate_GREAT_regions(
-    gr = gr,
-    comm_name = paste0("community_", comm),
-    species = 'mm10'
-  )
-    
-  
-  final_target_genes[[comm]] <- unlist(unname(GREAT_results$annotated_genes))
-}
+# Apply enrichment function
+final_df_km  <- run_pathway_enrichment(genes_km,  genesets_removed)
+final_df_hc  <- run_pathway_enrichment(genes_hc,  genesets_removed)
+final_df_tcn <- run_pathway_enrichment(genes_tcn, genesets_removed)
 
-final_target_genes <- list()  
-for (comm in sort(unique(final_tcseq_clst_hc$cluster_Tcseq_hc))) {
-  
-  regions <- final_tcseq_clst_hc[final_tcseq_clst_hc$cluster_Tcseq_hc == comm, ] |> select(peaks) |> separate(peaks,c('chr','start','end') , sep ="-")
-    
-  gr <- makeGRangesFromDataFrame(
-    regions,
-    seqnames.field = colnames(regions)[1],
-    start.field = colnames(regions)[2],
-    end.field = colnames(regions)[3],
-    keep.extra.columns = TRUE
-  )
-    
-  GREAT_results <- interrogate_GREAT_regions(
-    gr = gr,
-    comm_name = paste0("community_", comm),
-    species = 'mm10'
-  )
-    
-  
-  final_target_genes[[comm]] <- unlist(unname(GREAT_results$annotated_genes))
-}
+#######
+# 1. Add a source column to each dataframe and combine them
+final_df_km$source <- "K-means"
+final_df_hc$source <- "Hierarchical"
+final_df_tcn$source <- "TCN"
 
+combined_df <- rbind(final_df_km, final_df_hc, final_df_tcn)
 
-library(clusterProfiler)
-library(msigdbr)
-library(DOSE)
+# 2. Select columns and calculate -log10 q-value
+final_df_selected_Columns <- combined_df %>% 
+  select(source, community, Description, FoldEnrichment, qvalue) %>%
+  mutate(qval_log10 = -log10(qvalue))
 
-msigdbr_collections(db_species = "Mm") |> View()
-genesets <- msigdbr(species = "Mus musculus" , db_species = 'MM', collection = "M8" )
-genesets_removed  <- genesets |> select(gs_name ,gene_symbol )
-i = 1
-j=0
-for (x in final_target_genes) {
-    target_genes = x
-    x_enrichr <- enricher( target_genes , TERM2GENE = genesets_removed  , universe = final_list_genes) #   , universe = unname(unlist(reults[[1]]))
-    x_df  <- x_enrichr@result |> filter(qvalue < 0.05)
-    x_df$FoldEnrichment <- (parse_ratio(x_df$GeneRatio)) /
-                      (parse_ratio(x_df$BgRatio))
-    x_df <- x_df |> arrange ( -FoldEnrichment )
-
-    if(nrow(x_df) == 0) {    
-        i = i + 1
-        next
-    }
-
-    x_df  <- top_n(x_df,5,FoldEnrichment)
-    x_df['community'] <- i
-
-    if (j == 0) {
-        final_df <- x_df
-        j=1
-    } else {
-        final_df <- rbind(final_df , x_df)
-    }
-    i = i + 1
-}
-
-final_df_selected_Columns  <- final_df |> select(community, Description , FoldEnrichment ,qvalue )
-final_df_selected_Columns['qval_log10']  <- -log10(final_df_selected_Columns$qvalue)
-
-clusteing_df = final_df_selected_Columns |> dplyr::select(Description , FoldEnrichment , community) |> spread(community , FoldEnrichment) |> column_to_rownames("Description")
-clusteing_df[is.na(clusteing_df)] = 0
-row.order <- stats::hclust(stats::dist(clusteing_df))$order
-col.order <- stats::hclust(stats::dist(t(clusteing_df)))$order
-clusteing_df[clusteing_df == 0] <-  NA
-clusteing_df = clusteing_df[row.order, col.order]
-
-final_df_selected_Columns  <- final_df_selected_Columns |> mutate(name = fct_relevel(Description, 
-            rownames(clusteing_df)))
-final_df_selected_Columns$community  <- factor(final_df_selected_Columns$community , levels = sort(final_df_selected_Columns |> pull(community) |> unique()))
-
-final_df_selected_Columns$Description <- final_df_selected_Columns$Description |>
-  str_remove("DESCARTES_") |>
-  str_remove("TABULA_MURIS") |>
+# 3. Clean Description strings (removing prefixes and underscores)
+final_df_selected_Columns$Description <- final_df_selected_Columns$Description %>%
+  str_remove("DESCARTES_") %>%
+  str_remove("TABULA_MURIS") %>%
   str_replace_all("_", " ")
 
-ggplot(final_df_selected_Columns , aes(x = community , y = Description , color = qval_log10 , size = FoldEnrichment)) +
-  geom_point() + #color =Percent  , , size = 5
-  scale_color_gradient(low = "blue" , high = "red" , na.value ="white")+
-  scale_radius() +#trans = "log2"
-  theme_classic() +
-  # scale_y_discrete(limits=rownames(clusteing_df)) +
-  theme(legend.position="top" , legend.text = element_text(size=10))+
-  theme(text = element_text(size=10))+
-  xlab("")+
-  ylab("")
-  #scale_x_discrete(limits =colnames(clusteing_df), guide = guide_axis(angle = 90)) +
-  # theme(axis.title.y=element_blank(), #axis.text.y = element_text(color = "grey20", size = 10, angle = 0, hjust = 1, vjust = 0, face = "plain") ,
-  #       axis.text.y=element_blank(),
-  #       legend.position="none")
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/Cell_annotations_TCseq_hc.pdf",device = cairo_pdf , 
+# 4. Clustering/Ordering Logic (Global ordering for the Y-axis)
+# This ensures that similar terms across all datasets are grouped together
+clustering_df <- final_df_selected_Columns %>% 
+  select(Description, FoldEnrichment, community, source) %>%
+  # Create a unique ID for community within each source to avoid column collisions
+  mutate(unique_comm = paste0(source, "_", community)) %>%
+  select(-community, -source) %>%
+  pivot_wider(names_from = unique_comm, values_from = FoldEnrichment, values_fill = 0) %>%
+  column_to_rownames("Description")
+
+row_order <- stats::hclust(stats::dist(clustering_df))$order
+ordered_terms <- rownames(clustering_df)[row_order]
+
+# Apply the order and factor levels
+final_df_selected_Columns <- final_df_selected_Columns %>%
+  mutate(
+    Description = factor(Description, levels = ordered_terms),
+    source = factor(source, levels = c("K-means", "Hierarchical", "TCN")), # Order of facets
+    community = factor(community)
+  )
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/CellAnnotations_alldf.png"  ,
   height = 5, 
-  width = 9, 
-  units = 'in',
-  dpi = 300
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
+# 5. Plotting with Facets
+ggplot(final_df_selected_Columns, aes(x = community, y = Description, color = qval_log10, size = FoldEnrichment)) +
+  geom_point() +
+  scale_color_gradient(low = "blue", high = "red", na.value = "white") +
+  scale_radius() +
+  theme_bw() + 
+  theme(
+    strip.background = element_blank(),
+    legend.position = "top",
+    legend.text = element_text(size = 10),
+    text = element_text(size = 10),
+    panel.spacing = unit(1, "lines"), # This controls the "space" between datasets
+    axis.text.x = element_text(angle = 0)
+  ) +
+  # Use facet_grid to separate datasets. 
+  # scales = "free_x" and space = "free_x" are CRUCIAL to keep community widths equal
+  facet_grid(. ~ source, scales = "free_x", space = "free_x") +
+  xlab("Community") +
+  ylab("") +
+  labs(color = "-log10(q-value)", size = "Fold Enrichment")
+dev.off()
+#######
+
+library(WGCNA)
+library(tidyverse)
+library(flashClust)
+
+allowWGCNAThreads(nThreads = 40)
+powers = c(c(1:10), seq(from = 12, to = 40, by = 2))
+
+input_mat <- read_tsv("/mnt/nas-safu01/analysis/scripts/ScriptSdigiove/RegNetATACProject/T-ChroNet/paper_analysis/data/LiverDevelopment/normalized_samplemean_multicov_all_sites_all_timepoint.tsv") |> tibble::column_to_rownames('peaks')
+input_mat <- t(input_mat)
+
+sft <- pickSoftThreshold(
+  input_mat,
+  powerVector = powers,
+  verbose = 5,
+  moreNetworkConcepts = TRUE
 )
+
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+
+plot(sft$fitIndices[, 1],
+     -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
+     xlab = "Soft Threshold (power)",
+     ylab = "Scale Free Topology Model Fit, signed R^2",
+     main = paste("Scale independence")
+)
+text(sft$fitIndices[, 1],
+     -sign(sft$fitIndices[, 3]) * sft$fitIndices[, 2],
+     labels = powers, cex = cex1, col = "red"
+)
+abline(h = 0.90, col = "red")
+plot(sft$fitIndices[, 1],
+     sft$fitIndices[, 5],
+     xlab = "Soft Threshold (power)",
+     ylab = "Mean Connectivity",
+     type = "n",
+     main = paste("Mean connectivity")
+)
+text(sft$fitIndices[, 1],
+     sft$fitIndices[, 5],
+     labels = powers,
+     cex = cex1, col = "red")
+
+softPower <- 1
+adjacency <- WGCNA::adjacency(input_mat, power = softPower)
+TOM=TOMsimilarityFromExpr(input_mat,networkType = "unsigned", TOMType = "unsigned", power = softPower);
+dissTOM=1-TOM
+geneTree = flashClust(as.dist(dissTOM),method="ward");
+
+set.seed(123)
+dynamicMods_1000 = cutreeDynamic(dendro = geneTree,  method="tree", minClusterSize = 1000);
+peak_clusters_1000 <- data.frame(list(peaks = colnames(input_mat) , clusuters_wgcna = dynamicMods_1000))
+dynamicMods_100 = cutreeDynamic(dendro = geneTree,  method="tree", minClusterSize = 100);
+peak_clusters_100 <- data.frame(list(peaks = colnames(input_mat) , clusuters_wgcna_100 = dynamicMods_100))
+
+
+final_comparison <- merge.data.frame(peak_clusters_100 , final_tcnr_clst , by = 'peaks')
+final_comparison <- merge.data.frame(final_comparison , peak_clusters_1000 , by = 'peaks')
+
+final_comparison$clusuters_wgcna <- factor(final_comparison$clusuters_wgcna , levels = sort(unique(final_comparison$clusuters_wgcna)))
+final_comparison$cluster_TCNR <- factor(final_comparison$cluster_TCNR , levels = sort(unique(final_comparison$cluster_TCNR)))
+final_comparison$clusuters_wgcna_100 <- factor(final_comparison$clusuters_wgcna_100 , levels = sort(unique(final_comparison$clusuters_wgcna_100)))
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/pictures/wgcna1000_hc_our_wgcna100_LIVER.pdf"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
+# Plotting the transition between 'clusters' and 'clusters_tcnr'
+ggplot(final_comparison, aes(axis1 = clusuters_wgcna, axis2 = cluster_TCNR , axis3 = clusuters_wgcna_100)) +
+  geom_alluvium(aes(fill = cluster_TCNR), width = 1/12) +
+  geom_stratum(width = 1/12, fill = "grey80", color = "black") +
+  geom_text(stat = "stratum", aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("TCseq Clusters HC", "TCNR Clusters" ,"TCseq Clusters KM"), expand = c(.05, .05 , .05)) +
+  labs(title = "Peaks Cluster Membership Transition",
+       y = "Number of Peaks") +
+  theme_minimal() +
+  theme(text = element_text(size = 15))
+dev.off()
+
+
+
+genes_wgcna <- get_great_genes(peak_clusters_1000, "peaks", "clusuters_wgcna", species_genome)
+final_df_wgcna <- run_pathway_enrichment(genes_wgcna, genesets_removed)
+final_df_wgcna$source <- "WGCNA"
+
+
+combined_df <- rbind(final_df_wgcna, final_df_tcn)
+
+# 2. Select columns and calculate -log10 q-value
+final_df_selected_Columns <- combined_df %>% 
+  select(source, community, Description, FoldEnrichment, qvalue) %>%
+  mutate(qval_log10 = -log10(qvalue))
+
+# 3. Clean Description strings (removing prefixes and underscores)
+final_df_selected_Columns$Description <- final_df_selected_Columns$Description %>%
+  str_remove("DESCARTES_") %>%
+  str_remove("TABULA_MURIS") %>%
+  str_replace_all("_", " ")
+
+# 4. Clustering/Ordering Logic (Global ordering for the Y-axis)
+# This ensures that similar terms across all datasets are grouped together
+clustering_df <- final_df_selected_Columns %>% 
+  select(Description, FoldEnrichment, community, source) %>%
+  # Create a unique ID for community within each source to avoid column collisions
+  mutate(unique_comm = paste0(source, "_", community)) %>%
+  select(-community, -source) %>%
+  pivot_wider(names_from = unique_comm, values_from = FoldEnrichment, values_fill = 0) %>%
+  column_to_rownames("Description")
+
+row_order <- stats::hclust(stats::dist(clustering_df))$order
+ordered_terms <- rownames(clustering_df)[row_order]
+
+# Apply the order and factor levels
+final_df_selected_Columns <- final_df_selected_Columns %>%
+  mutate(
+    Description = factor(Description, levels = ordered_terms),
+    source = factor(source, levels = c("K-means", "Hierarchical", "TCN")), # Order of facets
+    community = factor(community)
+  )
+
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/CellAnnotations_alldf.png"  ,
+  height = 5, 
+  width = 9,
+  family = "ArialMT",
+  useDingbats = FALSE)
+# 5. Plotting with Facets
+ggplot(final_df_selected_Columns, aes(x = community, y = Description, color = qval_log10, size = FoldEnrichment)) +
+  geom_point() +
+  scale_color_gradient(low = "blue", high = "red", na.value = "white") +
+  scale_radius() +
+  theme_bw() + 
+  theme(
+    strip.background = element_blank(),
+    legend.position = "top",
+    legend.text = element_text(size = 10),
+    text = element_text(size = 10),
+    panel.spacing = unit(1, "lines"), # This controls the "space" between datasets
+    axis.text.x = element_text(angle = 0)
+  ) +
+  # Use facet_grid to separate datasets. 
+  # scales = "free_x" and space = "free_x" are CRUCIAL to keep community widths equal
+  facet_grid(. ~ source, scales = "free_x", space = "free_x") +
+  xlab("Community") +
+  ylab("") +
+  labs(color = "-log10(q-value)", size = "Fold Enrichment")
+dev.off()
 
 #### MonaLisa evaluation
 library(monaLisa)
@@ -345,350 +468,151 @@ pwms <- getMatrixSet(JASPARConnect,
                      opts = list(
                       tax_group = "vertebrates",
                       collection="CORE",
-                      matrixtype = "PWM"))
+                      matrixtype = "PWM",
+                      all_versions = FALSE))
 
 # disconnect Db
 RSQLite::dbDisconnect(JASPARConnect)
 
 genome_obj <- BSgenome.Mmusculus.UCSC.mm10::BSgenome.Mmusculus.UCSC.mm10
-  monaLisa_enrichments <- list()
-  for (i in sort(unique(final_tcseq_clst_hc$cluster_Tcseq_hc))) {
-    community_nodes <- final_tcseq_clst_hc[final_tcseq_clst_hc$cluster_Tcseq_hc == i, ] |> dplyr::select(peaks) |> tidyr::separate(peaks,c('chr','start','end') , sep ="-")
 
-    gr <- GenomicRanges::makeGRangesFromDataFrame(
-    community_nodes,
-    seqnames.field = colnames(community_nodes)[1],
-    start.field = colnames(community_nodes)[2],
-    end.field = colnames(community_nodes)[3],
-    keep.extra.columns = TRUE
-    )
-
+process_monalisa_enrichment <- function(cluster_df, 
+                                        coord_col, 
+                                        cluster_col, 
+                                        pwms, 
+                                        genome_obj, 
+                                        method_label = "Method",
+                                        negLog10Padj_th = 4.0, 
+                                        log2enr_th = 1.0, 
+                                        top_n = 20) {
+  
+  library(tidyverse)
+  library(monaLisa)
+  library(GenomicRanges)
+  library(SummarizedExperiment)
+  
+  enrich_list <- list()
+  clusters <- sort(unique(cluster_df[[cluster_col]]))
+  
+  for (i in clusters) {
+    message(paste("Processing", method_label, "cluster:", i))
+    
+    nodes <- cluster_df[cluster_df[[cluster_col]] == i, ] %>%
+      dplyr::select(all_of(coord_col)) %>%
+      tidyr::separate(!!sym(coord_col), c('chr', 'start', 'end'), sep = "-")
+    
+    gr <- GenomicRanges::makeGRangesFromDataFrame(nodes)
     seqs <- BSgenome::getSeq(genome_obj, gr)
-
+    
     se_genome <- monaLisa::calcBinnedMotifEnrR(
-    seqs = seqs,
-    pwmL = pwms,                      
-    background = "genome",            
-    genome = genome_obj, 
-    genome.oversample = 2,
-    BPPARAM = BiocParallel::MulticoreParam(20)
+      seqs = seqs, pwmL = pwms, background = "genome",            
+      genome = genome_obj, genome.oversample = 2,
+      BPPARAM = BiocParallel::MulticoreParam(20)
     )
-
-    monaLisa_enrichments[[i]] <- se_genome
+    enrich_list[[as.character(i)]] <- se_genome
+  }
+  
+  final_enrich <- NULL
+  
+  for (idx in seq_along(enrich_list)) {
+    enr <- enrich_list[[idx]]
+    comm_name <- names(enrich_list)[idx]
+    
+    sel_padj <- apply(assay(enr, "negLog10Padj"), 1, function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
+    sel_enr  <- apply(assay(enr, "log2enr"), 1, function(x) max(x, na.rm = TRUE)) > log2enr_th
+    
+    seSel <- enr[sel_padj & sel_enr, ]
+    
+    mat <- as.data.frame(assay(seSel, "log2enr"))
+    motif_meta <- as.data.frame(mcols(seSel)[c("motif.id", "motif.name")])
+    
+    # FIX: Create a unique ID to avoid the 'duplicate row.names' error
+    # Format: "Arnt (MA0004.1)"
+    rownames(mat) <- paste0(motif_meta$motif.name, " (", motif_meta$motif.id, ")")
+    
+    colnames(mat) <- paste0("community_", comm_name)
+    mat <- mat %>% rownames_to_column("motif_unique")
+    
+    if (is.null(final_enrich)) {
+      final_enrich <- mat
+    } else {
+      final_enrich <- full_join(final_enrich, mat, by = "motif_unique")
+    }
+  }
+  
+  final_matrix <- final_enrich %>% column_to_rownames("motif_unique")
+  
+  saved_motifs <- map(colnames(final_matrix), function(col) {
+    final_matrix %>%
+      filter(!is.na(.data[[col]])) %>%
+      arrange(desc(.data[[col]])) %>%
+      head(top_n) %>%
+      rownames()
+  }) %>% unlist() %>% unique()
+  
+  cluster_map <- final_matrix[saved_motifs, ]
+  cluster_map[is.na(cluster_map)] <- 0
+  r_cluster <- fastcluster::hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
+  
+  long_df <- final_matrix[saved_motifs, ] %>%
+    rownames_to_column("motif_unique") %>%
+    pivot_longer(cols = -motif_unique, names_to = "Community", values_to = "ComboScore") %>%
+    mutate(
+      Community = as.numeric(gsub("\\D", "", Community)),
+      Factor_Full = factor(motif_unique, levels = r_cluster$labels[r_cluster$order]),
+      # Create a clean label for the plot (remove the ID)
+      Factor = gsub(" \\(MA.*\\)", "", Factor_Full),
+      Method = method_label
+    )
+  
+  return(long_df)
 }
 
-negLog10Padj_th  = 4.0
-log2enr_th = 1.0
-top_n = 20
+# 1. Process all three
+res_hc  <- process_monalisa_enrichment(final_tcseq_clst_hc, "peaks", "cluster_Tcseq_hc", pwms, genome_obj, "Hierarchical")
+res_km  <- process_monalisa_enrichment(final_tcseq_clst_km, "peaks", "cluster_Tcseq_km", pwms, genome_obj, "K-means")
+res_tcn <- process_monalisa_enrichment(final_tcnr_clst, "peaks", "cluster_TCNR", pwms, genome_obj, "TCN")
 
-for (enrichments_num in seq_along(monaLisa_enrichments)) {
-    enrichments <- monaLisa_enrichments[[enrichments_num]]
-      # select strongly enriched motifs
-    sel <- apply(SummarizedExperiment::assay(enrichments, "negLog10Padj"), 1,
-                function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
-    sel_enr <- apply(SummarizedExperiment::assay(enrichments, "log2enr"), 1, 
-                  function(x) max(x, na.rm = TRUE)) > log2enr_th # 2-fold enriched
-    final_sel <- sel & sel_enr
-    seSel <- enrichments[final_sel,]
+# 2. Combine
+all_results <- bind_rows(res_hc, res_km, res_tcn)
 
+# 3. Plot together with spacing
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/TFs_alldf_3.pdf"  ,
+  height = 8, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE) 
+ggplot(all_results, aes(x = factor(Community), y = Factor_Full)) +
+  geom_point(aes(size = ComboScore), shape = 21, stroke = 0.6, color = "black") +
+  geom_point(aes(size = ComboScore), shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
+  facet_grid(. ~ Method, scales = "free_x", space = "free_x") +
+  scale_y_discrete(labels = function(x) gsub(" \\(MA.*\\)", "", x)) + # Cleans labels on Y axis
+  theme_bw() +
+  theme(
+    panel.spacing = unit(2, "lines"), 
+    axis.text.y = element_text(size = 7)
+  ) +
+  labs(x = "Community ID", y = "Transcription Factor", size = "Log2 Enr")
+dev.off()
+res_wgcna <- process_monalisa_enrichment(peak_clusters_1000, "peaks", "clusuters_wgcna", pwms, genome_obj, "WGCNA")
 
-    matrix_enrich <- seSel@assays@data$log2enr
-    id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
-    rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
-    colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
-    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
-      
-    if (enrichments_num == 1 ) {
-      final_enrich <- matrix_enrich
-    }
-    else {
-      final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
-    }
-    }
-    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
+all_results <- bind_rows(res_wgcna, res_tcn)
 
-
-    saved_tfs <- c()
-
-    for (column_name in colnames(final_enrich_2)) {
-      col_df <- final_enrich_2[!is.na(final_enrich_2[[column_name]]), column_name, drop = FALSE]
-      col_df <- col_df[order(-col_df[[column_name]]),, drop = FALSE]
-      top_values <- head(col_df, top_n)
-      saved_tfs <- c(saved_tfs, rownames(top_values))
-    }
-
-    saved_tfs <- unique(saved_tfs)
-
-    # matrix for ordering
-    cluster_map <- final_enrich_2[saved_tfs, ]
-    cluster_map[is.na(cluster_map)] <- 0
-
-    r.cluster <- hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
-
-    # -------------------------
-    # 5. Long-format for plotting
-    # -------------------------
-    final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
-      rownames_to_column("Factor") |>
-      pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
-
-    final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,
-                                            levels = r.cluster$labels[r.cluster$order])
-
-    final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
-
-    final_homer_scatterplot$Community <- factor(
-      final_homer_scatterplot$Community,
-      levels = sort(unique(final_homer_scatterplot$Community))
-  )
-    # -------------------------
-    # 6. Plot
-    # -------------------------
-ggplot(final_homer_scatterplot, aes(x = Community, y = Factor)) +
-      geom_point(aes(size = ComboScore),
-                shape = 21, stroke = 0.6, color = "black") +
-      geom_point(aes(size = ComboScore),
-                shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
-      scale_x_discrete(drop=F)+
-      theme_classic() +
-      ylab("")+
-  theme(text = element_text(size=10)) +
-    theme(
-      legend.position = "top",
-      legend.text = element_text(size = 10)
-    )
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/monalisa_HC.pdf",device = cairo_pdf , 
-  height = 9, 
-  width = 5, 
-  units = 'in',
-  dpi = 300
-)
-
-
-monaLisa_enrichments <- list()
-  for (i in sort(unique(final_tcseq_clst_km$cluster_Tcseq_km))) {
-    community_nodes <- final_tcseq_clst_km[final_tcseq_clst_km$cluster_Tcseq_km == i, ] |> dplyr::select(peaks) |> tidyr::separate(peaks,c('chr','start','end') , sep ="-")
-
-    gr <- GenomicRanges::makeGRangesFromDataFrame(
-    community_nodes,
-    seqnames.field = colnames(community_nodes)[1],
-    start.field = colnames(community_nodes)[2],
-    end.field = colnames(community_nodes)[3],
-    keep.extra.columns = TRUE
-    )
-
-    seqs <- BSgenome::getSeq(genome_obj, gr)
-
-    se_genome <- monaLisa::calcBinnedMotifEnrR(
-    seqs = seqs,
-    pwmL = pwms,                      
-    background = "genome",            
-    genome = genome_obj, 
-    genome.oversample = 2,
-    BPPARAM = BiocParallel::MulticoreParam(20)
-    )
-
-    monaLisa_enrichments[[i]] <- se_genome
-}
-
-negLog10Padj_th  = 4.0
-log2enr_th = 1.0
-top_n = 20
-
-for (enrichments_num in seq_along(monaLisa_enrichments)) {
-    enrichments <- monaLisa_enrichments[[enrichments_num]]
-      # select strongly enriched motifs
-    sel <- apply(SummarizedExperiment::assay(enrichments, "negLog10Padj"), 1,
-                function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
-    sel_enr <- apply(SummarizedExperiment::assay(enrichments, "log2enr"), 1, 
-                  function(x) max(x, na.rm = TRUE)) > log2enr_th # 2-fold enriched
-    final_sel <- sel & sel_enr
-    seSel <- enrichments[final_sel,]
-
-
-    matrix_enrich <- seSel@assays@data$log2enr
-    id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
-    rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
-    colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
-    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
-      
-    if (enrichments_num == 1 ) {
-      final_enrich <- matrix_enrich
-    }
-    else {
-      final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
-    }
-    }
-    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
-
-
-    saved_tfs <- c()
-
-    for (column_name in colnames(final_enrich_2)) {
-      col_df <- final_enrich_2[!is.na(final_enrich_2[[column_name]]), column_name, drop = FALSE]
-      col_df <- col_df[order(-col_df[[column_name]]),, drop = FALSE]
-      top_values <- head(col_df, top_n)
-      saved_tfs <- c(saved_tfs, rownames(top_values))
-    }
-
-    saved_tfs <- unique(saved_tfs)
-
-    # matrix for ordering
-    cluster_map <- final_enrich_2[saved_tfs, ]
-    cluster_map[is.na(cluster_map)] <- 0
-
-    r.cluster <- hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
-
-    # -------------------------
-    # 5. Long-format for plotting
-    # -------------------------
-    final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
-      rownames_to_column("Factor") |>
-      pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
-
-    final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,
-                                            levels = r.cluster$labels[r.cluster$order])
-
-    final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
-
-    final_homer_scatterplot$Community <- factor(
-      final_homer_scatterplot$Community,
-      levels = sort(unique(final_homer_scatterplot$Community))
-  )
-    # -------------------------
-    # 6. Plot
-    # -------------------------
-ggplot(final_homer_scatterplot, aes(x = Community, y = Factor)) +
-      geom_point(aes(size = ComboScore),
-                shape = 21, stroke = 0.6, color = "black") +
-      geom_point(aes(size = ComboScore),
-                shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
-      scale_x_discrete(drop=F)+
-      theme_classic() +
-      ylab("")+
-  theme(text = element_text(size=10)) +
-    theme(
-      legend.position = "top",
-      legend.text = element_text(size = 10)
-    )
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/monalisa_KM.pdf",device = cairo_pdf , 
-  height = 9, 
-  width = 5, 
-  units = 'in',
-  dpi = 300
-)
-
-
-
-monaLisa_enrichments <- list()
-  for (i in sort(unique(final_tcnr_clst$cluster_TCNR))) {
-    community_nodes <- final_tcnr_clst[final_tcnr_clst$cluster_TCNR == i, ] |> dplyr::select(X1) |> tidyr::separate(X1,c('chr','start','end') , sep ="-")
-
-    gr <- GenomicRanges::makeGRangesFromDataFrame(
-    community_nodes,
-    seqnames.field = colnames(community_nodes)[1],
-    start.field = colnames(community_nodes)[2],
-    end.field = colnames(community_nodes)[3],
-    keep.extra.columns = TRUE
-    )
-
-    seqs <- BSgenome::getSeq(genome_obj, gr)
-
-    se_genome <- monaLisa::calcBinnedMotifEnrR(
-    seqs = seqs,
-    pwmL = pwms,                      
-    background = "genome",            
-    genome = genome_obj, 
-    genome.oversample = 2,
-    BPPARAM = BiocParallel::MulticoreParam(20)
-    )
-
-    monaLisa_enrichments[[i]] <- se_genome
-}
-
-negLog10Padj_th  = 4.0
-log2enr_th = 1.0
-top_n = 20
-
-for (enrichments_num in seq_along(monaLisa_enrichments)) {
-    enrichments <- monaLisa_enrichments[[enrichments_num]]
-      # select strongly enriched motifs
-    sel <- apply(SummarizedExperiment::assay(enrichments, "negLog10Padj"), 1,
-                function(x) max(abs(x), 0, na.rm = TRUE)) > negLog10Padj_th
-    sel_enr <- apply(SummarizedExperiment::assay(enrichments, "log2enr"), 1, 
-                  function(x) max(x, na.rm = TRUE)) > log2enr_th # 2-fold enriched
-    final_sel <- sel & sel_enr
-    seSel <- enrichments[final_sel,]
-
-
-    matrix_enrich <- seSel@assays@data$log2enr
-    id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
-    rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
-    colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
-    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
-      
-    if (enrichments_num == 1 ) {
-      final_enrich <- matrix_enrich
-    }
-    else {
-      final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
-    }
-    }
-    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
-
-
-    saved_tfs <- c()
-
-    for (column_name in colnames(final_enrich_2)) {
-      col_df <- final_enrich_2[!is.na(final_enrich_2[[column_name]]), column_name, drop = FALSE]
-      col_df <- col_df[order(-col_df[[column_name]]),, drop = FALSE]
-      top_values <- head(col_df, top_n)
-      saved_tfs <- c(saved_tfs, rownames(top_values))
-    }
-
-    saved_tfs <- unique(saved_tfs)
-
-    # matrix for ordering
-    cluster_map <- final_enrich_2[saved_tfs, ]
-    cluster_map[is.na(cluster_map)] <- 0
-
-    r.cluster <- fastcluster::hclust(dist(cluster_map, method = "euclidean"), method = "ward.D2")
-
-    # -------------------------
-    # 5. Long-format for plotting
-    # -------------------------
-    final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
-      rownames_to_column("Factor") |>
-      pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
-
-    final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,
-                                            levels = r.cluster$labels[r.cluster$order])
-
-    final_homer_scatterplot$Community <- as.numeric(gsub("\\D", "", final_homer_scatterplot$Community))
-
-    final_homer_scatterplot$Community <- factor(
-      final_homer_scatterplot$Community,
-      levels = sort(unique(final_homer_scatterplot$Community))
-  )
-    # -------------------------
-    # 6. Plot
-    # -------------------------
-ggplot(final_homer_scatterplot, aes(x = Community, y = Factor)) +
-      geom_point(aes(size = ComboScore),
-                shape = 21, stroke = 0.6, color = "black") +
-      geom_point(aes(size = ComboScore),
-                shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
-      scale_x_discrete(drop=F)+
-      theme_classic() +
-      ylab("")+
-  theme(text = element_text(size=10)) +
-    theme(
-      legend.position = "top",
-      legend.text = element_text(size = 10)
-    )
-ggsave("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/TCseq/pictures/monalisa_Original.pdf",device = cairo_pdf , 
-  height = 9, 
-  width = 5, 
-  units = 'in',
-  dpi = 300
-)
+# 3. Plot together with spacing
+pdf("/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/WGCNA/picture/TFs_alldf_2.pdf"  ,
+  height = 8, 
+  width = 7,
+  family = "ArialMT",
+  useDingbats = FALSE)
+ggplot(all_results, aes(x = factor(Community), y = Factor_Full)) +
+  geom_point(aes(size = ComboScore), shape = 21, stroke = 0.6, color = "black") +
+  geom_point(aes(size = ComboScore), shape = 21, fill = "black", stroke = 0.6, alpha = 0.4) +
+  facet_grid(. ~ Method, scales = "free_x", space = "free_x") +
+  scale_y_discrete(labels = function(x) gsub(" \\(MA.*\\)", "", x)) + # Cleans labels on Y axis
+  theme_bw() +
+  theme(
+    panel.spacing = unit(2, "lines"), 
+    axis.text.y = element_text(size = 7)
+  ) +
+  labs(x = "Community ID", y = "Transcription Factor", size = "Log2 Enr")
+dev.off()

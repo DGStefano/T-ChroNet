@@ -12,13 +12,13 @@ build_TCrhoNetNetwork_from_series(
 )
 }
 \arguments{
+\item{series_object}{TCrhoNetSeries object}
+
 \item{threshold}{Choosen correlation threshold. If not provided it uses the best threshold parameter stored in the TCrhoNetSeries object}
 
 \item{matrix_path}{Path of the normalized log2 matrix used for correlation evaluation}
 
 \item{verbose}{(default=TRUE)}
-
-\item{object}{TCrhoNetSeries object}
 }
 \value{
 A TCrhoNetNetwork object

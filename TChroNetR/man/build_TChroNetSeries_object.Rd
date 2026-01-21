@@ -5,7 +5,7 @@
 \title{Create the TChroNetSeries object}
 \usage{
 build_TChroNetSeries_object(
-  edge_files,
+  output_dir,
   matrix_path,
   method = c("Leiden", "Louvain"),
   resolutions_list = seq(0.1, 0.9, 0.1),
@@ -17,7 +17,7 @@ build_TChroNetSeries_object(
 )
 }
 \arguments{
-\item{edge_files}{List of parquet files to build the network}
+\item{output_dir}{Directory containing TChroNetPy results}
 
 \item{matrix_path}{Path to the log2 normalized count matrix used in tchronetPy}
 
@@ -28,6 +28,10 @@ build_TChroNetSeries_object(
 \item{run_cd}{Boolean value for running community detection evaluation. default = FALSE}
 
 \item{transitivity}{Boolean value for evaluating transitivity value for each threshold. default = FALSE}
+
+\item{min_size}{Size of the smallest community to consider}
+
+\item{merged_id}{The community id given to all the nodes belonging to communities smaller than min_size}
 
 \item{seed}{Set a seed for computational reproducibility}
 }

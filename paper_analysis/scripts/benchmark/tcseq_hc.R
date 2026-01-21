@@ -2,15 +2,17 @@ library(TCseq)
 library(dplyr)
 library(readr)
 library(cluster)
+library(factoextra)
+# --- REMOVE GARBAGE ---
+gc(full = TRUE)
 
 # --- ARGUMENT PARSING ---
 args <- commandArgs(trailingOnly = TRUE)
-bed_path <- as.numeric(args[1])
+bed_path <- args[1]
 
-# --- REMOVE GARBAGE ---
-gc(full = TRUE)
 # --- CONFIGURATION ---
 BED_DIR <- bed_path
+# BED_DIR <- "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/subset.bed"
 BAM_DIR <- "/mnt/nas-safu01/analysis/PhDsdigiove/method_coAcces/data/BALL/preliminary_analysis/results_atac/bwa/merged_library/"
 
 data_tcseq <- readr::read_delim(BED_DIR) |> as.data.frame()
@@ -47,9 +49,6 @@ res_k <- fviz_nbclust(t,
 
 # Retrieve the optimal K
 best_k <- as.numeric(res_k$data$clusters[which.max(res_k$data$y)])
-
-# Select the optimal k (first max or Tibs2001 method)
-best_k <- maxSE(gap_stat_hc$Tab[, "gap"], gap_stat_hc$Tab[, "SE.sim"], method = "Tibs2001SEmax")
 
 # Final clustering with the selected best_k
 tca <- timeclust(tca, algo = 'hc', k = best_k, standardize = TRUE)

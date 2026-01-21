@@ -173,7 +173,7 @@ build_TChroNetSeries_object <- function(output_dir, matrix_path,
       }
     }
     if(run_cd == FALSE) {
-      membership_nodes_print = NA
+      membership_nodes = NA
     }
     # --- Save Results ---
     obj@communities[[as.character(thr)]] <- th_cluster_df

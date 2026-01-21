@@ -5520,3 +5520,4 @@ Warning message:
 In storage.mode(x) <- "double" : NAs introduced by coercion
 [?25h
 >>> Processing threshold range: 0.70 - 0.80
+[?25h[?25hConsolidating temporary files into Parquet...

@@ -15,7 +15,6 @@
 #' @param verbose (default=TRUE)
 #' @return A TCrhoNetNetwork object
 #' @export
-#' Optimized conversion of TCrhoNetSeries into a TCrhoNetNetwork 
 build_TCrhoNetNetwork_from_series <- function(series_object,
                                               threshold,
                                               matrix_path,

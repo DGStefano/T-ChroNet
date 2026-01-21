@@ -21,8 +21,6 @@
 #' @param seed Set a seed for computational reproducibility
 #' @return A TChroNetSeries object
 #' @export
-#' 
-
 build_TChroNetSeries_object <- function(output_dir, matrix_path,
                                         method = c("Leiden", "Louvain"),
                                         resolutions_list = seq(0.1, 0.9, 0.1),

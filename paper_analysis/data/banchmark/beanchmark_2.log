@@ -49,3 +49,18 @@ Traceback (most recent call last):
   File "/home/sdigiove/miniconda3/envs/tchronet_env/lib/python3.10/subprocess.py", line 1953, in _wait
     time.sleep(delay)
 KeyboardInterrupt
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 1
+RUNNING: TchronetR | Nodes: 10000 | Threads: 1
+Error in library(TChroNetR) : there is no package called ‘TChroNetR’
+Execution halted
+ERROR conda.cli.main_run:execute(127): `conda run Rscript /home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R /home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv /mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet` failed. (See above for error)
+!!! Error running TchronetR: Command '['/usr/bin/time', '-v', '-o', 'stats.tmp', 'conda', 'run', '-n', 'R', '--no-capture-output', 'Rscript', '/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R', '/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_10000/norm_counts.tsv', '/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet']' returned non-zero exit status 1.
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 2
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 5
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 15
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 20
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 25
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 30
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 35
+RUNNING: tchronetpy | Nodes: 10000 | Threads: 40
+RUNNING: tchronetpy | Nodes: 20000 | Threads: 1

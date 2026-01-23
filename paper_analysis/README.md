@@ -1,0 +1,1 @@
+This folder contains the data and the script used to perform the analysis in the paper.

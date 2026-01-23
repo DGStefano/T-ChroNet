@@ -1,8 +1,9 @@
 library(edgeR)
 library(dplyr)
-
+library(tidyr)
+library(tidyverse)
 # Load your master data
-master_counts <- read.table("/home/sdigiove/T-ChroNet/paper_analysis/data/BCP-ALL/consensus_peaks.mLb.clN.featureCounts.txt", header=TRUE , skip = 1 ) |> dplyr::select(-Geneid , -Length , -Strand ) |> 
+master_counts <- read.table("~/T-ChroNet/paper_analysis/data/BCP-ALL/consensus_peaks.mLb.clN.featureCounts.txt", header=TRUE , skip = 1 ) |> dplyr::select(-Geneid , -Length , -Strand ) |> 
   unite(sites , c('Chr',"Start","End") , sep ="-") 
 master_bed <- master_counts |> dplyr::select(sites) 
 
@@ -25,7 +26,7 @@ prepare_subset <- function(n_nodes) {
   bed_subset <- master_bed |> dplyr::filter(sites %in% selected_peak_ids)
   
   # 5. Save files
-  save_path <- paste0("/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_", n_nodes)
+  save_path <- paste0("~/T-ChroNet/paper_analysis/data/banchmark/counts/data_", n_nodes)
   dir.create(save_path , showWarnings = F)
   raw_subset |> write.table( paste0(save_path, "/raw_counts.tsv"), sep="\t", quote=F , col.names = TRUE)
   norm_subset |> write.table( paste0(save_path, "/norm_counts.tsv"), sep="\t", quote=F, col.names = TRUE)

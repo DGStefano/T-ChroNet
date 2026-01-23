@@ -1,5 +1,5 @@
 library(GenomicRanges)
-library(BSgenome.Hsapiens.UCSC.hg38)
+
 library(BSgenome.Mmusculus.UCSC.mm10)
 library(phastCons100way.UCSC.hg38)
 library(TxDb.Hsapiens.UCSC.hg38.knownGene)

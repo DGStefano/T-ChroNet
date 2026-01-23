@@ -32,7 +32,7 @@ plot_enrichments_tfs <- function(object , negLog10Padj_th  = 4.0 , log2enr_th = 
     id_to_names <- seSel@elementMetadata[c("motif.id" , "motif.name")]
     rownames(matrix_enrich) <- unlist(unname(id_to_names[id_to_names$motif.id %in% rownames(matrix_enrich), "motif.name" ]))
     colnames(matrix_enrich) <- paste('community_' , as.character(enrichments_num) , sep ="")
-    matrix_enrich <- matrix_enrich |> as.data.frame() |> rownames_to_column('tfs')
+    matrix_enrich <- matrix_enrich |> as.data.frame() |> tibble::rownames_to_column('tfs')
       
     if (enrichments_num == 1 ) {
       final_enrich <- matrix_enrich
@@ -41,7 +41,7 @@ plot_enrichments_tfs <- function(object , negLog10Padj_th  = 4.0 , log2enr_th = 
       final_enrich <- merge.data.frame(final_enrich , matrix_enrich , by = "tfs" , all = T)
     }
     }
-    final_enrich_2 <- final_enrich |> column_to_rownames('tfs')
+    final_enrich_2 <- final_enrich |> tibble::column_to_rownames('tfs')
 
 
     saved_tfs <- c()
@@ -65,7 +65,7 @@ plot_enrichments_tfs <- function(object , negLog10Padj_th  = 4.0 , log2enr_th = 
     # 5. Long-format for plotting
     # -------------------------
     final_homer_scatterplot <- final_enrich_2[saved_tfs, ] |>
-      rownames_to_column("Factor") |>
+      tibble::rownames_to_column("Factor") |>
       pivot_longer(cols = -Factor, names_to = "Community", values_to = "ComboScore")
 
     final_homer_scatterplot$Factor <- factor(final_homer_scatterplot$Factor,

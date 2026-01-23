@@ -33,15 +33,12 @@ library(TChroNetR)
 ```
 
 ```{r}
-# List all graph edge files (thresholded networks)
-edge_files <- list.files("~/T-ChroNet/toy_data/results/th/", full.names = TRUE)
-
 # Path to the normalized count matrix
 matrix_path <- "~/T-ChroNet/toy_data/data/thp1_test.tsv"
 
 # Build the TChroNet series object
 obj_series <- build_TChroNetSeries_object(
-  edge_files,
+  "~/T-ChroNet/toy_data/results/th/",
   matrix_path,
   resolutions_list = seq(0.5, 1.5, 0.1),
   run_cd = TRUE,
@@ -190,7 +187,27 @@ obj <- annotate_regions_from_bed(obj,
 plot_stacked_annotation(obj)
 ```
 
-# 8. Target Gene Identification
+
+# 8. Profiling Community Characteristics
+
+To determine if the identified communities represent distinct biological features \(rather than merely reflecting broader signal trends\) TChroNetR provides the `profile_community_biology` function. This tool annotates each genomic region within the network with key architectural and evolutionary metrics. By calling this function, users obtain a comprehensive data frame containing region length, GC content, distance to the nearest Transcription Start Site (TSS), and phylogenetic conservation scores. These metrics are essential for validating whether specific communities are enriched for certain biological properties, such as promoter-proximal elements or highly conserved regulatory regions.
+
+```{r}
+# import libraries for hg 38 genome
+library(BSgenome.Hsapiens.UCSC.hg38)
+library(phastCons100way.UCSC.hg38)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+
+communities_profilation <- profile_community_biology(obj,
+                                                      genome = BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38,
+                                                      phast = phastCons100way.UCSC.hg38::phastCons100way.UCSC.hg38,
+                                                      txdb = TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
+                                                      )
+
+```
+
+
+# 9. Target Gene Identification
 
 To interpret the biological role of each community, `TChroNetR` interfaces with **rGREAT**. This identifies enriched functions and potential target genes for the genomic regions within each cluster.
 
@@ -199,7 +216,7 @@ To interpret the biological role of each community, `TChroNetR` interfaces with 
 obj <- run_GREAT_analysis(obj, genome = 'hg19')
 ```
 
-# 9. Transcription Factors Identification
+# 10. Transcription Factors Identification
 
 To understand the regulatory drivers behind each community, `TChroNetR` integrates with the `monaLisa` package to perform Transcription Factor (TF) motif enrichment analysis. This step identifies which motifs are significantly overrepresented in the genomic regions of specific communities compared to a background set.
 

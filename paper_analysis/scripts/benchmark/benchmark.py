@@ -3,12 +3,13 @@ import time
 import pandas as pd
 import os
 import glob
+import shutil
 
 # --- CONFIGURATION ---
-NODE_INTERVALS = [80000, 100000] #10000, 20000, 40000, 60000, 
-THREAD_LIST = [1,2,5, 15 ,20,25,30,35,40 ]  # Multi-threading will apply to tchronetpy and WGCNA # 5, 15, 20,25,30,35,40
-RESULTS_FILE = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/final_performance_comparison.csv"
-OUT_DIR_TCN = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet"
+NODE_INTERVALS = [60000] #10000, 20000, 40000, , 80000, 100000
+THREAD_LIST = [1] #,2,5, 15, 20,25,30,35,40
+RESULTS_FILE = "~/T-ChroNet/paper_analysis/data/banchmark/final_performance_comparison_2.csv"
+OUT_DIR_TCN = "/tmp/tcn_parquet" 
 def get_command(base_path , tool_name, outdir, threads):
     norm_path = os.path.join(base_path, "norm_counts.tsv")
     raw_path = os.path.join(base_path, "raw_counts.tsv")
@@ -25,38 +26,41 @@ def get_command(base_path , tool_name, outdir, threads):
     
     if tool_name == "TchronetR":
         # TchronetR: Single-threaded, Normalized data
-        return ["Rscript", "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R",norm_path, OUT_DIR_TCN ]
+        return ["Rscript", "~/T-ChroNet/paper_analysis/scripts/benchmark/tchronetr_bench.R",norm_path, OUT_DIR_TCN ]
     
     if tool_name == "WGCNA":
         # WGCNA: Multi-threaded, Raw data
         # Calculate the CPU core range (e.g., if t=5, range is "0-4")
-        return ["Rscript", "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R", str(threads), raw_path]
+        return ["Rscript", "~/T-ChroNet/paper_analysis/scripts/benchmark/wgcna_bench.R", str(threads), raw_path]
     
     if tool_name == "TCseq_KM":
         # TCseq: Single-threaded, BED/BAM data logic
-        return ["Rscript", "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R", bed_path]
+        return ["Rscript", "~/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_km.R", bed_path]
 
     if tool_name == "TCseq_HC":
         # TCseq: Single-threaded, BED/BAM data logic
-        return ["Rscript", "/home/sdigiove/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R",bed_path]
+        return ["Rscript", "~/T-ChroNet/paper_analysis/scripts/benchmark/tcseq_hc.R",bed_path]
 
     return None
 
 def run_benchmark():
     all_results = []
-    tools = [  "TCseq_KM" , "TCseq_HC", "WGCNA" ] #  "tchronetpy" , , "TchronetR"
+    tools = ["TCseq_HC"] #   "tchronetpy" , "TchronetR", "WGCNA"   "TCseq_KM" , 
 
     for n in NODE_INTERVALS:
-        base_path = "/home/sdigiove/T-ChroNet/paper_analysis/data/banchmark/counts/data_" + str(n)+"/"
+        base_path = "~/T-ChroNet/paper_analysis/data/banchmark/counts/data_" + str(n)+"/"
         for t in THREAD_LIST:
-                parquet_path = "/mnt/nas-safu02/sdigiove_workspace/check_th_TCHRONET/new_tchroent_ties/benchmark/parquet/*.parquet"
+                parquet_path = OUT_DIR_TCN
         
-                # Find and remove all matching files
-                for f in glob.glob(parquet_path):
+                # Find everything inside the parquet folder
+                for item in glob.glob(os.path.join(parquet_path, "*")):
                     try:
-                        os.remove(f)
-                    except OSError as e:
-                        print(f"Error deleting {f}: {e}")
+                        if os.path.isdir(item):
+                            shutil.rmtree(item)  # Deletes a folder and everything inside it
+                        else:
+                            os.remove(item)      # Deletes a file
+                    except Exception as e:
+                        print(f"Error deleting {item}: {e}")
 
                 for tool in tools:
                     

@@ -1,14 +1,10 @@
 #' Create the TChroNetSeries object
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenbase
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' @importFrom igraph make_empty_graph add_vertices add_edges vcount ecount E V degree components edge_density transitivity
+#' @importFrom leidenbase leiden_find_partition
+#' @importFrom dplyr select collect mutate filter arrange left_join %>%
+#' @importFrom arrow open_dataset
+#' @importFrom methods new
+#' @importFrom stats setNames
 #' 
 #' @param output_dir Directory containing TChroNetPy results
 #' @param matrix_path Path to the log2 normalized count matrix used in tchronetPy

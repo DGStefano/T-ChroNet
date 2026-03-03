@@ -1,14 +1,7 @@
 #' Plot the modularity. If TCrhoNetSeries object is provided the plot represents all the available threshold
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' 
+#' @import ggplot2
+#' @importFrom dplyr bind_rows
 #' 
 #' @param object TChroNetNetwork object
 #' @return A ggplot2 object

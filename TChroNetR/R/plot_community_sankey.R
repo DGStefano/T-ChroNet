@@ -1,7 +1,7 @@
 #' Plot the sankey plot of communities at increased resolution for a fixed threshold
-#' @import ggsankey
+#' 
 #' @import ggplot2
-#' @import dplyr
+#' @importFrom ggsankey make_long geom_sankey
 #' 
 #' 
 #' @param object TCrhoNetSeries or TCrhoNetNetwork object

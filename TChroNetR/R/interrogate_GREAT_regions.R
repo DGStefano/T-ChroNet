@@ -1,14 +1,6 @@
 #' Interrogate GREAT and retrieve a list of target genes
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#'
+#' @importFrom rGREAT submitGreatJob getEnrichmentTables getRegionGeneAssociations
 #' 
 #' @param gr GRanges object
 #' @param comm_name Name of the community

@@ -1,28 +1,54 @@
 Package: TChroNetR
 Title: T-ChroNet Analysis Toolkit
-Version: 0.0.1
+Version: 1.0.1
 Authors@R: 
     person("Stefano", "Di Giovenale", , "stefano.digiovenale@ifo.it", role = c("aut", "cre"))
-Description: This package allows the network analysis of Chromatin Networks.
-Depends: R(>= 4.2)
+Description: This package allows the network analysis of Chromatin
+    Networks.
+License: GPL (>= 3)
+Depends: 
+    R (>= 4.2)
 Imports: 
+    arrow,
+    BiocGenerics,
+    BiocParallel,
+    Biostrings,
+    BSgenome,
+    BSgenome.Hsapiens.UCSC.hg19,
+    BSgenome.Hsapiens.UCSC.hg38,
+    BSgenome.Mmusculus.UCSC.mm10,
+    data.table,
     dplyr (>= 1.1.4),
     fossil (>= 0.4.0),
+    GenomeInfoDb,
     GenomicRanges (>= 1.54.0),
     ggplot2 (>= 3.5.0),
     ggsankey (>= 0.0.99999),
     grid (>= 4.3.0),
     igraph (>= 2.0.3),
-    leidenAlg (>= 1.1.5),
-    liftOver (>= 1.26.0),
-    rhdf5 (>= 2.46.0),
+    IRanges,
+    leidenbase,
+    methods,
+    monaLisa,
+    rGREAT,
     rlang (>= 1.1.6),
-    rtracklayer (>= 1.62.0)
-License: GPL (>= 3)
+    rtracklayer (>= 1.62.0),
+    S4Vectors,
+    scales,
+    stats,
+    SummarizedExperiment,
+    tibble,
+    tidyr
+Suggests: 
+    JASPAR2024,
+    knitr,
+    phastCons100way.UCSC.hg38,
+    rmarkdown,
+    RSQLite,
+    TFBSTools,
+    TxDb.Hsapiens.UCSC.hg38.knownGene
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
-Suggests: 
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr

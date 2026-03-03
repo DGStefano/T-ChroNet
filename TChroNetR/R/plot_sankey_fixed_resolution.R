@@ -1,8 +1,11 @@
 #' Plot the sankey plot of communities at increased threshod for a fixed resolution
+#' 
 #' @import ggplot2
-#' @import ggsankey
-#' @import rlang
-#' @import dplyr
+#' @importFrom ggsankey make_long geom_sankey
+#' @importFrom rlang sym
+#' @importFrom dplyr select rename pull
+#' @importFrom tibble as_tibble
+#' @importFrom methods slotNames
 #' 
 #' @param object TCrhoNetSeries object
 #' @param resolution Fixed resolution to compare

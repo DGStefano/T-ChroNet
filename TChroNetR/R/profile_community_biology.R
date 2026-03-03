@@ -1,8 +1,10 @@
 #' Profile Community Biology
-#' @import GenomicRanges
-#' @import BSgenome
-#' @import dplyr
-#' @import Biostrings
+#' 
+#' @importFrom GenomicRanges GRanges promoters distanceToNearest seqnames start end width
+#' @importFrom IRanges IRanges
+#' @importFrom S4Vectors metadata mcols
+#' @importFrom BiocGenerics score
+#' @importFrom dplyr select everything
 #' 
 #' @param object TChroNetNetwork object
 #' @param genome A BSgenome object (e.g., BSgenome.Hsapiens.UCSC.hg38).

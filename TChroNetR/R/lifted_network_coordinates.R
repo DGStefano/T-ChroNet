@@ -1,14 +1,7 @@
 #' Lift the coordinates from a genome to another
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#'
+#' @importFrom rtracklayer import.chain liftOver
+#' @importFrom GenomicRanges seqnames start end
 #' 
 #' @param object TChroNetNetwork object
 #' @param chain_path Path to a chain file for liftover

@@ -1,15 +1,10 @@
 #' Annotate regions according to a provided bed annotation file 
 #'
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' @importFrom GenomicRanges GRanges findOverlaps
+#' @importFrom rtracklayer import
+#' @importFrom IRanges IRanges
+#' @importFrom S4Vectors queryHits subjectHits
+#' @importFrom stats na.omit
 #' 
 #' @param object TChroNetNetwork object
 #' @param bed_path Path to a bed file containing regions and annotations
@@ -67,7 +62,7 @@ annotate_regions_from_bed <- function(object, bed_path , genome = 'hg38' ) {
   
   
   bed_gr <- rtracklayer::import(bed_path, format = "BED")
-  overlaps <- findOverlaps(gr_network, bed_gr)
+  overlaps <- GenomicRanges::findOverlaps(gr_network, bed_gr)
   
   overlaps <- overlaps[!duplicated(queryHits(overlaps)),]
   

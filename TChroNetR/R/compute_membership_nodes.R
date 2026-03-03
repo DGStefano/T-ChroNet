@@ -1,14 +1,7 @@
 #' Calcualte communities in network
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' @importFrom igraph degree vcount V E cluster_louvain membership modularity
+#' @importFrom leidenbase leiden_find_partition
+#' @importFrom methods slot
 #' 
 #' @param object TChroNetNetwork object
 #' @param resolutions Resolution parameter it can be a unique resolution or a list of resolutions

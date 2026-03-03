@@ -14,9 +14,20 @@ conda env create -f environment.yml
 conda activate tchronet_env
 pip install git+https://github.com/DGStefano/T-ChroNet.git#subdirectory=TChroNetPy
 ```
-To install TChronetR
+To install TChronetR, ensure you have the necessary Bioconductor dependencies first:
 ```
-remotes::install_github("DGStefano/T-ChroNet",subdir = "TChroNetR")
+# Install Bioconductor dependencies
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install(c("GenomicRanges", "rtracklayer", "liftOver", "monaLisa"))
+
+# Install visualization and utility dependencies
+install.packages("remotes")
+remotes::install_github("davidsjoberg/ggsankey")
+
+# Install T-ChroNet from the subdirectory
+remotes::install_github("DGStefano/T-ChroNet", subdir = "TChroNetR")
 ```
 
 ## Tutorial

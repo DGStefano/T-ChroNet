@@ -1,8 +1,8 @@
 #' Plot the random index map in which communities are compared among neighbors at increased threshold and resolution.
 #' 
-#' @import fossil
-#' @import dplyr
-#' @import grid
+#' @importFrom fossil adj.rand.index
+#' @importFrom grid arrow unit
+#' @import ggplot2
 #' 
 #' @param object TCrhoNetSeries object
 #' @param color_limits List of min and max limits for color map (default = c(0.0,1))

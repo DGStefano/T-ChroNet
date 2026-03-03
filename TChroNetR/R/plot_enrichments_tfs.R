@@ -1,10 +1,10 @@
 #' Annotate regions according to a provided bed annotation file 
 #'
-#' @import dplyr
-#' @import BSgenome
-#' @import GenomicRanges
-#' @import monaLisa
-#' @import tidyr
+#' @import ggplot2
+#' @importFrom SummarizedExperiment assay
+#' @importFrom tibble rownames_to_column column_to_rownames
+#' @importFrom tidyr pivot_longer
+#' @importFrom stats hclust dist
 #' 
 #' @param object TChroNetNetwork object
 #' @param negLog10Padj_th negative log 10 p-value threshold. defult = 4.0

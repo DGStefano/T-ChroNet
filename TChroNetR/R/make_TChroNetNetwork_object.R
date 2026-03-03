@@ -1,14 +1,10 @@
 #' Create a NetworkAnalysis object from an HDF5 network file
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' 
+#' @importFrom igraph make_empty_graph add_vertices add_edges vcount ecount
+#' @importFrom arrow read_parquet
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom methods new
+#' @importFrom dplyr select
 #' 
 #' @param edge_files List of parquet files to build the network
 #' @param matrix_path Path to the tsv normalized counts matrix

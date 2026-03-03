@@ -1,14 +1,6 @@
 #' Plot the density at each threshold
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' 
+#' @import ggplot2
 #' 
 #' @param object TCrhoNetSeries object
 #' @return A ggplot2 object

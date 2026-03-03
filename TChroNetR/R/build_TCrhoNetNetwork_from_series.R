@@ -1,13 +1,8 @@
 #' Convert a TCrhoNetSeries into a TCrhoNetNetwork 
 #' @import igraph
 #' @import GenomicRanges
-#' @import rtracklayer
-#' @import rhdf5
-#' @import dplyr
 #' @importFrom data.table fread
-#' @importFrom S4Vectors IRanges
-#' @importFrom tibble as_tibble
-#' @importFrom tidyr pivot_longer
+#' @importFrom IRanges IRanges
 #' 
 #' @param series_object TCrhoNetSeries object
 #' @param threshold Choosen correlation threshold. If not provided it uses the best threshold parameter stored in the TCrhoNetSeries object

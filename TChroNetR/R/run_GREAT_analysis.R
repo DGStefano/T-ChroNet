@@ -1,14 +1,7 @@
 #' Find taret genes for each community accordig GREAT analysis
-#' @import rhdf5
-#' @import igraph
-#' @import leidenAlg
-#' @import GenomicRanges
-#' @import rtracklayer
-#' @import liftOver
-#' @import leidenAlg
-#' @import dplyr
-#' @importFrom tibble tibble
-#' @importFrom tidyr pivot_longer
+#' 
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom GenomeInfoDb seqnames
 #' 
 #' @param object TChroNetNetwork object
 #' @param resolutions Set the resolution parameter for plotting trends. If not specified the function the resolution parameter stored in the object (deafault = NULL)

@@ -1,5 +1,7 @@
 #' Plot the transitivity at each threshold
+#' 
 #' @import ggplot2
+#' @importFrom rlang sym
 #' 
 #' @param object TCrhoNetSeries object
 #' @return A ggplot2 object

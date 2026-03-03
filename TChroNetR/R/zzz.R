@@ -2,12 +2,13 @@
 "_PACKAGE"
 
 .onLoad <- function(libname, pkgname) {
-  # Optional: Automatically load imported packages
-  pkgs <- c("hdf5r","igraph","leidenAlg","GenomicRanges","rtracklayer","liftOver","leidenAlg","dplyr")
-  invisible(lapply(pkgs, function(pkg) {
-    if (!requireNamespace(pkg, quietly = TRUE)) {
-      stop(paste("Package", pkg, "is required but not installed."))
-    }
-    library(pkg, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
-  }))
+  # Ensures S4 methods work correctly across the package
+  if (!requireNamespace("methods", quietly = TRUE)) {
+    stop("The 'methods' package is required.")
+  }
+}
+
+.onUnload <- function(libpath) {
+  # Clean up any loaded DLLs if you had C++ code (optional)
+  library.dynam.unload("YourPackageName", libpath)
 }

@@ -1,11 +1,9 @@
 #' Annotate regions according to a provided bed annotation file 
-#'
-#' @import dplyr
-#' @import BSgenome
-#' @import GenomicRanges
-#' @import monaLisa
-#' @import tidyr
-#' @import BiocParallel
+#' 
+#' @importFrom monaLisa calcBinnedMotifEnrR
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @importFrom BiocParallel MulticoreParam
+#' @importFrom BSgenome getSeq
 #' 
 #' @param object TChroNetNetwork object
 #' @param pwms PWMatrixList with motifs for which to calculate enrichments.

@@ -20,7 +20,7 @@ To install TChronetR, ensure you have the necessary Bioconductor dependencies fi
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install(c("GenomicRanges", "rtracklayer", "liftOver", "monaLisa"))
+BiocManager::install(c("Matrix", "SummarizedExperiment", "S4Vectors", "rtracklayer", "rGREAT", "monaLisa", "IRanges", "GenomicRanges", "GenomeInfoDb", "BSgenome", "Biostrings", "BiocParallel", "BiocGenerics"))
 
 # Install visualization and utility dependencies
 install.packages("remotes")
